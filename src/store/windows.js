@@ -1,8 +1,8 @@
 export default {
     state: {
         maxZIndex: 0,
-        topPrevWindow: 0,
-        leftPrevWindow: 500,
+        topPrevWindow: 50,
+        leftPrevWindow: 600,
         activeWindow: null,
         windows: [
             /* {

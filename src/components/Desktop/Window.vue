@@ -14,23 +14,23 @@
     <v-card class="mainboard-window__card">
 
     <v-card-title
-        class="headline mainboard-window__title"
-        :class = "{'primary': options.active, 'grey lighten-1': !options.active}"
+        class="mainboard-window__title"
+        :class = "{'titleActiveWindow': options.active, 'grey lighten-1': !options.active}"
         @mousedown="setActiveWindow"
         primary-title
     >
         <span >{{ options.title }}</span>
         <v-spacer></v-spacer>
-        <v-btn icon>
+        <v-btn icon small class="mainboard-window__btn">
             <v-icon color="white">refresh</v-icon>
         </v-btn>
-        <v-btn icon @click="minimizeWindow" @mousedown.stop="''">
+        <v-btn icon small class="mainboard-window__btn" @click="minimizeWindow" @mousedown.stop="''">
             <v-icon color="white">minimize</v-icon>
         </v-btn>
-        <v-btn icon @click="toggleFullscreenWindow">
+        <v-btn icon small class="mainboard-window__btn" @click="toggleFullscreenWindow">
             <v-icon color="white">fullscreen</v-icon>
         </v-btn>
-        <v-btn icon @click="closeWindow">
+        <v-btn icon small class="mainboard-window__btn" @click="closeWindow">
             <v-icon color="white">close</v-icon>
         </v-btn>
     </v-card-title>
@@ -152,9 +152,15 @@ export default {
     }
 
     .mainboard-window__title {
+        font-size: 16px;
+        color:#fff;
         cursor: move;
         padding: 5px;
-        height: 40px;
+        height: 30px;
+    }
+
+    .mainboard-window__btn {
+        margin: 0;
     }
 
     .mainboard-window__body {

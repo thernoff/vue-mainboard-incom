@@ -12,6 +12,7 @@ import colors from 'vuetify/es5/util/colors'
 Vue.use(Vuetify, {
   theme: {
     primary: colors.indigo.darken1, // #E53935
+    titleActiveWindow: colors.indigo.lighten1,
     secondary: colors.red.lighten4, // #FFCDD2
     accent: colors.indigo.base // #3F51B5
   }
