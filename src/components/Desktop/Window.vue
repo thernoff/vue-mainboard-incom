@@ -16,7 +16,7 @@
     <v-card-title
         class="headline mainboard-window__title"
         :class = "{'primary': options.active, 'grey lighten-1': !options.active}"
-        @click="setActiveWindow"
+        @mousedown="setActiveWindow"
         primary-title
     >
         <span >{{ options.title }}</span>
@@ -24,7 +24,7 @@
         <v-btn icon>
             <v-icon color="white">refresh</v-icon>
         </v-btn>
-        <v-btn icon @click.stop="minimizeWindow">
+        <v-btn icon @click="minimizeWindow" @mousedown.stop="''">
             <v-icon color="white">minimize</v-icon>
         </v-btn>
         <v-btn icon @click="toggleFullscreenWindow">
@@ -159,6 +159,8 @@ export default {
 
     .mainboard-window__body {
         height: calc(100% - 40px);
+        position: relative;
+        padding: 0;
     }
 
     .fullscreen {

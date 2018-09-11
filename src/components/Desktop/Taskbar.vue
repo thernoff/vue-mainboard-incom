@@ -14,7 +14,7 @@
             color="primary"
             @click="toggleMinimizedWindow(index, window.minimize)"
         >
-            <span class="taskbar__minimize-window">{{ titleMinimizeWindow(window.title) }}</span>
+            <span class="taskbar__minimize-window" :title="window.title">{{ titleMinimizeWindow(window.title) }}</span>
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn
