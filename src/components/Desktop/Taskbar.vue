@@ -12,7 +12,7 @@
             :key="index"
             v-if="!window.closed"
             color="primary"
-            @click="toggleMinimizeWindow(index)"
+            @click="toggleMinimizedWindow(index, window.minimize)"
         >
             <span class="taskbar__minimize-window">{{ titleMinimizeWindow(window.title) }}</span>
         </v-btn>
@@ -28,8 +28,11 @@
 <script>
 export default {
     methods: {
-        toggleMinimizeWindow(index) {
+        toggleMinimizedWindow(index, minimize) {
             this.$store.commit('toggleMinimizeWindow', index)
+            if (minimize) {
+                this.$store.commit('setActiveWindow', index)
+            }
         },
         toggleVisibleStartMenu() {
             this.$store.dispatch('actionToggleVisibleStartMenu')

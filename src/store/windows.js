@@ -1,8 +1,9 @@
 export default {
     state: {
-        maxZIndex: 5,
+        maxZIndex: 0,
         topPrevWindow: 0,
         leftPrevWindow: 500,
+        activeWindow: null,
         windows: [
             /* {
               title: 'Аналитика нарушений/потока',
@@ -38,9 +39,16 @@ export default {
                 zIndex: state.maxZIndex + 1,
                 minimize: false,
                 fullscreen: false,
-                closed: false
+                closed: false,
+                active: true
             }
-            state.windows.push(newWindow)
+
+            if (state.activeWindow) {
+                state.activeWindow.active = false
+            }
+
+            const length = state.windows.push(newWindow)
+            state.activeWindow = state.windows[length - 1]
 
             state.topPrevWindow += 50
             state.leftPrevWindow += 50
@@ -77,6 +85,31 @@ export default {
 
         fullscreenWindowOff (state, index) {
             state.windows[index].fullscreen = false
+        },
+
+        setActiveWindow (state, index) {
+            state.activeWindow.active = false
+            state.activeWindow = state.windows[index]
+            state.activeWindow.active = true
+
+            state.maxZIndex += 1
+            state.activeWindow.zIndex = state.maxZIndex
+        },
+
+        unsetActiveWindow (state) {
+            state.activeWindow.active = false
+            state.windows.some( (window, index) => {
+                console.log(index, window.minimize)
+                if ( !window.minimize ) {
+                    console.log('index', index)
+                    state.activeWindow = window
+                    state.activeWindow.active = true
+                    return true
+                }
+            })
+
+            state.maxZIndex += 1
+            state.activeWindow.zIndex = state.maxZIndex
         }
     },
     actions: {

@@ -12,30 +12,34 @@
     :class="{'fullscreen': options.fullscreen}"
 >
     <v-card class="mainboard-window__card">
+
     <v-card-title
-        class="headline grey lighten-2 mainboard-window__title"
+        class="headline mainboard-window__title"
+        :class = "{'primary': options.active, 'grey lighten-1': !options.active}"
+        @click="setActiveWindow"
         primary-title
-        v-on:mousedown="down"
-        v-on:mousemove="move"
-        v-on:mouseup="up"
     >
-        {{options.title}}
+        <span >{{ options.title }}</span>
         <v-spacer></v-spacer>
         <v-btn icon>
-            <v-icon>refresh</v-icon>
+            <v-icon color="white">refresh</v-icon>
         </v-btn>
-        <v-btn icon @click="minimizeWindow">
-            <v-icon>minimize</v-icon>
+        <v-btn icon @click.stop="minimizeWindow">
+            <v-icon color="white">minimize</v-icon>
         </v-btn>
         <v-btn icon @click="toggleFullscreenWindow">
-            <v-icon>fullscreen</v-icon>
+            <v-icon color="white">fullscreen</v-icon>
         </v-btn>
         <v-btn icon @click="closeWindow">
-            <v-icon>close</v-icon>
+            <v-icon color="white">close</v-icon>
         </v-btn>
     </v-card-title>
 
     <v-card-text class="mainboard-window__body">
+        <div class="mainboard-window__cover-window"
+            v-if="!options.active"
+            @mousedown="setActiveWindow"
+        ></div>
         <base-mainboard-frame :frameSrc="options.currentUrl"></base-mainboard-frame>
     </v-card-text>
 
@@ -52,24 +56,23 @@ export default {
         baseMainboardFrame: Frame
     },
     methods: {
-        down(event) {
-            console.log(event)
-        },
-        move(event) {
-            console.log(event)
-        },
-        up(event) {
-            console.log(event)
-        },
-        minimizeWindow() {
+        minimizeWindow () {
             this.$store.commit('toggleMinimizeWindow', this.index)
+            console.log('this.options.active', this.options.active)
+            if (this.options.active) {
+                this.$store.commit('unsetActiveWindow')
+            }
         },
-        closeWindow() {
+        closeWindow () {
             //this.$store.commit('closeWindow', this.index)
             this.$store.dispatch('actionCloseWindow', this.index)
         },
-        toggleFullscreenWindow() {
+        toggleFullscreenWindow () {
             this.$store.commit('toggleFullscreenWindow', this.index)
+        },
+        setActiveWindow () {
+            console.log('setActiveWindow')
+            this.$store.commit('setActiveWindow', this.index)
         }
     },
     mounted () {
@@ -136,8 +139,16 @@ export default {
     }
 
     .mainboard-window__card {
+        position: relative;
         width: 100%;
         height: 100%;
+    }
+
+    .mainboard-window__cover-window {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
     }
 
     .mainboard-window__title {
