@@ -45,6 +45,8 @@ export default {
 
         updateWindowSize (state, options) {
             const window = state.windows[options.index]
+            window.top = parseInt(options.top)
+            window.left = parseInt(options.left)
             window.width *= parseFloat(options.coefWidth)
             window.height *= parseFloat(options.coefHeight)
         },

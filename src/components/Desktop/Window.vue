@@ -119,6 +119,8 @@ export default {
                     index: $(this).data('index'),
                     coefWidth: coefWidth,
                     coefHeight: coefHeight,
+                    left: ui.position.left,
+                    top: ui.position.top,
                 }
 
                 self.$store.commit('updateWindowSize', options);
