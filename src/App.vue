@@ -4,11 +4,13 @@
   <v-app>
     <v-navigation-drawer app temporary></v-navigation-drawer>
 
-    <mainboard-toolbar></mainboard-toolbar>
+    <!-- <mainboard-toolbar></mainboard-toolbar> -->
 
     <v-content class="mainboard-workspace">
       <v-container fluid>
-        <mainboard-window
+        <v-layout row wrap>
+
+            <mainboard-window
           v-for="(window, index) in windows"
           v-if="!window.closed"
           v-show="!window.minimize"
@@ -16,6 +18,9 @@
           :index="index"
           :options="window"
         ></mainboard-window>
+
+        </v-layout>
+
         <mainboard-startmenu
           :workspaces="workspaces"
           v-if="visibleStartmenu"

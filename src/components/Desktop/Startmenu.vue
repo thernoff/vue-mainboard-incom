@@ -2,7 +2,7 @@
     <!-- <v-layout row>
     <v-flex xs12 sm6 offset-sm3> -->
       <v-card id="startmenu">
-        <v-toolbar color="light-blue" dark>
+        <v-toolbar color="primary" dark depressed>
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
 
           <v-toolbar-title>My files</v-toolbar-title>

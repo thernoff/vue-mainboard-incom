@@ -15,7 +15,7 @@
 
     <v-card-title
         class="mainboard-window__title"
-        :class = "{'titleActiveWindow': options.active, 'grey lighten-1': !options.active}"
+        :class = "{'indigo lighten-1': options.active, 'indigo lighten-4': !options.active}"
         @mousedown="setActiveWindow"
         primary-title
     >
@@ -58,7 +58,6 @@ export default {
     methods: {
         minimizeWindow () {
             this.$store.commit('toggleMinimizeWindow', this.index)
-            console.log('this.options.active', this.options.active)
             if (this.options.active) {
                 this.$store.commit('unsetActiveWindow')
             }
@@ -89,7 +88,6 @@ export default {
             stop: function (event, ui) {
                 var $window = $(this);
                 $window.find('.mainboard-frame__cover').hide();
-                console.log('$(this).data(index)', $(this).data('index'),);
                 var options = {
                     index: $(this).data('index'),
                     //top: ui.offset.top,
@@ -110,8 +108,20 @@ export default {
                 $window.find('.mainboard-frame__cover').show();
             },
             stop: function (event, ui) {
+                console.log('ui', ui);
                 var $window = $(this);
                 $window.find('.mainboard-frame__cover').hide();
+
+                var coefWidth = ui.size.width / ui.originalSize.width;
+                var coefHeight = ui.size.height / ui.originalSize.height;
+                console.log(coefWidth, coefHeight);
+                var options = {
+                    index: $(this).data('index'),
+                    coefWidth: coefWidth,
+                    coefHeight: coefHeight,
+                }
+
+                self.$store.commit('updateWindowSize', options);
             }
         })
     }
@@ -122,6 +132,10 @@ export default {
     .mainboard-window {
         position: absolute;
         width: 500px;
+        border: 2px solid rgba(92, 107, 192, 0.8);
+        border-radius: 5px;
+        webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
     }
 
     .mainboard-window--top-half {

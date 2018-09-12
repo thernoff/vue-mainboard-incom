@@ -4,26 +4,7 @@ export default {
         topPrevWindow: 50,
         leftPrevWindow: 600,
         activeWindow: null,
-        windows: [
-            /* {
-              title: 'Аналитика нарушений/потока',
-              top: 20,
-              left: 100,
-              width: 24,
-              height: 30,
-              zIndex: 2,
-              currentUrl: 'http://system35.incom-sr.ru/inner.php/apiusers/api/login?uname=azernov&pword=ad09b5e38346118779e518fa4d4f22f7c54da39f&redirurl=aHR0cDovL3N5c3RlbTM1LmluY29tLXNyLnJ1L2lubmVyLnBocC9zcGVlZGNhbXMvYW5hbGl0aWNzLmh0bWw,',
-            },
-            {
-              title: 'Очередь нарушений',
-              top: 220,
-              left: 500,
-              width: 32,
-              height: 41,
-              zIndex: 1,
-              currentUrl: 'http://system35.incom-sr.ru/inner.php/apiusers/api/login?uname=azernov&pword=ad09b5e38346118779e518fa4d4f22f7c54da39f&redirurl=aHR0cDovL3N5c3RlbTM1LmluY29tLXNyLnJ1L2lubmVyLnBocC9zcGVlZGNhbXMvdmlvbGF0aW9ucy9xdWV1ZS8,',
-            } */
-          ]
+        windows: []
     },
     mutations: {
         createNewWindow (state, itemStartMenu) {
@@ -57,14 +38,15 @@ export default {
         },
 
         updateWindowCoords (state, options) {
-            console.log(options)
             const window = state.windows[options.index]
-            //delete(options.index)
-            //Object.assign(window, options)
             window.top += parseInt(options.diffY)
             window.left += parseInt(options.diffX)
+        },
 
-            console.log('update coords state.windows', window)
+        updateWindowSize (state, options) {
+            const window = state.windows[options.index]
+            window.width *= parseFloat(options.coefWidth)
+            window.height *= parseFloat(options.coefHeight)
         },
 
         closeWindow (state, index) {
@@ -77,6 +59,7 @@ export default {
 
         toggleMinimizeWindow (state, index) {
             state.windows[index].minimize = !state.windows[index].minimize
+            //state.windows[index] = {...state.windows[index], minimize: !state.windows[index].minimize}
         },
 
         toggleFullscreenWindow (state, index) {
@@ -99,7 +82,6 @@ export default {
         unsetActiveWindow (state) {
             state.activeWindow.active = false
             state.windows.some( (window, index) => {
-                console.log(index, window.minimize)
                 if ( !window.minimize ) {
                     console.log('index', index)
                     state.activeWindow = window
@@ -119,6 +101,7 @@ export default {
     },
     getters: {
         getWindows(state) {
+            console.log('getWindows')
             return state.windows
         },
 
