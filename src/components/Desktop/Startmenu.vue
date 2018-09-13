@@ -5,13 +5,14 @@
         <v-toolbar color="primary" dark depressed>
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
 
-          <v-toolbar-title>My files</v-toolbar-title>
+          <v-toolbar-title>
+            Гость
+          </v-toolbar-title>
+          <!-- <v-spacer></v-spacer> -->
 
-          <v-spacer></v-spacer>
-
-          <v-btn icon>
+          <!-- <v-btn icon>
             <v-icon>search</v-icon>
-          </v-btn>
+          </v-btn> -->
 
          <!--  <v-btn icon>
             <v-icon>view_module</v-icon>
@@ -19,13 +20,21 @@
         </v-toolbar>
 
         <v-list two-line subheader>
-          <v-subheader inset>Рабочие области</v-subheader>
-
+          <!-- <v-subheader inset>Рабочие области</v-subheader> -->
+          <v-list-tile
+            @click="createNewWorkspace"
+          >
+            <v-list-tile-content>
+              <v-list-tile-title>
+                Создать новую рабочую область
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
           <v-list-tile
             v-for="(workspace, index) in workspaces"
             :key="index"
             avatar
-            @click="''"
+            @click="setActiveWorkspace(index)"
           >
             <v-list-tile-avatar>
               <!-- <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon> -->
@@ -59,10 +68,10 @@
             <v-list-tile
               v-for="(item, index) in items"
               :key="index"
-              @click="''"
+              @click="createNewWindow(index)"
             >
               <v-list-tile-content>
-                <v-list-tile-title @click="createNewWindow(index)">{{ item.title }}</v-list-tile-title>
+                <v-list-tile-title @click="''">{{ item.title }}</v-list-tile-title>
               </v-list-tile-content>
 
             </v-list-tile>
@@ -77,21 +86,43 @@
 <script>
 export default {
     data() {
-        return {
-        }
+      return {}
     },
-    props: ['workspaces'],
+
     methods: {
-      createNewWindow(index) {
+      createNewWorkspace() {
+        //let activeWorkspace = this.$store.commit('createNewWorkspace')
+        this.$store.dispatch('actionCreateNewWorkspace')
+        let windows = this.$store.getters.getWindowsActiveWorkspace
+        //this.$store.commit('setWindows', windows)
+        this.$store.dispatch('actionSetWindows', windows)
+        this.$store.dispatch('actionToggleVisibleStartMenu')
+      },
+
+      setActiveWorkspace (index) {
+        //let activeWorkspace = this.$store.commit('setActiveWorkspace', index)
+        this.$store.dispatch('actionSetActiveWorkspace', index)
+        let windows = this.$store.getters.getWindowsActiveWorkspace
+        //this.$store.commit('setWindows', windows)
+        this.$store.dispatch('actionSetWindows', windows)
+        this.$store.dispatch('actionToggleVisibleStartMenu')
+      },
+
+      createNewWindow (index) {
         const itemStartMenu = this.$store.getters.getItemStartMenu(index)
         this.$store.commit('createNewWindow', itemStartMenu)
         this.$store.dispatch('actionToggleVisibleStartMenu')
       }
     },
+
     computed: {
-      items() {
+      workspaces () {
+        return this.$store.getters.getWorkspaces
+      },
+
+      items () {
         return this.$store.getters.getItems
-      }
+      },
     }
 }
 </script>

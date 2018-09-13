@@ -9,7 +9,7 @@
         zIndex: options.zIndex,
     }"
 
-    :class="{'fullscreen': options.fullscreen}"
+    :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
 >
     <v-card class="mainboard-window__card">
 
@@ -21,16 +21,23 @@
     >
         <span >{{ options.title }}</span>
         <v-spacer></v-spacer>
-        <v-btn icon small class="mainboard-window__btn">
+        <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
+            <v-icon color="white">fas fa-arrows-alt-v</v-icon>
+        </v-btn>
+        <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullwidth')" title="Развернуть по ширине">
+            <v-icon color="white">fas fa-arrows-alt-h</v-icon>
+        </v-btn>
+        <v-btn icon small class="mainboard-window__btn" @click="reloadWindow" title="Перезагрузить окно">
             <v-icon color="white">refresh</v-icon>
         </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click="minimizeWindow" @mousedown.stop="''">
+        <v-btn icon small class="mainboard-window__btn" @click="minimizeWindow" @mousedown.stop="''" title="Свернуть">
             <v-icon color="white">minimize</v-icon>
         </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click="toggleFullscreenWindow">
-            <v-icon color="white">fullscreen</v-icon>
+        <v-btn icon small class="mainboard-window__btn" @click="toggleFullscreenWindow" title="Развернуть на весь экран">
+            <v-icon v-if="!options.fullscreen" color="white">fullscreen</v-icon>
+            <v-icon v-if="options.fullscreen" color="white">fullscreen_exit</v-icon>
         </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click="closeWindow">
+        <v-btn icon small class="mainboard-window__btn" @click="closeWindow" title="Закрыть окно">
             <v-icon color="white">close</v-icon>
         </v-btn>
     </v-card-title>
@@ -40,7 +47,7 @@
             v-if="!options.active"
             @mousedown="setActiveWindow"
         ></div>
-        <base-mainboard-frame :frameSrc="options.currentUrl"></base-mainboard-frame>
+        <base-mainboard-frame ref="baseMainboardFrame" :frameSrc="options.apiLink"></base-mainboard-frame>
     </v-card-text>
 
     <v-divider></v-divider>
@@ -49,11 +56,11 @@
 </template>
 
 <script>
-import Frame from '../Base/BaseFrame'
+import baseMainboardFrame from '../Base/BaseFrame'
 export default {
     props: ['options', 'index'],
     components: {
-        baseMainboardFrame: Frame
+        baseMainboardFrame,
     },
     methods: {
         minimizeWindow () {
@@ -61,6 +68,12 @@ export default {
             if (this.options.active) {
                 this.$store.commit('unsetActiveWindow')
             }
+        },
+        toggleClassWindow (classCss) {
+            this.$store.commit('toggleClassWindow', {index: this.index, classCss: classCss})
+        },
+        reloadWindow () {
+            this.$refs.baseMainboardFrame.$refs.baseFrame.src = this.options.apiLink
         },
         closeWindow () {
             //this.$store.commit('closeWindow', this.index)
@@ -80,13 +93,21 @@ export default {
         .draggable({
             handle: '.mainboard-window__title',
             containment: '.mainboard-workspace',
+            snap: ".mainboard-window",
             start: function(event, ui) {
                 var $window = $(this);
                 //$window.find('.mainboard-frame__cover').css({display: 'block'});
                 $window.find('.mainboard-frame__cover').show();
             },
             stop: function (event, ui) {
+                console.log('ui', ui)
                 var $window = $(this);
+                var offset = $window.offset();
+                var top = offset.top;
+                var left = offset.left;
+                var bottom = top + $window.outerHeight();
+                var right = left + $window.outerWidth();
+                console.log(left, top, right, bottom);
                 $window.find('.mainboard-frame__cover').hide();
                 var options = {
                     index: $(this).data('index'),
@@ -102,6 +123,10 @@ export default {
         .resizable({
             handles: 'e, s, n, w',
             containment: '.mainboard-workspace',
+            grid: 20,
+            iframeFix: true,
+            minHeight: 150,
+            minWidth: 300,
             start: function(event, ui) {
                 var $window = $(this);
                 //$window.find('.mainboard-frame__cover').css({display: 'block'});
@@ -138,6 +163,15 @@ export default {
         border-radius: 5px;
         webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
         box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
+    }
+
+    .mainboard-window--fullheight {
+        top: 0px !important;
+        height: 100% !important;
+    }
+
+    .mainboard-window--fullwidth {
+        width: 100% !important;
     }
 
     .mainboard-window--top-half {

@@ -4,17 +4,17 @@
   <v-app>
     <v-navigation-drawer app temporary></v-navigation-drawer>
 
-    <!-- <mainboard-toolbar></mainboard-toolbar> -->
+    <mainboard-toolbar></mainboard-toolbar>
 
     <v-content class="mainboard-workspace">
-      <v-container fluid>
+      <!-- <v-container fluid> -->
         <v-layout row wrap>
 
-            <mainboard-window
+        <mainboard-window
           v-for="(window, index) in windows"
           v-if="!window.closed"
           v-show="!window.minimize"
-          :key="index"
+          :key="window.id"
           :index="index"
           :options="window"
         ></mainboard-window>
@@ -22,11 +22,10 @@
         </v-layout>
 
         <mainboard-startmenu
-          :workspaces="workspaces"
           v-if="visibleStartmenu"
         ></mainboard-startmenu>
         <!-- <router-view></router-view> -->
-      </v-container>
+      <!-- </v-container> -->
     </v-content>
 
     <!-- <v-footer app dark color="primary"></v-footer> -->
@@ -44,41 +43,46 @@ import Window from './components/Desktop/Window'
 export default {
   data () {
     return {
-      counter: 0,
-      workspaces: [
-          {
-              title: 'Тестовая область 1',
-              description: ''
-          },
-          {
-              title: 'Тестовая область 2',
-              description: ''
-          },
-          {
-              title: 'Тестовая область 3',
-              description: ''
-          }
-      ],
     }
   },
+
   components: {
     mainboardTaskbar: Taskbar,
     mainboardToolbar: Toolbar,
     mainboardStartmenu: Startmenu,
     mainboardWindow: Window
   },
+
   computed: {
-    visibleStartmenu() {
+    visibleStartmenu () {
       return this.$store.getters.visibleStartmenu
     },
-    windows() {
+
+    windows () {
       return this.$store.getters.getWindows
-    }
+    },
+
   },
+
   methods: {
     toggleVisibleStartMenu() {
         this.$store.dispatch('actionToggleVisibleStartMenu')
+    },
+
+    getWindows () {
+      return this.$store.getters.getWindows
     }
+  },
+
+  beforeCreate () {
+    this.$store.commit('setActiveWorkspace')
+    let activeWorkspace = this.$store.getters.getActiveWorkspace
+    this.$store.commit('setWindows', activeWorkspace.windows)
+  },
+
+  updated() {
+    let d = this.$store.getters.getWindowsActiveWorkspace
+    console.log('activeWorkspace', d)
   },
   name: 'App'
 }

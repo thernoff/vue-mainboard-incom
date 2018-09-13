@@ -56,12 +56,13 @@ export default {
             }
     },
     computed: {
-        minimizeWindows() {
+        minimizeWindows () {
             return this.$store.getters.getMinimizeWindows
         },
-        windows() {
+
+        windows () {
             return this.$store.getters.getWindows
-        }
+        },
     }
 }
 </script>

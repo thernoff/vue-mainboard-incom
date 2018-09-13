@@ -1,3 +1,15 @@
+function getRandomId () {
+    var id = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 10; i++) {
+        id += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    id += Math.floor(Date.now() / 1000)
+    return id;
+};
+
 export default {
     state: {
         maxZIndex: 0,
@@ -7,12 +19,20 @@ export default {
         windows: []
     },
     mutations: {
+        setWindows (state, windows) {
+            state.windows = windows
+        },
+
         createNewWindow (state, itemStartMenu) {
             const title = itemStartMenu.title
-            const url = itemStartMenu.url
+            const apiLink = itemStartMenu.apiLink
+            //const id = Math.random()
+            const id = getRandomId()
+            console.log('id', id)
             const newWindow = {
+                id,
                 title,
-                currentUrl: url,
+                apiLink,
                 top: state.topPrevWindow,
                 left: state.leftPrevWindow,
                 width: 40,
@@ -21,7 +41,8 @@ export default {
                 minimize: false,
                 fullscreen: false,
                 closed: false,
-                active: true
+                active: true,
+                classesCss: [],
             }
 
             if (state.activeWindow) {
@@ -33,8 +54,6 @@ export default {
 
             state.topPrevWindow += 50
             state.leftPrevWindow += 50
-
-            console.log('create state.windows', newWindow)
         },
 
         updateWindowCoords (state, options) {
@@ -49,6 +68,17 @@ export default {
             window.left = parseInt(options.left)
             window.width *= parseFloat(options.coefWidth)
             window.height *= parseFloat(options.coefHeight)
+        },
+
+        toggleClassWindow (state, data) {
+            let classesCss = state.windows[data.index].classesCss
+            let i = classesCss.indexOf(data.classCss)
+            if ( i > -1 ) {
+                classesCss.splice(i, 1)
+            } else {
+                classesCss.push(data.classCss)
+            }
+            console.log(i,classesCss)
         },
 
         closeWindow (state, index) {
@@ -97,13 +127,16 @@ export default {
         }
     },
     actions: {
-        actionCloseWindow({commit}, index) {
+        actionCloseWindow ({commit}, index) {
             commit('closeWindow', index)
+        },
+
+        actionSetWindows ({commit}, windows) {
+            commit('setWindows', windows)
         },
     },
     getters: {
         getWindows(state) {
-            console.log('getWindows')
             return state.windows
         },
 
