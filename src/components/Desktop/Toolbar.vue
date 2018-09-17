@@ -1,6 +1,11 @@
 <template>
-    <v-toolbar
+    <!-- <v-toolbar
       app
+      dark
+      color="primary"
+      height="40"
+    > -->
+    <v-toolbar
       dark
       color="primary"
       height="40"
@@ -18,13 +23,12 @@
 <script>
 export default {
   computed: {
-    titleActiveWorkspace () {
-      return this.$store.getters.getTitleActiveWorkspace
+    titleActiveWorkspace() {
+      return this.$store.getters.getTitleActiveWorkspace;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-
 </style>

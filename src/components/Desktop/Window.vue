@@ -56,178 +56,188 @@
 </template>
 
 <script>
-import baseMainboardFrame from '../Base/BaseFrame'
+import baseMainboardFrame from "../Base/BaseFrame";
 export default {
-    props: ['options', 'index'],
-    components: {
-        baseMainboardFrame,
+  props: ["options", "index"],
+  components: {
+    baseMainboardFrame
+  },
+  methods: {
+    minimizeWindow() {
+      this.$store.commit("toggleMinimizeWindow", this.index);
+      if (this.options.active) {
+        this.$store.commit("unsetActiveWindow");
+      }
     },
-    methods: {
-        minimizeWindow () {
-            this.$store.commit('toggleMinimizeWindow', this.index)
-            if (this.options.active) {
-                this.$store.commit('unsetActiveWindow')
-            }
-        },
-        toggleClassWindow (classCss) {
-            this.$store.commit('toggleClassWindow', {index: this.index, classCss: classCss})
-        },
-        reloadWindow () {
-            this.$refs.baseMainboardFrame.$refs.baseFrame.src = this.options.apiLink
-        },
-        closeWindow () {
-            //this.$store.commit('closeWindow', this.index)
-            this.$store.dispatch('actionCloseWindow', this.index)
-        },
-        toggleFullscreenWindow () {
-            this.$store.commit('toggleFullscreenWindow', this.index)
-        },
-        setActiveWindow () {
-            console.log('setActiveWindow')
-            this.$store.commit('setActiveWindow', this.index)
-        }
+    toggleClassWindow(classCss) {
+      this.$store.commit("toggleClassWindow", {
+        index: this.index,
+        classCss: classCss
+      });
     },
-    mounted () {
-        var self = this;
-        $('.mainboard-window')
-        .draggable({
-            handle: '.mainboard-window__title',
-            containment: '.mainboard-workspace',
-            snap: ".mainboard-window",
-            start: function(event, ui) {
-                var $window = $(this);
-                //$window.find('.mainboard-frame__cover').css({display: 'block'});
-                $window.find('.mainboard-frame__cover').show();
-            },
-            stop: function (event, ui) {
-                console.log('ui', ui)
-                var $window = $(this);
-                var offset = $window.offset();
-                var top = offset.top;
-                var left = offset.left;
-                var bottom = top + $window.outerHeight();
-                var right = left + $window.outerWidth();
-                console.log(left, top, right, bottom);
-                $window.find('.mainboard-frame__cover').hide();
-                var options = {
-                    index: $(this).data('index'),
-                    //top: ui.offset.top,
-                    //left: ui.offset.left
-                    diffX: ui.position.left - ui.originalPosition.left,
-                    diffY: ui.position.top - ui.originalPosition.top,
-                }
-
-                self.$store.commit('updateWindowCoords', options);
-            }
-        })
-        .resizable({
-            handles: 'e, s, n, w',
-            containment: '.mainboard-workspace',
-            grid: 20,
-            iframeFix: true,
-            minHeight: 150,
-            minWidth: 300,
-            start: function(event, ui) {
-                var $window = $(this);
-                //$window.find('.mainboard-frame__cover').css({display: 'block'});
-                $window.find('.mainboard-frame__cover').show();
-            },
-            stop: function (event, ui) {
-                console.log('ui', ui);
-                var $window = $(this);
-                $window.find('.mainboard-frame__cover').hide();
-
-                var coefWidth = ui.size.width / ui.originalSize.width;
-                var coefHeight = ui.size.height / ui.originalSize.height;
-                console.log(coefWidth, coefHeight);
-                var options = {
-                    index: $(this).data('index'),
-                    coefWidth: coefWidth,
-                    coefHeight: coefHeight,
-                    left: ui.position.left,
-                    top: ui.position.top,
-                }
-
-                self.$store.commit('updateWindowSize', options);
-            }
-        })
+    reloadWindow() {
+      this.$refs.baseMainboardFrame.$refs.baseFrame.src = this.options.apiLink;
+    },
+    closeWindow() {
+      //this.$store.commit('closeWindow', this.index)
+      this.$store.dispatch("actionCloseWindow", this.index);
+    },
+    toggleFullscreenWindow() {
+      this.$store.commit("toggleFullscreenWindow", this.index);
+    },
+    setActiveWindow() {
+      console.log("setActiveWindow");
+      this.$store.commit("setActiveWindow", this.index);
     }
-}
+  },
+  mounted() {
+    var self = this;
+    var countRows = self.$store.getters.getCountRows;
+    var countColumns = self.$store.getters.getCountColumns;
+    console.log("widhtGrid", self.$store.getters.getWidthGrid);
+    console.log("heightGrid", self.$store.getters.getHeightGrid);
+    $(".mainboard-window")
+      .draggable({
+        handle: ".mainboard-window__title",
+        containment: ".mainboard-workspace",
+        snap: ".mainboard-window",
+        start: function(event, ui) {
+          var $window = $(this);
+          //$window.find('.mainboard-frame__cover').css({display: 'block'});
+          $window.find(".mainboard-frame__cover").show();
+        },
+        stop: function(event, ui) {
+          console.log("ui", ui);
+          var $window = $(this);
+          console.log("$window.outerWidth", $window.outerWidth());
+          console.log("$window.outerHeight", $window.outerHeight());
+          var offset = $window.offset();
+          var top = offset.top;
+          var left = offset.left;
+          var bottom = top + $window.outerHeight();
+          var right = left + $window.outerWidth();
+          console.log(left, top, right, bottom);
+
+          $window.find(".mainboard-frame__cover").hide();
+          var options = {
+            index: $(this).data("index"),
+            top: ui.position.top,
+            left: ui.position.left,
+            diffX: ui.position.left - ui.originalPosition.left,
+            diffY: ui.position.top - ui.originalPosition.top
+          };
+
+          self.$store.dispatch("actionUpdateWindowCoords", options);
+        }
+      })
+      .resizable({
+        handles: "e, s, n, w",
+        containment: ".mainboard-workspace",
+        //grid: 20,
+        iframeFix: true,
+        minHeight: 150,
+        minWidth: 300,
+        start: function(event, ui) {
+          var $window = $(this);
+          //$window.find('.mainboard-frame__cover').css({display: 'block'});
+          $window.find(".mainboard-frame__cover").show();
+        },
+        stop: function(event, ui) {
+          console.log("ui", ui);
+          var $window = $(this);
+          $window.find(".mainboard-frame__cover").hide();
+
+          var coefWidth = ui.size.width / ui.originalSize.width;
+          var coefHeight = ui.size.height / ui.originalSize.height;
+          console.log(coefWidth, coefHeight);
+          var options = {
+            index: $(this).data("index"),
+            coefWidth: coefWidth,
+            coefHeight: coefHeight,
+            left: ui.position.left,
+            top: ui.position.top
+          };
+
+          self.$store.commit("updateWindowSize", options);
+        }
+      });
+  }
+};
 </script>
 
 <style scoped>
-    .mainboard-window {
-        position: absolute;
-        width: 500px;
-        border: 2px solid rgba(92, 107, 192, 0.8);
-        border-radius: 5px;
-        webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
-        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
-    }
+.mainboard-window {
+  position: absolute;
+  width: 500px;
+  border: 2px solid rgba(92, 107, 192, 0.8);
+  border-radius: 5px;
+  webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
+}
 
-    .mainboard-window--fullheight {
-        top: 0px !important;
-        height: 100% !important;
-    }
+.mainboard-window--fullheight {
+  top: 0px !important;
+  height: 100% !important;
+}
 
-    .mainboard-window--fullwidth {
-        width: 100% !important;
-    }
+.mainboard-window--fullwidth {
+  width: 100% !important;
+}
 
-    .mainboard-window--top-half {
-        top: 0px !important;
-        left: 0px !important;
-        width: 100% !important;
-        height: 50% !important;
-    }
+.mainboard-window--top-half {
+  top: 0px !important;
+  left: 0px !important;
+  width: 100% !important;
+  height: 50% !important;
+}
 
-    .mainboard-window--bottom-half {
-        bottom: 0px !important;
-        left: 0px !important;
-        width: 100% !important;
-        height: 50% !important;
-    }
+.mainboard-window--bottom-half {
+  bottom: 0px !important;
+  left: 0px !important;
+  width: 100% !important;
+  height: 50% !important;
+}
 
-    .mainboard-window__card {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
+.mainboard-window__card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
-    .mainboard-window__cover-window {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 10;
-    }
+.mainboard-window__cover-window {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
 
-    .mainboard-window__title {
-        font-size: 16px;
-        color:#fff;
-        cursor: move;
-        padding: 5px;
-        height: 30px;
-    }
+.mainboard-window__title {
+  font-size: 16px;
+  color: #fff;
+  cursor: move;
+  padding: 5px;
+  height: 30px;
+}
 
-    .mainboard-window__btn {
-        margin: 0;
-    }
+.mainboard-window__btn {
+  margin: 0;
+}
 
-    .mainboard-window__body {
-        height: calc(100% - 40px);
-        position: relative;
-        padding: 0;
-    }
+.mainboard-window__body {
+  height: calc(100% - 40px);
+  position: relative;
+  padding: 0;
+}
 
-    .fullscreen {
-        position: absolute !important;
-        z-index: 1000;
-        width: 100% !important;
-        height: 100% !important;
-        top: 0!important;
-        left: 0!important;
-        bottom: 0!important;
-        right: 0!important;
-    }
+.fullscreen {
+  position: absolute !important;
+  z-index: 1000;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
 </style>
 

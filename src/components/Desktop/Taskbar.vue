@@ -1,5 +1,6 @@
 <template>
-  <v-footer app dark color="primary">
+  <!-- <v-footer app dark color="primary"> -->
+    <v-footer dark color="primary">
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
       <v-btn
           color="primary"
@@ -32,47 +33,47 @@
 
 <script>
 export default {
-    data() {
-        return {
-            //windows: this.getWindows()
-        }
+  data() {
+    return {
+      //windows: this.getWindows()
+    };
+  },
+  methods: {
+    toggleMinimizedWindow(index, minimize) {
+      console.log("minimize", minimize);
+      this.$store.commit("toggleMinimizeWindow", index);
+      if (minimize) {
+        this.$store.commit("setActiveWindow", index);
+      }
     },
-    methods: {
-        toggleMinimizedWindow(index, minimize) {
-            console.log('minimize', minimize)
-            this.$store.commit('toggleMinimizeWindow', index)
-                if (minimize) {
-                    this.$store.commit('setActiveWindow', index)
-                }
-            },
-            toggleVisibleStartMenu() {
-                this.$store.dispatch('actionToggleVisibleStartMenu')
-            },
-            titleMinimizeWindow(title) {
-                return (title.length < 10) ? title : title.substr(0, 10) + '...'
-            },
-            getWindows() {
-                return this.$store.getters.getWindows
-            }
+    toggleVisibleStartMenu() {
+      this.$store.dispatch("actionToggleVisibleStartMenu");
     },
-    computed: {
-        minimizeWindows () {
-            return this.$store.getters.getMinimizeWindows
-        },
-
-        windows () {
-            return this.$store.getters.getWindows
-        },
+    titleMinimizeWindow(title) {
+      return title.length < 10 ? title : title.substr(0, 10) + "...";
+    },
+    getWindows() {
+      return this.$store.getters.getWindows;
     }
-}
+  },
+  computed: {
+    minimizeWindows() {
+      return this.$store.getters.getMinimizeWindows;
+    },
+
+    windows() {
+      return this.$store.getters.getWindows;
+    }
+  }
+};
 </script>
 
 <style scoped>
-    .taskbar__minimize-window {
-        max-width: 85px;
-        overflow: hidden;
-        font-size: 12px;
-    }
+.taskbar__minimize-window {
+  max-width: 85px;
+  overflow: hidden;
+  font-size: 12px;
+}
 </style>
 
 

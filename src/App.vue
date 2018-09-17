@@ -1,26 +1,22 @@
 <template>
-<div class="mainboard">
-  <div class="mainboard-cover" v-if="visibleStartmenu" @click="toggleVisibleStartMenu"></div>
-  <v-app>
-    <v-navigation-drawer app temporary></v-navigation-drawer>
-
-    <mainboard-toolbar></mainboard-toolbar>
+  <v-app class="mainboard">
+    <div class="mainboard-cover" v-if="visibleStartmenu" @click="toggleVisibleStartMenu"></div>
+    <!-- <v-navigation-drawer app temporary></v-navigation-drawer> -->
+    <mainboard-toolbar class="mainboard-toolbar"></mainboard-toolbar>
 
     <v-content class="mainboard-workspace">
       <!-- <v-container fluid> -->
-        <v-layout row wrap>
-
-        <mainboard-window
-          v-for="(window, index) in windows"
-          v-if="!window.closed"
-          v-show="!window.minimize"
-          :key="window.id"
-          :index="index"
-          :options="window"
-        ></mainboard-window>
-
-        </v-layout>
-
+        <mainboard-grid ref="grid"></mainboard-grid>
+          <v-layout row wrap>
+            <mainboard-window
+              v-for="(window, index) in windows"
+              v-if="!window.closed"
+              v-show="!window.minimize"
+              :key="window.id"
+              :index="index"
+              :options="window"
+            ></mainboard-window>
+          </v-layout>
         <mainboard-startmenu
           v-if="visibleStartmenu"
         ></mainboard-startmenu>
@@ -29,79 +25,101 @@
     </v-content>
 
     <!-- <v-footer app dark color="primary"></v-footer> -->
-    <mainboard-taskbar></mainboard-taskbar>
+    <mainboard-taskbar class="mainboard-taskbar"></mainboard-taskbar>
   </v-app>
-</div>
+
 
 </template>
 
 <script>
-import Taskbar from './components/Desktop/Taskbar'
-import Toolbar from './components/Desktop/Toolbar'
-import Startmenu from './components/Desktop/Startmenu'
-import Window from './components/Desktop/Window'
+import Taskbar from "./components/Desktop/Taskbar";
+import Toolbar from "./components/Desktop/Toolbar";
+import Startmenu from "./components/Desktop/Startmenu";
+import Window from "./components/Desktop/Window";
+import Grid from "./components/Desktop/Grid";
+
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
 
   components: {
     mainboardTaskbar: Taskbar,
     mainboardToolbar: Toolbar,
     mainboardStartmenu: Startmenu,
-    mainboardWindow: Window
+    mainboardWindow: Window,
+    mainboardGrid: Grid
   },
 
   computed: {
-    visibleStartmenu () {
-      return this.$store.getters.visibleStartmenu
+    visibleStartmenu() {
+      return this.$store.getters.visibleStartmenu;
     },
 
-    windows () {
-      return this.$store.getters.getWindows
-    },
-
+    windows() {
+      return this.$store.getters.getWindows;
+    }
   },
 
   methods: {
     toggleVisibleStartMenu() {
-        this.$store.dispatch('actionToggleVisibleStartMenu')
+      this.$store.dispatch("actionToggleVisibleStartMenu");
     },
 
-    getWindows () {
-      return this.$store.getters.getWindows
+    getWindows() {
+      return this.$store.getters.getWindows;
     }
   },
 
-  beforeCreate () {
-    this.$store.commit('setActiveWorkspace')
-    let activeWorkspace = this.$store.getters.getActiveWorkspace
-    this.$store.commit('setWindows', activeWorkspace.windows)
+  beforeCreate() {
+    this.$store.commit("setActiveWorkspace");
+    let activeWorkspace = this.$store.getters.getActiveWorkspace;
+    this.$store.commit("setWindows", activeWorkspace.windows);
+  },
+
+  mounted() {
+    this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
+    console.log("this.$refs.grid", this.$refs.grid.$el);
+    console.log(
+      "this.$refs.grid.$el.clientHeight",
+      this.$refs.grid.$el.clientHeight
+    );
+    this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
   },
 
   updated() {
-    let d = this.$store.getters.getWindowsActiveWorkspace
-    console.log('activeWorkspace', d)
+    let d = this.$store.getters.getWindowsActiveWorkspace;
+    console.log("activeWorkspace", d);
   },
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
 <style scoped>
 .mainboard {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
-  .mainboard-workspace {
-    overflow: hidden;
-  }
+.mainboard-workspace {
+  position: relative;
+  /* height: 100%; */
+  overflow: hidden;
+}
 
-  .mainboard-cover {
-    position: absolute;
-    width: 100%;
-    height: 100vh;
-    z-index: 10;
-  }
+.mainboard-cover {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+}
+
+/* .mainboard-toolbar {
+  position: relative;
+}
+
+.mainboard-taskbar {
+  position: relative;
+} */
 </style>

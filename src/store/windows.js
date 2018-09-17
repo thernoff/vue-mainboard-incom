@@ -1,4 +1,4 @@
-function getRandomId () {
+function getRandomId() {
     var id = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -19,11 +19,11 @@ export default {
         windows: []
     },
     mutations: {
-        setWindows (state, windows) {
+        setWindows(state, windows) {
             state.windows = windows
         },
 
-        createNewWindow (state, itemStartMenu) {
+        createNewWindow(state, itemStartMenu) {
             const title = itemStartMenu.title
             const apiLink = itemStartMenu.apiLink
             //const id = Math.random()
@@ -56,13 +56,15 @@ export default {
             state.leftPrevWindow += 50
         },
 
-        updateWindowCoords (state, options) {
+        updateWindowCoords(state, options) {
             const window = state.windows[options.index]
-            window.top += parseInt(options.diffY)
-            window.left += parseInt(options.diffX)
+            //window.top += parseInt(options.diffY)
+            //window.left += parseInt(options.diffX)
+            window.top = parseFloat(options.top)
+            window.left = parseFloat(options.left)
         },
 
-        updateWindowSize (state, options) {
+        updateWindowSize(state, options) {
             const window = state.windows[options.index]
             window.top = parseInt(options.top)
             window.left = parseInt(options.left)
@@ -70,39 +72,39 @@ export default {
             window.height *= parseFloat(options.coefHeight)
         },
 
-        toggleClassWindow (state, data) {
+        toggleClassWindow(state, data) {
             let classesCss = state.windows[data.index].classesCss
             let i = classesCss.indexOf(data.classCss)
-            if ( i > -1 ) {
+            if (i > -1) {
                 classesCss.splice(i, 1)
             } else {
                 classesCss.push(data.classCss)
             }
-            console.log(i,classesCss)
+            console.log(i, classesCss)
         },
 
-        closeWindow (state, index) {
+        closeWindow(state, index) {
             state.windows[index].closed = true
         },
 
-        minimizeWindow (state, index) {
+        minimizeWindow(state, index) {
             state.windows[index].minimize = true
         },
 
-        toggleMinimizeWindow (state, index) {
+        toggleMinimizeWindow(state, index) {
             state.windows[index].minimize = !state.windows[index].minimize
             //state.windows[index] = {...state.windows[index], minimize: !state.windows[index].minimize}
         },
 
-        toggleFullscreenWindow (state, index) {
+        toggleFullscreenWindow(state, index) {
             state.windows[index].fullscreen = !state.windows[index].fullscreen
         },
 
-        fullscreenWindowOff (state, index) {
+        fullscreenWindowOff(state, index) {
             state.windows[index].fullscreen = false
         },
 
-        setActiveWindow (state, index) {
+        setActiveWindow(state, index) {
             state.activeWindow.active = false
             state.activeWindow = state.windows[index]
             state.activeWindow.active = true
@@ -111,10 +113,10 @@ export default {
             state.activeWindow.zIndex = state.maxZIndex
         },
 
-        unsetActiveWindow (state) {
+        unsetActiveWindow(state) {
             state.activeWindow.active = false
-            state.windows.some( (window, index) => {
-                if ( !window.minimize ) {
+            state.windows.some((window, index) => {
+                if (!window.minimize) {
                     console.log('index', index)
                     state.activeWindow = window
                     state.activeWindow.active = true
@@ -127,13 +129,23 @@ export default {
         }
     },
     actions: {
-        actionCloseWindow ({commit}, index) {
+        actionCloseWindow({ commit }, index) {
             commit('closeWindow', index)
         },
 
-        actionSetWindows ({commit}, windows) {
+        actionSetWindows({ commit }, windows) {
             commit('setWindows', windows)
         },
+
+        actionUpdateWindowCoords({ commit, rootState }, options) {
+            const modeGrid = rootState.grid.modeGrid
+            const countColumns = rootState.grid.countColumns
+            const countRows = rootState.grid.countRows
+            const widthGrid = rootState.grid.widthGrid
+            const heightGrid = rootState.grid.heightGrid
+            console.log(widthGrid, heightGrid)
+            commit('updateWindowCoords', options)
+        }
     },
     getters: {
         getWindows(state) {
