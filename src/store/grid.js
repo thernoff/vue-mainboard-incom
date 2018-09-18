@@ -1,8 +1,8 @@
 export default {
   state: {
     modeGrid: true,
-    countRows: 12,
-    countColumns: 24,
+    countRows: 16,
+    countColumns: 32,
     grid: [10, 5],
     widthGrid: 0,
     heightGrid: 0,
@@ -15,6 +15,10 @@ export default {
     setHeightGrid(state, heightGrid) {
       state.heightGrid = heightGrid
     },
+
+    toggleModeGrid(state) {
+      state.modeGrid = !state.modeGrid
+    }
   },
   actions: {
 

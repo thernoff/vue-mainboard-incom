@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 function getRandomId() {
     var id = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -57,19 +59,27 @@ export default {
         },
 
         updateWindowCoords(state, options) {
-            const window = state.windows[options.index]
+            let window = state.windows[options.index]
             //window.top += parseInt(options.diffY)
             //window.left += parseInt(options.diffX)
-            window.top = parseFloat(options.top)
-            window.left = parseFloat(options.left)
+            //Vue.set(window, 'left', +options.left)
+            //Vue.set(window, 'top', +options.top)
+            //Vue.set(window, 'left', +options.left)
+            //Vue.set(window, 'top', +options.top)
+            window.top = +options.top
+            window.left = +options.left
+            //state.obj = { ...state.obj, newProp: 123 };
+            //state.windows[options.index] = { ...state.windows[options.index], top: +options.top, left: +options.left };
         },
 
         updateWindowSize(state, options) {
             const window = state.windows[options.index]
-            window.top = parseInt(options.top)
-            window.left = parseInt(options.left)
-            window.width *= parseFloat(options.coefWidth)
-            window.height *= parseFloat(options.coefHeight)
+            //window.top = +options.top
+            //window.left = +options.left
+            //window.width *= parseFloat(options.coefWidth)
+            //window.height *= parseFloat(options.coefHeight)
+            window.width = +options.width
+            window.height = +options.height
         },
 
         toggleClassWindow(state, data) {
@@ -138,14 +148,68 @@ export default {
         },
 
         actionUpdateWindowCoords({ commit, rootState }, options) {
-            const modeGrid = rootState.grid.modeGrid
-            const countColumns = rootState.grid.countColumns
-            const countRows = rootState.grid.countRows
+            commit('updateWindowCoords', options)
+            if (rootState.grid.modeGrid) {
+                //console.log('old left', options.left, 'old top', options.top)
+                const countColumns = rootState.grid.countColumns
+                const widthGrid = rootState.grid.widthGrid
+                const widthOneColumn = widthGrid / countColumns
+                options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+
+                const countRows = rootState.grid.countRows
+                const heightGrid = rootState.grid.heightGrid
+                const heightOneRow = heightGrid / countRows
+                options.top = Math.floor(options.top / heightOneRow) * heightOneRow
+
+                options.width = 100 * options.width / widthGrid
+                options.height = 100 * options.height / heightGrid
+
+                const widthColumnPercent = 100 / countColumns
+                options.width = Math.ceil(options.width / widthColumnPercent) * (widthColumnPercent)
+
+                const heightRowPercent = 100 / countRows
+                options.height = Math.ceil(options.height / heightRowPercent) * (heightRowPercent)
+
+                setTimeout(function () {
+                    commit('updateWindowSize', options)
+                    commit('updateWindowCoords', options)
+                }, 1)
+            }
+        },
+
+        actionUpdateWindowSize({ commit, rootState }, options) {
             const widthGrid = rootState.grid.widthGrid
             const heightGrid = rootState.grid.heightGrid
-            console.log(widthGrid, heightGrid)
+            options.width = 100 * options.width / widthGrid
+            options.height = 100 * options.height / heightGrid
             commit('updateWindowCoords', options)
-        }
+            commit('updateWindowSize', options)
+
+            if (rootState.grid.modeGrid) {
+                //console.log('old left', options.left, 'old top', options.top)
+                const countColumns = rootState.grid.countColumns
+                const widthGrid = rootState.grid.widthGrid
+                const widthOneColumn = widthGrid / countColumns
+                options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+
+                const countRows = rootState.grid.countRows
+                const heightGrid = rootState.grid.heightGrid
+                const heightOneRow = heightGrid / countRows
+                options.top = Math.floor(options.top / heightOneRow) * heightOneRow
+
+                const widthColumnPercent = 100 / countColumns
+                options.width = Math.ceil(options.width / widthColumnPercent) * (widthColumnPercent)
+
+                const heightRowPercent = 100 / countRows
+                options.height = Math.ceil(options.height / heightRowPercent) * (heightRowPercent)
+
+                console.log('actionUpdateWindowSize', options.width)
+                setTimeout(function () {
+                    commit('updateWindowCoords', options)
+                    commit('updateWindowSize', options)
+                }, 1)
+            }
+        },
     },
     getters: {
         getWindows(state) {

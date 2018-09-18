@@ -1,13 +1,17 @@
 <template>
+
   <v-app class="mainboard">
     <div class="mainboard-cover" v-if="visibleStartmenu" @click="toggleVisibleStartMenu"></div>
     <!-- <v-navigation-drawer app temporary></v-navigation-drawer> -->
     <mainboard-toolbar class="mainboard-toolbar"></mainboard-toolbar>
 
-    <v-content class="mainboard-workspace">
+    <div class="mainboard-workspace">
       <!-- <v-container fluid> -->
-        <mainboard-grid ref="grid"></mainboard-grid>
-          <v-layout row wrap>
+        <mainboard-grid
+          v-if="isModeGrid"
+          ref="grid"
+        ></mainboard-grid>
+          <!-- <v-layout row wrap> -->
             <mainboard-window
               v-for="(window, index) in windows"
               v-if="!window.closed"
@@ -16,15 +20,13 @@
               :index="index"
               :options="window"
             ></mainboard-window>
-          </v-layout>
+          <!-- </v-layout> -->
         <mainboard-startmenu
           v-if="visibleStartmenu"
         ></mainboard-startmenu>
         <!-- <router-view></router-view> -->
       <!-- </v-container> -->
-    </v-content>
-
-    <!-- <v-footer app dark color="primary"></v-footer> -->
+    </div>
     <mainboard-taskbar class="mainboard-taskbar"></mainboard-taskbar>
   </v-app>
 
@@ -37,6 +39,7 @@ import Toolbar from "./components/Desktop/Toolbar";
 import Startmenu from "./components/Desktop/Startmenu";
 import Window from "./components/Desktop/Window";
 import Grid from "./components/Desktop/Grid";
+import ResizableBlock from "./components/Desktop/ResizableBlock";
 
 export default {
   data() {
@@ -48,7 +51,8 @@ export default {
     mainboardToolbar: Toolbar,
     mainboardStartmenu: Startmenu,
     mainboardWindow: Window,
-    mainboardGrid: Grid
+    mainboardGrid: Grid,
+    mainboardResizableBlock: ResizableBlock
   },
 
   computed: {
@@ -58,6 +62,10 @@ export default {
 
     windows() {
       return this.$store.getters.getWindows;
+    },
+
+    isModeGrid() {
+      return this.$store.getters.isModeGrid;
     }
   },
 
@@ -104,7 +112,8 @@ export default {
 
 .mainboard-workspace {
   position: relative;
-  /* height: 100%; */
+  width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 

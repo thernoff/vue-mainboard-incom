@@ -12,11 +12,11 @@
           'background-color': '#ead8d8',
           'float': 'left',
           'width': widthGridCell + '%',
-          'border': '1px solid #cabcbc',
+          'border': '1px dashed #cabcbc',
           'height': '100%'
         }"
       >
-        {{y}}, {{x}}
+
       </div>
     </div>
   </div>

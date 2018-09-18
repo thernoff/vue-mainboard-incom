@@ -4,14 +4,29 @@
     :style="{
         top: options.top + 'px',
         left: options.left + 'px',
+        width: Math.floor(widthGrid * options.width / 100) + 'px',
+        height: Math.floor(heightGrid * options.height / 100) + 'px',
+        zIndex: options.zIndex,
+    }"
+
+    :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
+>
+<!-- <div class="mainboard-window"
+    :data-index="index"
+    :style="{
+        top: options.top + 'px',
+        left: options.left + 'px',
         width: options.width + '%',
         height: options.height + '%',
         zIndex: options.zIndex,
     }"
 
     :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
->
-    <v-card class="mainboard-window__card">
+> -->
+    <v-card
+      tile
+      class="mainboard-window__card"
+    >
 
     <v-card-title
         class="mainboard-window__title"
@@ -59,6 +74,14 @@
 import baseMainboardFrame from "../Base/BaseFrame";
 export default {
   props: ["options", "index"],
+  computed: {
+    widthGrid() {
+      return this.$store.getters.getWidthGrid;
+    },
+    heightGrid() {
+      return this.$store.getters.getHeightGrid;
+    }
+  },
   components: {
     baseMainboardFrame
   },
@@ -94,71 +117,77 @@ export default {
     var self = this;
     var countRows = self.$store.getters.getCountRows;
     var countColumns = self.$store.getters.getCountColumns;
-    console.log("widhtGrid", self.$store.getters.getWidthGrid);
-    console.log("heightGrid", self.$store.getters.getHeightGrid);
+    //console.log("widhtGrid", self.$store.getters.getWidthGrid);
+    //console.log("heightGrid", self.$store.getters.getHeightGrid);
     $(".mainboard-window")
       .draggable({
         handle: ".mainboard-window__title",
+        //handle: ".mainboard-window",
         containment: ".mainboard-workspace",
-        snap: ".mainboard-window",
+        //snap: ".mainboard-window",
         start: function(event, ui) {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
         },
         stop: function(event, ui) {
-          console.log("ui", ui);
+          console.log("draggable ui", ui);
           var $window = $(this);
-          console.log("$window.outerWidth", $window.outerWidth());
-          console.log("$window.outerHeight", $window.outerHeight());
-          var offset = $window.offset();
-          var top = offset.top;
-          var left = offset.left;
-          var bottom = top + $window.outerHeight();
-          var right = left + $window.outerWidth();
-          console.log(left, top, right, bottom);
+          //console.log("$window.outerWidth", $window.outerWidth());
+          //console.log("$window.outerHeight", $window.outerHeight());
+          //var offset = $window.offset();
+          //var top = offset.top;
+          //var left = offset.left;
+          //var bottom = top + $window.outerHeight();
+          //var right = left + $window.outerWidth();
+          //console.log(left, top, right, bottom);
 
           $window.find(".mainboard-frame__cover").hide();
           var options = {
             index: $(this).data("index"),
             top: ui.position.top,
             left: ui.position.left,
-            diffX: ui.position.left - ui.originalPosition.left,
-            diffY: ui.position.top - ui.originalPosition.top
+            width: $window.width(),
+            height: $window.height()
+            //diffX: ui.position.left - ui.originalPosition.left,
+            //diffY: ui.position.top - ui.originalPosition.top
           };
 
           self.$store.dispatch("actionUpdateWindowCoords", options);
         }
       })
       .resizable({
-        handles: "e, s, n, w",
+        handles: "se, e, s, n, w",
         containment: ".mainboard-workspace",
-        //grid: 20,
+        grid: [1, 1],
         iframeFix: true,
         minHeight: 150,
         minWidth: 300,
+        //helper: "ui-resizable-helper",
         start: function(event, ui) {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
         },
         stop: function(event, ui) {
-          console.log("ui", ui);
+          //console.log("ui", ui);
           var $window = $(this);
           $window.find(".mainboard-frame__cover").hide();
 
-          var coefWidth = ui.size.width / ui.originalSize.width;
-          var coefHeight = ui.size.height / ui.originalSize.height;
-          console.log(coefWidth, coefHeight);
+          //var coefWidth = ui.size.width / ui.originalSize.width;
+          //var coefHeight = ui.size.height / ui.originalSize.height;
+          //console.log(coefWidth, coefHeight);
           var options = {
             index: $(this).data("index"),
-            coefWidth: coefWidth,
-            coefHeight: coefHeight,
+            //coefWidth: coefWidth,
+            //coefHeight: coefHeight,
             left: ui.position.left,
-            top: ui.position.top
+            top: ui.position.top,
+            width: ui.size.width,
+            height: ui.size.height
           };
-
-          self.$store.commit("updateWindowSize", options);
+          //self.$store.dispatch("actionUpdateWindowCoords", options);
+          self.$store.dispatch("actionUpdateWindowSize", options);
         }
       });
   }
@@ -168,11 +197,12 @@ export default {
 <style scoped>
 .mainboard-window {
   position: absolute;
-  width: 500px;
-  border: 2px solid rgba(92, 107, 192, 0.8);
+  /* border: 2px solid rgba(92, 107, 192, 0.8); */
   border-radius: 5px;
+  box-sizing: border-box;
   webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
 }
 
 .mainboard-window--fullheight {
@@ -202,6 +232,8 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  border: 2px solid rgba(92, 107, 192, 1);
+  border-radius: inherit;
 }
 
 .mainboard-window__cover-window {
@@ -217,6 +249,8 @@ export default {
   cursor: move;
   padding: 5px;
   height: 30px;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
 }
 
 .mainboard-window__btn {
@@ -227,6 +261,8 @@ export default {
   height: calc(100% - 40px);
   position: relative;
   padding: 0;
+  margin: 0;
+  /* border-radius: inherit; */
 }
 
 .fullscreen {
