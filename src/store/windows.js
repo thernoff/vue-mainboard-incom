@@ -18,7 +18,7 @@ export default {
         topPrevWindow: 50,
         leftPrevWindow: 600,
         activeWindow: null,
-        windows: []
+        windows: [] // хранится ссылка на массив activeWorkspace.windows
     },
     mutations: {
         setWindows(state, windows) {
@@ -26,14 +26,16 @@ export default {
         },
 
         createNewWindow(state, itemStartMenu) {
-            const title = itemStartMenu.title
+            const title = itemStartMenu.title || itemStartMenu.label
+            const link = itemStartMenu.link
             const apiLink = itemStartMenu.apiLink
             //const id = Math.random()
             const id = getRandomId()
-            console.log('id', id)
+            //console.log('id', id)
             const newWindow = {
                 id,
                 title,
+                link,
                 apiLink,
                 top: state.topPrevWindow,
                 left: state.leftPrevWindow,
@@ -115,12 +117,26 @@ export default {
         },
 
         setActiveWindow(state, index) {
-            state.activeWindow.active = false
-            state.activeWindow = state.windows[index]
-            state.activeWindow.active = true
-
-            state.maxZIndex += 1
-            state.activeWindow.zIndex = state.maxZIndex
+            if (state.windows.length > 0) {
+                if (index != undefined) {
+                    state.activeWindow.active = false
+                    state.activeWindow = state.windows[index]
+                    state.activeWindow.active = true
+                } else {
+                    for (let i = 0; i < state.windows.length; i++) {
+                        if (state.windows[i].active) {
+                            state.activeWindow = state.windows[i]
+                            break;
+                        }
+                    }
+                }
+            } else {
+                state.activeWindow = null
+            }
+            if (state.activeWindow) {
+                state.maxZIndex += 1
+                state.activeWindow.zIndex = state.maxZIndex
+            }
         },
 
         unsetActiveWindow(state) {
@@ -143,8 +159,16 @@ export default {
             commit('closeWindow', index)
         },
 
+        actionSetActiveWindow({ commit }) {
+            commit('setActiveWindow')
+        },
+
         actionSetWindows({ commit }, windows) {
             commit('setWindows', windows)
+        },
+
+        actionToggleWindows({ commit }, windows) {
+            commit('toggleWindows', windows)
         },
 
         actionUpdateWindowCoords({ commit, rootState }, options) {

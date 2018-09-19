@@ -13,7 +13,7 @@
       <v-toolbar-side-icon></v-toolbar-side-icon>
       <v-toolbar-title>Incom</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-list-tile>{{ titleActiveWorkspace }}</v-list-tile>
+      <v-list-tile v-on:click="saveSettingsDesktop">{{ titleActiveWorkspace }}</v-list-tile>
       <v-toolbar-items class="hidden-sm-and-down">
         <!-- <v-btn flat>Link One</v-btn> -->
         <v-switch
@@ -45,6 +45,14 @@ export default {
     toggleModeGrid() {
       console.log("toggleModeGrid");
       this.$store.commit("toggleModeGrid");
+    },
+
+    consoleData() {
+      console.log(JSON.stringify(this.$store.getters.workspaces));
+    },
+
+    saveSettingsDesktop() {
+      this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
 };

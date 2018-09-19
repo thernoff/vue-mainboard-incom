@@ -4,10 +4,10 @@ export default {
         error: null
     },
     mutations: {
-        setLoading (state, data) {
+        setLoading(state, data) {
             state.loading = data
         },
-        setError (state, data) {
+        setError(state, data) {
             state.error = data
         },
         clearError(state) {
@@ -15,21 +15,27 @@ export default {
         }
     },
     actions: {
-        setLoading ({commit}, data) {
+        actionInit({ commit, state }) {
+            commit('setActiveWorkspace')
+            commit('setWindows', state.activeWorkspace.windows);
+            commit('setActiveWindow');
+        },
+
+        setLoading({ commit }, data) {
             commit('setLoading', data)
         },
-        setError ({commit}, data) {
+        setError({ commit }, data) {
             commit('setError', data)
         },
-        clearError ({commit}) {
+        clearError({ commit }) {
             commit('clearError')
         }
     },
     getters: {
-        loading (state) {
+        loading(state) {
             return state.loading
         },
-        error (state) {
+        error(state) {
             return state.error
         }
     }

@@ -69,6 +69,25 @@ export default {
     }
   },
 
+  beforeCreate() {
+    /* this.$store.commit("setActiveWorkspace");
+    let activeWorkspace = this.$store.getters.getActiveWorkspace;
+    this.$store.commit("setWindows", activeWorkspace.windows);
+    this.$store.commit("setActiveWindow"); */
+  },
+
+  mounted() {
+    this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
+    this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
+
+    this.$store.dispatch("actionGetDashboard");
+  },
+
+  updated() {
+    //let d = this.$store.getters.getWindowsActiveWorkspace;
+    //console.log("activeWorkspace", d);
+  },
+
   methods: {
     toggleVisibleStartMenu() {
       this.$store.dispatch("actionToggleVisibleStartMenu");
@@ -79,26 +98,6 @@ export default {
     }
   },
 
-  beforeCreate() {
-    this.$store.commit("setActiveWorkspace");
-    let activeWorkspace = this.$store.getters.getActiveWorkspace;
-    this.$store.commit("setWindows", activeWorkspace.windows);
-  },
-
-  mounted() {
-    this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
-    console.log("this.$refs.grid", this.$refs.grid.$el);
-    console.log(
-      "this.$refs.grid.$el.clientHeight",
-      this.$refs.grid.$el.clientHeight
-    );
-    this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
-  },
-
-  updated() {
-    let d = this.$store.getters.getWindowsActiveWorkspace;
-    console.log("activeWorkspace", d);
-  },
   name: "App"
 };
 </script>

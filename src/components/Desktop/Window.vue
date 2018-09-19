@@ -62,7 +62,7 @@
             v-if="!options.active"
             @mousedown="setActiveWindow"
         ></div>
-        <base-mainboard-frame ref="baseMainboardFrame" :frameSrc="options.apiLink"></base-mainboard-frame>
+        <base-mainboard-frame ref="baseMainboardFrame" :frameSrc="options.link"></base-mainboard-frame>
     </v-card-text>
 
     <v-divider></v-divider>
@@ -145,8 +145,8 @@ export default {
           $window.find(".mainboard-frame__cover").hide();
           var options = {
             index: $(this).data("index"),
-            top: ui.position.top,
-            left: ui.position.left,
+            top: ui.position.top < 0 ? 0 : ui.position.top,
+            left: ui.position.left < 0 ? 0 : ui.position.left,
             width: $window.width(),
             height: $window.height()
             //diffX: ui.position.left - ui.originalPosition.left,
@@ -181,8 +181,8 @@ export default {
             index: $(this).data("index"),
             //coefWidth: coefWidth,
             //coefHeight: coefHeight,
-            left: ui.position.left,
-            top: ui.position.top,
+            top: ui.position.top < 0 ? 0 : ui.position.top,
+            left: ui.position.left < 0 ? 0 : ui.position.left,
             width: ui.size.width,
             height: ui.size.height
           };

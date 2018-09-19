@@ -1,7 +1,7 @@
 <template>
     <!-- <v-layout row>
     <v-flex xs12 sm6 offset-sm3> -->
-      <v-card id="startmenu">
+      <v-card id="startmenu" class="mainboard-startmenu">
         <v-toolbar color="primary" dark depressed>
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
 
@@ -19,7 +19,7 @@
           </v-btn> -->
         </v-toolbar>
 
-        <v-list two-line subheader>
+        <v-list>
           <!-- <v-subheader inset>Рабочие области</v-subheader> -->
           <v-list-tile
             @click="createNewWorkspace"
@@ -55,27 +55,33 @@
 
           <v-divider></v-divider>
 
-          <v-list>
-          <v-list-group
+          <v-list class="mainboard-startmenu__categories">
+                <v-list-group
+                  class="mainboard-startmenu__category"
+                  v-for="(item, indexItem) in items"
+                  v-bind:key="item.id"
+                >
+                  <v-list-tile slot="activator">
+                    <v-list-tile-content>
+                      <v-list-tile-title>{{ item.label }}</v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
 
-          >
-            <v-list-tile slot="activator">
-              <v-list-tile-content>
-                <v-list-tile-title>Все элементы</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
+                    <v-list-tile
+                      v-for="(element, indexElement) in item.elements"
+                      v-bind:key="element.id"
+                      @click="createNewWindow(indexItem, indexElement)"
+                    >
+                    <img
+                      :src="element.image"
+                      v-bind:style="{width: '25px', marginRight: '5px'}"
+                    />
+                      <v-list-tile-content>
+                        <v-list-tile-title @click="''">{{ element.label }}</v-list-tile-title>
+                      </v-list-tile-content>
 
-            <v-list-tile
-              v-for="(item, index) in items"
-              :key="index"
-              @click="createNewWindow(index)"
-            >
-              <v-list-tile-content>
-                <v-list-tile-title @click="''">{{ item.title }}</v-list-tile-title>
-              </v-list-tile-content>
-
-            </v-list-tile>
-          </v-list-group>
+                    </v-list-tile>
+                </v-list-group>
         </v-list>
         </v-list>
       </v-card>
@@ -85,56 +91,76 @@
 
 <script>
 export default {
-    data() {
-      return {}
+  data() {
+    return {};
+  },
+
+  methods: {
+    createNewWorkspace() {
+      //let activeWorkspace = this.$store.commit('createNewWorkspace')
+      this.$store.dispatch("actionCreateNewWorkspace");
+      let windows = this.$store.getters.getWindowsActiveWorkspace;
+      //this.$store.commit('setWindows', windows)
+      this.$store.dispatch("actionSetWindows", windows);
+      this.$store.dispatch("actionSetActiveWindow");
+
+      this.$store.dispatch("actionToggleVisibleStartMenu");
     },
 
-    methods: {
-      createNewWorkspace() {
-        //let activeWorkspace = this.$store.commit('createNewWorkspace')
-        this.$store.dispatch('actionCreateNewWorkspace')
-        let windows = this.$store.getters.getWindowsActiveWorkspace
-        //this.$store.commit('setWindows', windows)
-        this.$store.dispatch('actionSetWindows', windows)
-        this.$store.dispatch('actionToggleVisibleStartMenu')
-      },
+    setActiveWorkspace(index) {
+      //let activeWorkspace = this.$store.commit('setActiveWorkspace', index)
+      this.$store.dispatch("actionSetActiveWorkspace", index);
+      /* let windows = this.$store.getters.getWindowsActiveWorkspace;
+      this.$store.dispatch("actionSetWindows", windows);
+      this.$store.dispatch("actionSetActiveWindow"); */
 
-      setActiveWorkspace (index) {
-        //let activeWorkspace = this.$store.commit('setActiveWorkspace', index)
-        this.$store.dispatch('actionSetActiveWorkspace', index)
-        let windows = this.$store.getters.getWindowsActiveWorkspace
-        //this.$store.commit('setWindows', windows)
-        this.$store.dispatch('actionSetWindows', windows)
-        this.$store.dispatch('actionToggleVisibleStartMenu')
-      },
-
-      createNewWindow (index) {
-        const itemStartMenu = this.$store.getters.getItemStartMenu(index)
-        this.$store.commit('createNewWindow', itemStartMenu)
-        this.$store.dispatch('actionToggleVisibleStartMenu')
-      }
+      this.$store.dispatch("actionToggleVisibleStartMenu");
     },
 
-    computed: {
-      workspaces () {
-        return this.$store.getters.getWorkspaces
-      },
-
-      items () {
-        return this.$store.getters.getItems
-      },
+    createNewWindow(indexItem, indexElement) {
+      const itemStartMenu = this.$store.getters.getItemStartMenu(
+        indexItem,
+        indexElement
+      );
+      this.$store.commit("createNewWindow", itemStartMenu);
+      this.$store.dispatch("actionToggleVisibleStartMenu");
     }
-}
+  },
+
+  computed: {
+    workspaces() {
+      return this.$store.getters.getWorkspaces;
+    },
+
+    items() {
+      return this.$store.getters.getItems;
+    }
+  }
+};
 </script>
 
 <style scoped>
-    #startmenu {
-        width: 300px;
-        position: absolute;
-        left: 5px;
-        bottom: 20px;
-        z-index: 100;
-    }
+.mainboard-startmenu {
+  width: 300px;
+  overflow: hidden;
+  position: absolute;
+  left: 5px;
+  bottom: 20px;
+  z-index: 100;
+}
+
+.mainboard-startmenu__categories {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 320px;
+}
+
+.mainboard-startmenu__category {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 320px;
+}
 </style>
 
 

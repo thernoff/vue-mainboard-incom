@@ -1,6 +1,6 @@
 <template>
   <!-- <v-footer app dark color="primary"> -->
-    <v-footer dark color="primary">
+    <v-footer dark color="primary" v-if="visibleTaskbar">
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
       <v-btn
           color="primary"
@@ -35,10 +35,14 @@
 export default {
   data() {
     return {
+      visibleTaskbar: true
       //windows: this.getWindows()
     };
   },
   methods: {
+    toggleVisibleTaskbar() {
+      this.visibleTaskbar = !this.visibleTaskbar;
+    },
     toggleMinimizedWindow(index, minimize) {
       console.log("minimize", minimize);
       this.$store.commit("toggleMinimizeWindow", index);
