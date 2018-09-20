@@ -34,7 +34,7 @@
             v-for="(workspace, index) in workspaces"
             :key="index"
             avatar
-            @click="setActiveWorkspace(index)"
+            v-on:click="setActiveWorkspace(index)"
           >
             <v-list-tile-avatar>
               <!-- <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon> -->

@@ -16,8 +16,8 @@ export default {
   },
 
   mutations: {
-    createNewWorkspace(state) {
-      const title = 'Тестовая область'
+    createNewWorkspace(state, nameWorkspace) {
+      const title = nameWorkspace
       const descripton = ''
       const newWorkspace = {
         title,
@@ -81,8 +81,8 @@ export default {
       }
     },
 
-    actionCreateNewWorkspace({ state, commit, dispatch }) {
-      commit('createNewWorkspace')
+    actionCreateNewWorkspace({ state, commit, dispatch }, nameWorkspace) {
+      commit('createNewWorkspace', nameWorkspace)
       commit('setWindows', state.activeWorkspace.windows)
       commit('setActiveWindow')
     },
