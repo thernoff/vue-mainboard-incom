@@ -1,5 +1,5 @@
 <template>
-<div class="mainboard-dialog-window">
+<div class="mainboard-info-dialog-window">
   <!-- <div v-on:click.stop="showDialogWindow"> -->
     <slot></slot>
   <!-- </div> -->
@@ -27,8 +27,7 @@
           <v-flex xs12>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn class="warning" v-on:click="onCancel">Отмена</v-btn>
-              <v-btn class="success" v-on:click="onAccept">Согласен</v-btn>
+              <v-btn class="success" v-on:click="onAccept">Принять</v-btn>
             </v-card-actions>
           </v-flex>
         </v-layout>
@@ -47,11 +46,8 @@ export default {
     };
   },
   methods: {
-    onCancel() {
-      this.$emit("hideDialogWindow", false);
-    },
     onAccept() {
-      this.$emit("hideDialogWindow", true);
+      this.$emit("hideInfoDialogWindow");
     }
   },
   watch: {

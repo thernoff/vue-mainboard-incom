@@ -124,7 +124,7 @@ export default {
         handle: ".mainboard-window__title",
         //handle: ".mainboard-window",
         containment: ".mainboard-workspace",
-        //snap: ".mainboard-window",
+        snap: ".mainboard-window",
         start: function(event, ui) {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});

@@ -1,5 +1,5 @@
 <template>
-<div class="mainboard-dialog-window">
+<div class="mainboard-input-dialog-window">
   <!-- <div v-on:click.stop="showDialogWindow"> -->
     <slot></slot>
   <!-- </div> -->
@@ -19,7 +19,12 @@
         <v-layout row>
           <v-flex xs12>
            <v-card-text>
-             <p>{{text}}</p>
+             <v-text-field
+                  name="title"
+                  v-bind:label="label"
+                  type="text"
+                  v-model="inputValue"
+              ></v-text-field>
            </v-card-text>
           </v-flex>
         </v-layout>
@@ -28,7 +33,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn class="warning" v-on:click="onCancel">Отмена</v-btn>
-              <v-btn class="success" v-on:click="onAccept">Согласен</v-btn>
+              <v-btn class="success" v-on:click="onSave">Сохранить</v-btn>
             </v-card-actions>
           </v-flex>
         </v-layout>
@@ -40,18 +45,28 @@
 
 <script>
 export default {
-  props: ["title", "text", "visible"],
+  props: ["title", "label", "value", "visible"],
   data() {
     return {
-      modal: false
+      modal: false,
+      inputValue: this.value || ""
     };
   },
   methods: {
-    onCancel() {
-      this.$emit("hideDialogWindow", false);
+    showDialogWindow() {
+      //this.modal = true;
     },
-    onAccept() {
-      this.$emit("hideDialogWindow", true);
+    onCancel() {
+      this.$emit("hideInputDialogWindow");
+      //this.modal = false;
+    },
+    onSave() {
+      console.log("this.inputValue", this.inputValue);
+      if (this.inputValue !== "") {
+        this.$emit("input", this.inputValue);
+        this.$emit("hideInputDialogWindow");
+        //this.modal = false;
+      }
     }
   },
   watch: {

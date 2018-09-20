@@ -32,8 +32,13 @@ export default {
       //state.windows = state.activeWorkspace.windows
       const length = state.workspaces.push(newWorkspace)
       state.activeWorkspace = state.workspaces[length - 1]
+      state.indexActiveWorkspace = length - 1
 
       //return state.activeWorkspace
+    },
+
+    deletetCurrentWorkspace(state) {
+      state.workspaces.splice(state.indexActiveWorkspace, 1)
     },
 
     setActiveWorkspace(state, index = undefined) {
@@ -42,10 +47,12 @@ export default {
         state.activeWorkspace.active = false
         state.activeWorkspace = state.workspaces[index]
         state.activeWorkspace.active = true
+        state.indexActiveWorkspace = index
       } else {
         for (let i = 0; i < state.workspaces.length; i++) {
           if (state.workspaces[i].active) {
             state.activeWorkspace = state.workspaces[i]
+            state.indexActiveWorkspace = i
             break;
           }
         }
@@ -131,6 +138,15 @@ export default {
           console.log(error);
         })
 
+    },
+
+    actionDeleteCurrentWorkspace({ commit, state, getters }) {
+      if (state.workspaces.length > 1) {
+        commit('deletetCurrentWorkspace')
+        commit('setActiveWorkspace', 0)
+        commit('setWindows', state.activeWorkspace.windows)
+        commit('setActiveWindow')
+      }
     }
   },
   getters: {
@@ -172,6 +188,10 @@ export default {
 
     workspaces(state) {
       return state.workspaces
+    },
+
+    indexActiveWorkspace() {
+      return state.indexActiveWorkspace
     }
   }
 }
