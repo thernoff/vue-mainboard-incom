@@ -30,7 +30,11 @@
 
       v-on:hideDialogWindow="deleteCurrentWorkspace($event)"
     ></mainboard-dialog-window>
-
+    <mainboard-cover
+      v-if="visibleCover"
+      v-on:click.native="hideCover"
+    >
+    </mainboard-cover>
     <v-toolbar
       dark
       color="primary"
@@ -44,6 +48,7 @@
           slot="activator"
           color="primary"
           dark
+          v-on:click="showCover"
         >
           {{ titleActiveWorkspace }}
         </v-btn>
@@ -91,19 +96,24 @@
 import InputDialogWindow from "./ModalWindows/InputDialogWindow";
 import DialogWindow from "./ModalWindows/DialogWindow";
 import InfoDialogWindow from "./ModalWindows/InfoDialogWindow";
+import Cover from "./Cover";
+
 export default {
   data() {
     return {
       modeGrid: true,
       visibleDialogWindow: false,
       visibleInfoDialogWindow: false,
-      visibleInputDialogWindow: false
+      visibleInputDialogWindow: false,
+      visibleCover: false
     };
   },
+
   components: {
     mainboardInputDialogWindow: InputDialogWindow,
     mainboardDialogWindow: DialogWindow,
-    mainboardInfoDialogWindow: InfoDialogWindow
+    mainboardInfoDialogWindow: InfoDialogWindow,
+    mainboardCover: Cover
   },
 
   computed: {
@@ -124,7 +134,16 @@ export default {
     }
   },
   methods: {
+    showCover() {
+      this.visibleCover = true;
+    },
+
+    hideCover() {
+      this.visibleCover = false;
+    },
+
     showDialogWindow() {
+      this.hideCover();
       this.visibleDialogWindow = true;
     },
 
@@ -133,6 +152,7 @@ export default {
     },
 
     showInfoDialogWindow() {
+      this.hideCover();
       this.visibleInfoDialogWindow = true;
     },
 
@@ -141,6 +161,7 @@ export default {
     },
 
     showInputDialogWindow() {
+      this.hideCover();
       this.visibleInputDialogWindow = true;
     },
 

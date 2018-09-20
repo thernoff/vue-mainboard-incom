@@ -1,7 +1,11 @@
 <template>
 
   <v-app class="mainboard">
-    <div class="mainboard-cover" v-if="visibleStartmenu" @click="toggleVisibleStartMenu"></div>
+    <mainboard-cover
+      v-if="visibleStartmenu"
+      v-on:click.native="toggleVisibleStartMenu"
+    >
+    </mainboard-cover>
     <!-- <v-navigation-drawer app temporary></v-navigation-drawer> -->
     <mainboard-toolbar class="mainboard-toolbar"></mainboard-toolbar>
 
@@ -39,6 +43,7 @@ import Toolbar from "./components/Desktop/Toolbar";
 import Startmenu from "./components/Desktop/Startmenu";
 import Window from "./components/Desktop/Window";
 import Grid from "./components/Desktop/Grid";
+import Cover from "./components/Desktop/Cover";
 import ResizableBlock from "./components/Desktop/ResizableBlock";
 
 export default {
@@ -52,6 +57,7 @@ export default {
     mainboardStartmenu: Startmenu,
     mainboardWindow: Window,
     mainboardGrid: Grid,
+    mainboardCover: Cover,
     mainboardResizableBlock: ResizableBlock
   },
 
@@ -60,12 +66,12 @@ export default {
       return this.$store.getters.visibleStartmenu;
     },
 
-    windows() {
-      return this.$store.getters.getWindows;
-    },
-
     isModeGrid() {
       return this.$store.getters.isModeGrid;
+    },
+
+    windows() {
+      return this.$store.getters.windows;
     }
   },
 
@@ -83,18 +89,11 @@ export default {
     this.$store.dispatch("actionGetDashboard");
   },
 
-  updated() {
-    //let d = this.$store.getters.getWindowsActiveWorkspace;
-    //console.log("activeWorkspace", d);
-  },
+  updated() {},
 
   methods: {
     toggleVisibleStartMenu() {
       this.$store.dispatch("actionToggleVisibleStartMenu");
-    },
-
-    getWindows() {
-      return this.$store.getters.getWindows;
     }
   },
 
@@ -114,13 +113,6 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-}
-
-.mainboard-cover {
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-  z-index: 10;
 }
 
 /* .mainboard-toolbar {

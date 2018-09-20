@@ -17,6 +17,7 @@ export default {
         maxZIndex: 0,
         topPrevWindow: 50,
         leftPrevWindow: 600,
+        indexActiveWindow: 0,
         activeWindow: null,
         windows: [] // хранится ссылка на массив activeWorkspace.windows
     },
@@ -41,7 +42,7 @@ export default {
                 left: state.leftPrevWindow,
                 width: 40,
                 height: 45,
-                zIndex: state.maxZIndex + 1,
+                zIndex: state.windows.length + 1,
                 minimize: false,
                 fullscreen: false,
                 closed: false,
@@ -55,6 +56,7 @@ export default {
 
             const length = state.windows.push(newWindow)
             state.activeWindow = state.windows[length - 1]
+            state.indexActiveWindow = length - 1
 
             state.topPrevWindow += 50
             state.leftPrevWindow += 50
@@ -118,25 +120,43 @@ export default {
 
         setActiveWindow(state, index) {
             if (state.windows.length > 0) {
+                if (index === state.indexActiveWindow) {
+                    return
+                }
+
                 if (index != undefined) {
                     state.activeWindow.active = false
                     state.activeWindow = state.windows[index]
                     state.activeWindow.active = true
+                    state.indexActiveWindow = index
                 } else {
                     for (let i = 0; i < state.windows.length; i++) {
                         if (state.windows[i].active) {
                             state.activeWindow = state.windows[i]
+                            state.indexActiveWindow = i
                             break;
                         }
                     }
                 }
+
             } else {
                 state.activeWindow = null
+                state.indexActiveWindow = 0
             }
+
             if (state.activeWindow) {
                 state.maxZIndex += 1
-                state.activeWindow.zIndex = state.maxZIndex
+                const zIndex = state.activeWindow.zIndex
+                state.windows.forEach(function (window) {
+                    if (window.zIndex > zIndex) {
+                        window.zIndex -= 1
+                    }
+                })
+                state.activeWindow.zIndex = state.windows.length
             }
+
+            console.log('store:setActiveWindow', state.activeWindow.zIndex)
+            console.log('store:setActiveWindow', state.windows)
         },
 
         unsetActiveWindow(state) {
@@ -146,6 +166,7 @@ export default {
                     console.log('index', index)
                     state.activeWindow = window
                     state.activeWindow.active = true
+                    state.indexActiveWindow = index
                     return true
                 }
             })
@@ -236,7 +257,7 @@ export default {
         },
     },
     getters: {
-        getWindows(state) {
+        windows(state) {
             return state.windows
         },
 
