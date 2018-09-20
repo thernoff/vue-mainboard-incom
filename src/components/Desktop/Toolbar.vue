@@ -13,7 +13,29 @@
       <v-toolbar-side-icon></v-toolbar-side-icon>
       <v-toolbar-title>Incom</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-list-tile v-on:click="saveSettingsDesktop">{{ titleActiveWorkspace }}</v-list-tile>
+        <v-menu offset-y>
+        <v-btn
+          slot="activator"
+          color="primary"
+          dark
+        >
+          {{ titleActiveWorkspace }}
+        </v-btn>
+        <v-list>
+          <v-list-tile
+            v-on:click="createNewWorkspace"
+          >
+            Создать новую рабочую область
+          </v-list-tile>
+          <v-list-tile
+            v-for="(workspace, index) in workspaces"
+            :key="index"
+            @click="''"
+          >
+            <v-list-tile-title>{{ workspace.title }}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+    </v-menu>
       <v-toolbar-items class="hidden-sm-and-down">
         <!-- <v-btn flat>Link One</v-btn> -->
         <v-switch
@@ -34,6 +56,10 @@ export default {
     };
   },
   computed: {
+    workspaces() {
+      return this.$store.getters.workspaces;
+    },
+
     isModeGrid() {
       return this.$store.getters.isModeGrid;
     },
@@ -42,6 +68,10 @@ export default {
     }
   },
   methods: {
+    createNewWorkspace() {
+      this.$store.dispatch("actionCreateNewWorkspace");
+    },
+
     toggleModeGrid() {
       console.log("toggleModeGrid");
       this.$store.commit("toggleModeGrid");

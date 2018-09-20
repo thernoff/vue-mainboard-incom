@@ -99,21 +99,16 @@ export default {
     createNewWorkspace() {
       //let activeWorkspace = this.$store.commit('createNewWorkspace')
       this.$store.dispatch("actionCreateNewWorkspace");
-      let windows = this.$store.getters.getWindowsActiveWorkspace;
+      //let windows = this.$store.getters.getWindowsActiveWorkspace;
       //this.$store.commit('setWindows', windows)
-      this.$store.dispatch("actionSetWindows", windows);
-      this.$store.dispatch("actionSetActiveWindow");
+      //this.$store.dispatch("actionSetWindows", windows);
+      //this.$store.dispatch("actionSetActiveWindow");
 
       this.$store.dispatch("actionToggleVisibleStartMenu");
     },
 
     setActiveWorkspace(index) {
-      //let activeWorkspace = this.$store.commit('setActiveWorkspace', index)
       this.$store.dispatch("actionSetActiveWorkspace", index);
-      /* let windows = this.$store.getters.getWindowsActiveWorkspace;
-      this.$store.dispatch("actionSetWindows", windows);
-      this.$store.dispatch("actionSetActiveWindow"); */
-
       this.$store.dispatch("actionToggleVisibleStartMenu");
     },
 
