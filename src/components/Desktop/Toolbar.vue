@@ -136,6 +136,7 @@ export default {
       return this.$store.getters.getTitleActiveWorkspace;
     }
   },
+
   methods: {
     showCover() {
       this.visibleCover = true;
@@ -194,6 +195,11 @@ export default {
     toggleModeGrid() {
       console.log("toggleModeGrid");
       this.$store.commit("toggleModeGrid");
+      if (this.isModeGrid) {
+        $(".mainboard-window").draggable("option", "snap", false);
+      } else {
+        $(".mainboard-window").draggable("option", "snap", ".mainboard-window");
+      }
     },
 
     consoleData() {

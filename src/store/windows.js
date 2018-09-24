@@ -99,6 +99,8 @@ export default {
 
         closeWindow(state, index) {
             //state.windows[index].closed = true
+            state.activeWindow = null
+            state.indexActiveWindow = null
             state.windows.splice(index, 1)
         },
 
@@ -156,7 +158,7 @@ export default {
                     }
                 })
                 state.activeWindow.zIndex = state.windows.length
-                console.log('store:setActiveWindow', state.activeWindow.zIndex)
+                //console.log('store:setActiveWindow state.activeWindow.zIndex', state.activeWindow.zIndex)
                 console.log('store:setActiveWindow', state.windows)
             }
 
@@ -196,8 +198,12 @@ export default {
         }
     },
     actions: {
-        actionCloseWindow({ commit }, index) {
-            commit('closeWindow', index)
+        actionCloseWindow({ state, commit, dispatch }, index) {
+            commit("closeWindow", index)
+            commit("setActiveWindow", 0)
+            console.log('after close activeWindow', state.activeWindow)
+            console.log('after close indexActiveWindow', state.indexActiveWindow)
+            dispatch("actionSaveSettingsDesktop");
         },
 
         actionSetActiveWindow({ commit }) {
@@ -217,17 +223,39 @@ export default {
         },
 
         actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {
+            console.log('actionUpdateWindowCoords.options', options)
             commit('updateWindowCoords', options)
             if (rootState.grid.modeGrid) {
                 //console.log('old left', options.left, 'old top', options.top)
                 const countColumns = rootState.grid.countColumns
                 const widthGrid = rootState.grid.widthGrid
                 const widthOneColumn = widthGrid / countColumns
-                options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+                //options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+
+                console.log('countColumns', countColumns)
+                console.log('widthGrid', widthGrid)
+                console.log('widthOneColumn', widthOneColumn)
+
+                if (options.diffLeft) {
+                    options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+                } else {
+                    options.left = Math.round(options.left / widthOneColumn) * widthOneColumn
+                }
 
                 const countRows = rootState.grid.countRows
                 const heightGrid = rootState.grid.heightGrid
                 const heightOneRow = heightGrid / countRows
+
+                console.log('countRows', countRows)
+                console.log('heightGrid', heightGrid)
+                console.log('heightOneRow', heightOneRow)
+
+                if (options.diffTop) {
+                    options.top = Math.floor(options.top / heightOneRow) * heightOneRow
+                } else {
+                    options.top = Math.round(options.top / heightOneRow) * heightOneRow
+                }
+
                 options.top = Math.floor(options.top / heightOneRow) * heightOneRow
                 options.width = 100 * options.width / widthGrid
                 options.height = 100 * options.height / heightGrid
@@ -259,18 +287,18 @@ export default {
                 const countColumns = rootState.grid.countColumns
                 const widthGrid = rootState.grid.widthGrid
                 const widthOneColumn = widthGrid / countColumns
-                options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+                //options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
 
                 if (options.diffLeft) {
                     options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
                 } else {
-                    options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+                    options.left = Math.round(options.left / widthOneColumn) * widthOneColumn
                 }
 
                 const countRows = rootState.grid.countRows
                 const heightGrid = rootState.grid.heightGrid
                 const heightOneRow = heightGrid / countRows
-                const old = options.top;
+
                 if (options.diffTop) {
                     options.top = Math.floor(options.top / heightOneRow) * heightOneRow
                 } else {

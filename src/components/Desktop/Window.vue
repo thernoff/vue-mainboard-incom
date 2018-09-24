@@ -11,7 +11,7 @@
 
     :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
 > -->
-<div class="mainboard-window"
+<div ref="window" class="mainboard-window"
     :data-index="index"
     :style="{
         top: options.top + 'px',
@@ -57,17 +57,17 @@
         <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullwidth')" title="Развернуть по ширине">
             <v-icon color="white">fas fa-arrows-alt-h</v-icon>
         </v-btn> -->
-        <v-btn icon small class="mainboard-window__btn" @click="reloadWindow" title="Перезагрузить окно">
+        <v-btn icon small class="mainboard-window__btn" @click.stop="reloadWindow" title="Перезагрузить окно">
             <v-icon color="white">refresh</v-icon>
         </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click="minimizeWindow" @mousedown.stop="''" title="Свернуть">
+        <v-btn icon small class="mainboard-window__btn" @click.stop="minimizeWindow" title="Свернуть">
             <v-icon color="white">minimize</v-icon>
         </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click="toggleFullscreenWindow" title="Развернуть на весь экран">
+        <v-btn icon small class="mainboard-window__btn" @click.stop="toggleFullscreenWindow" title="Развернуть на весь экран">
             <v-icon v-if="!options.fullscreen" color="white">fullscreen</v-icon>
             <v-icon v-if="options.fullscreen" color="white">fullscreen_exit</v-icon>
         </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click="closeWindow" title="Закрыть окно">
+        <v-btn icon small class="mainboard-window__btn" @click.stop="closeWindow" title="Закрыть окно">
             <v-icon color="white">close</v-icon>
         </v-btn>
     </v-card-title>
@@ -114,6 +114,10 @@ export default {
 
     showBtnBack() {
       return this.history.length > 1;
+    },
+
+    isModeGrid() {
+      return this.$store.isModeGrid;
     }
   },
 
@@ -144,7 +148,8 @@ export default {
 
     closeWindow() {
       this.$store.dispatch("actionCloseWindow", this.index);
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      /* this.$store.commit("setActiveWindow");
+      this.$store.dispatch("actionSaveSettingsDesktop"); */
     },
 
     toggleFullscreenWindow() {
@@ -182,14 +187,12 @@ export default {
     var self = this;
     var countRows = self.$store.getters.getCountRows;
     var countColumns = self.$store.getters.getCountColumns;
-    //console.log("widhtGrid", self.$store.getters.getWidthGrid);
-    //console.log("heightGrid", self.$store.getters.getHeightGrid);
-    $(".mainboard-window")
+
+    $(this.$refs.window)
       .draggable({
         handle: ".mainboard-window__title",
-        //handle: ".mainboard-window",
         containment: ".mainboard-workspace",
-        snap: ".mainboard-window",
+        snap: !self.isModeGrid ? false : ".mainboard-window",
         start: function(event, ui) {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});
@@ -208,14 +211,17 @@ export default {
           //console.log(left, top, right, bottom);
 
           $window.find(".mainboard-frame__cover").hide();
+          console.log("draggable window self.index", self.index);
+          console.log("draggable window data-index", $(this).data("index"));
           var options = {
-            index: $(this).data("index"),
+            //index: $(this).data("index"),
+            index: self.index,
             top: ui.position.top < 0 ? 0 : ui.position.top,
             left: ui.position.left < 0 ? 0 : ui.position.left,
             width: $window.width(),
-            height: $window.height()
-            //diffX: ui.position.left - ui.originalPosition.left,
-            //diffY: ui.position.top - ui.originalPosition.top
+            height: $window.height(),
+            diffTop: ui.position.top - ui.originalPosition.top,
+            diffLeft: ui.position.left - ui.originalPosition.left
           };
 
           self.$store.dispatch("actionUpdateWindowCoords", options);
@@ -234,6 +240,7 @@ export default {
           var $window = $(this);
           //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
+          self.$store.commit("setActiveWindow", self.index);
         },
         stop: function(event, ui) {
           console.log("ui", ui);
@@ -244,7 +251,8 @@ export default {
           //var coefHeight = ui.size.height / ui.originalSize.height;
           //console.log(coefWidth, coefHeight);
           var options = {
-            index: $(this).data("index"),
+            index: self.index,
+            //index: $(this).data("index"),
             //coefWidth: coefWidth,
             //coefHeight: coefHeight,
             top: ui.position.top < 0 ? 0 : ui.position.top,

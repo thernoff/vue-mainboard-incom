@@ -6,11 +6,11 @@
     <mainboard-toolbar class="mainboard-toolbar"></mainboard-toolbar>
 
     <div class="mainboard-workspace">
-      <mainboard-cover
-      v-if="visibleStartmenu"
-      v-on:click.native="toggleVisibleStartMenu"
-    >
-    </mainboard-cover>
+      <!-- <mainboard-cover
+        v-if="visibleStartmenu"
+        v-on:click.native="toggleVisibleStartMenu"
+      >
+      </mainboard-cover> -->
       <!-- <v-container fluid> -->
         <mainboard-grid
           ref="grid"
@@ -85,6 +85,11 @@ export default {
   mounted() {
     console.log("WINDOWS", this.windows);
     const self = this;
+
+    this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
+    this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
+    this.$store.dispatch("actionGetDashboard");
+
     window.addEventListener("resize", function() {
       const oldWidthGrid = self.$store.getters.getWidthGrid;
       const oldHeightGrid = self.$store.getters.getHeightGrid;
@@ -101,14 +106,7 @@ export default {
       self.$store.commit("setWidthGrid", self.$refs.grid.$el.clientWidth);
       self.$store.commit("setHeightGrid", self.$refs.grid.$el.clientHeight);
     });
-
-    this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
-    this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
-
-    this.$store.dispatch("actionGetDashboard");
   },
-
-  updated() {},
 
   methods: {
     toggleVisibleStartMenu() {

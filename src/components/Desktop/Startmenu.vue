@@ -14,7 +14,7 @@
       <v-btn
           color="primary"
           slot="activator"
-          v-on:click="setNotActiveWindows"
+          v-on:click="onClickBtnStart"
         >
           <v-icon>home</v-icon>
       </v-btn>
@@ -144,7 +144,7 @@ export default {
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
-    setNotActiveWindows() {
+    onClickBtnStart() {
       this.$store.dispatch("actionSetNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
