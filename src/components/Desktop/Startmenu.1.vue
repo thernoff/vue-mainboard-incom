@@ -1,23 +1,6 @@
 <template>
     <!-- <v-layout row>
     <v-flex xs12 sm6 offset-sm3> -->
-      <v-menu
-        top
-        offset-y
-        light
-        z-index="9999"
-        close-on-click
-        :close-on-content-click="false"
-        :close-delay="50"
-        v-model="showMenu"
-      >
-      <v-btn
-          color="primary"
-          slot="activator"
-          v-on:click="setNotActiveWindows"
-        >
-          <v-icon>home</v-icon>
-      </v-btn>
       <v-card id="startmenu" class="mainboard-startmenu">
         <v-toolbar color="primary" dark depressed>
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
@@ -37,7 +20,7 @@
         </v-toolbar>
 
         <v-list>
-          <!-- <v-subheader inset>Рабочие области</v-subheader>
+          <!-- <v-subheader inset>Рабочие области</v-subheader> -->
           <v-list-tile
             @click="createNewWorkspace"
           >
@@ -54,7 +37,7 @@
             v-on:click="setActiveWorkspace(index)"
           >
             <v-list-tile-avatar>
-              <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon>
+              <!-- <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon> -->
               <v-icon>view_module</v-icon>
             </v-list-tile-avatar>
 
@@ -63,14 +46,14 @@
               <v-list-tile-sub-title>{{ workspace.description }}</v-list-tile-sub-title>
             </v-list-tile-content>
 
-            <v-list-tile-action>
+            <!-- <v-list-tile-action>
               <v-btn icon ripple>
                 <v-icon color="grey lighten-1">info</v-icon>
               </v-btn>
-            </v-list-tile-action>
+            </v-list-tile-action> -->
           </v-list-tile>
 
-          <v-divider></v-divider> -->
+          <v-divider></v-divider>
 
           <v-list class="mainboard-startmenu__categories">
                 <v-list-group
@@ -102,8 +85,6 @@
         </v-list>
         </v-list>
       </v-card>
-      </v-menu>
-
 <!--     </v-flex>
   </v-layout> -->
 </template>
@@ -111,9 +92,7 @@
 <script>
 export default {
   data() {
-    return {
-      showMenu: false
-    };
+    return {};
   },
 
   methods: {
@@ -134,18 +113,12 @@ export default {
     },
 
     createNewWindow(indexItem, indexElement) {
-      this.showMenu = false;
       const itemStartMenu = this.$store.getters.getItemStartMenu(
         indexItem,
         indexElement
       );
       this.$store.commit("createNewWindow", itemStartMenu);
       this.$store.dispatch("actionToggleVisibleStartMenu");
-      this.$store.dispatch("actionSaveSettingsDesktop");
-    },
-
-    setNotActiveWindows() {
-      this.$store.dispatch("actionSetNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   },
@@ -166,10 +139,10 @@ export default {
 .mainboard-startmenu {
   width: 300px;
   overflow: hidden;
-  /* position: absolute;
+  position: absolute;
   left: 5px;
   bottom: 20px;
-  z-index: 100; */
+  z-index: 100;
 }
 
 .mainboard-startmenu__categories {

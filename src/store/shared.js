@@ -1,17 +1,28 @@
 export default {
     state: {
         loading: false,
-        error: null
+        error: null,
+        openMenu: false
     },
     mutations: {
         setLoading(state, data) {
             state.loading = data
         },
+
         setError(state, data) {
             state.error = data
         },
+
         clearError(state) {
             state.error = null
+        },
+
+        toggleOpenMenu(state, open = undefined) {
+            if (open !== undefined) {
+                state.openMenu = !state.openMenu
+            } else {
+                state.openMenu = open
+            }
         }
     },
     actions: {
@@ -24,19 +35,30 @@ export default {
         setLoading({ commit }, data) {
             commit('setLoading', data)
         },
+
         setError({ commit }, data) {
             commit('setError', data)
         },
+
         clearError({ commit }) {
             commit('clearError')
+        },
+
+        actionToggleOpenMenu({ commit }, open) {
+            commit('toggleOpenMenu', open)
         }
     },
     getters: {
         loading(state) {
             return state.loading
         },
+
         error(state) {
             return state.error
+        },
+
+        openMenu(state) {
+            return state.openMenu
         }
     }
 }

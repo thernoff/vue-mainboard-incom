@@ -17,7 +17,7 @@ export default {
         maxZIndex: 0,
         topPrevWindow: 50,
         leftPrevWindow: 600,
-        indexActiveWindow: 0,
+        indexActiveWindow: null,
         activeWindow: null,
         windows: [] // хранится ссылка на массив activeWorkspace.windows
     },
@@ -98,7 +98,8 @@ export default {
         },
 
         closeWindow(state, index) {
-            state.windows[index].closed = true
+            //state.windows[index].closed = true
+            state.windows.splice(index, 1)
         },
 
         minimizeWindow(state, index) {
@@ -118,14 +119,16 @@ export default {
             state.windows[index].fullscreen = false
         },
 
-        setActiveWindow(state, index) {
+        setActiveWindow(state, index = undefined) {
             if (state.windows.length > 0) {
                 if (index === state.indexActiveWindow) {
                     return
                 }
 
                 if (index != undefined) {
-                    state.activeWindow.active = false
+                    if (state.activeWindow !== null) {
+                        state.activeWindow.active = false
+                    }
                     state.activeWindow = state.windows[index]
                     state.activeWindow.active = true
                     state.indexActiveWindow = index
@@ -153,10 +156,11 @@ export default {
                     }
                 })
                 state.activeWindow.zIndex = state.windows.length
+                console.log('store:setActiveWindow', state.activeWindow.zIndex)
+                console.log('store:setActiveWindow', state.windows)
             }
 
-            console.log('store:setActiveWindow', state.activeWindow.zIndex)
-            console.log('store:setActiveWindow', state.windows)
+
         },
 
         unsetActiveWindow(state) {
@@ -171,8 +175,24 @@ export default {
                 }
             })
 
-            state.maxZIndex += 1
-            state.activeWindow.zIndex = state.maxZIndex
+            if (state.activeWindow) {
+                state.maxZIndex += 1
+                const zIndex = state.activeWindow.zIndex
+                state.windows.forEach(function (window) {
+                    if (window.zIndex > zIndex) {
+                        window.zIndex -= 1
+                    }
+                })
+                state.activeWindow.zIndex = state.windows.length
+            }
+        },
+
+        setNotActiveWindows(state) {
+            state.windows.forEach(function (window) {
+                window.active = false
+            })
+            state.activeWindow = null
+            state.indexActiveWindow = null
         }
     },
     actions: {
@@ -184,6 +204,10 @@ export default {
             commit('setActiveWindow')
         },
 
+        actionSetNotActiveWindows({ commit }) {
+            commit('setNotActiveWindows')
+        },
+
         actionSetWindows({ commit }, windows) {
             commit('setWindows', windows)
         },
@@ -192,7 +216,7 @@ export default {
             commit('toggleWindows', windows)
         },
 
-        actionUpdateWindowCoords({ commit, rootState }, options) {
+        actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {
             commit('updateWindowCoords', options)
             if (rootState.grid.modeGrid) {
                 //console.log('old left', options.left, 'old top', options.top)
@@ -205,7 +229,6 @@ export default {
                 const heightGrid = rootState.grid.heightGrid
                 const heightOneRow = heightGrid / countRows
                 options.top = Math.floor(options.top / heightOneRow) * heightOneRow
-
                 options.width = 100 * options.width / widthGrid
                 options.height = 100 * options.height / heightGrid
 
@@ -214,22 +237,23 @@ export default {
 
                 const heightRowPercent = 100 / countRows
                 options.height = Math.ceil(options.height / heightRowPercent) * (heightRowPercent)
-
                 setTimeout(function () {
                     commit('updateWindowSize', options)
                     commit('updateWindowCoords', options)
+                    dispatch("actionSaveSettingsDesktop");
                 }, 1)
+            } else {
+                dispatch("actionSaveSettingsDesktop");
             }
         },
 
-        actionUpdateWindowSize({ commit, rootState }, options) {
+        actionUpdateWindowSize({ commit, dispatch, rootState }, options) {
             const widthGrid = rootState.grid.widthGrid
             const heightGrid = rootState.grid.heightGrid
             options.width = 100 * options.width / widthGrid
             options.height = 100 * options.height / heightGrid
             commit('updateWindowCoords', options)
             commit('updateWindowSize', options)
-
             if (rootState.grid.modeGrid) {
                 //console.log('old left', options.left, 'old top', options.top)
                 const countColumns = rootState.grid.countColumns
@@ -237,10 +261,21 @@ export default {
                 const widthOneColumn = widthGrid / countColumns
                 options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
 
+                if (options.diffLeft) {
+                    options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+                } else {
+                    options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
+                }
+
                 const countRows = rootState.grid.countRows
                 const heightGrid = rootState.grid.heightGrid
                 const heightOneRow = heightGrid / countRows
-                options.top = Math.floor(options.top / heightOneRow) * heightOneRow
+                const old = options.top;
+                if (options.diffTop) {
+                    options.top = Math.floor(options.top / heightOneRow) * heightOneRow
+                } else {
+                    options.top = Math.round(options.top / heightOneRow) * heightOneRow
+                }
 
                 const widthColumnPercent = 100 / countColumns
                 options.width = Math.ceil(options.width / widthColumnPercent) * (widthColumnPercent)
@@ -252,8 +287,13 @@ export default {
                 setTimeout(function () {
                     commit('updateWindowCoords', options)
                     commit('updateWindowSize', options)
+                    dispatch("actionSaveSettingsDesktop");
                 }, 1)
+            } else {
+                dispatch("actionSaveSettingsDesktop");
             }
+
+
         },
     },
     getters: {

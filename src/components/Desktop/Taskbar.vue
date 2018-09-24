@@ -2,12 +2,13 @@
   <!-- <v-footer app dark color="primary"> -->
     <v-footer dark color="primary" v-if="visibleTaskbar">
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
-      <v-btn
+      <!-- <v-btn
           color="primary"
           @click="toggleVisibleStartMenu"
         >
           <v-icon>home</v-icon>
-      </v-btn>
+      </v-btn> -->
+      <mainboard-startmenu></mainboard-startmenu>
       <v-btn
           v-for="(window, index) in windows"
           :key="index"
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+import Startmenu from "./Startmenu";
 export default {
   data() {
     return {
@@ -39,34 +41,35 @@ export default {
       //windows: this.getWindows()
     };
   },
+  components: {
+    mainboardStartmenu: Startmenu
+  },
   methods: {
     toggleVisibleTaskbar() {
       this.visibleTaskbar = !this.visibleTaskbar;
     },
+
     toggleMinimizedWindow(index, minimize) {
       console.log("minimize", minimize);
       this.$store.commit("toggleMinimizeWindow", index);
       if (minimize) {
         this.$store.commit("setActiveWindow", index);
       }
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
+
     toggleVisibleStartMenu() {
       this.$store.dispatch("actionToggleVisibleStartMenu");
     },
+
     titleMinimizeWindow(title) {
       return title.length < 10 ? title : title.substr(0, 10) + "...";
-    },
-    getWindows() {
-      return this.$store.getters.getWindows;
     }
   },
-  computed: {
-    minimizeWindows() {
-      return this.$store.getters.getMinimizeWindows;
-    },
 
+  computed: {
     windows() {
-      return this.$store.getters.getWindows;
+      return this.$store.getters.windows;
     }
   }
 };

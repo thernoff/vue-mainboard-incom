@@ -48,28 +48,31 @@
           slot="activator"
           color="primary"
           dark
-          v-on:click="showCover"
+          v-on:click="setNotActiveWindows"
         >
           {{ titleActiveWorkspace }}
         </v-btn>
         <v-list>
-          <!-- <mainboard-dialog-window
-            v-bind:title="'Введите название рабочей области'"
-            v-bind:label="'Название рабочей области'"
-            v-on:input="createNewWorkspace($event)"
-          > -->
-              <v-list-tile
-                v-on:click="showInputDialogWindow"
-              >
-                Создать новую рабочую область
-            </v-list-tile>
+            <!-- <mainboard-input-dialog-window
+              v-bind:title="'Введите название рабочей области'"
+              v-bind:label="'Название рабочей области'"
+              v-on:input="createNewWorkspace($event)"
+            > -->
+                <v-list-tile
+                  v-on:click="showInputDialogWindow"
+                >
+
+                  Создать новую рабочую область
+              </v-list-tile>
+            <!-- </mainboard-input-dialog-window> -->
+
             <v-list-tile
                 v-on:click="showDialogWindow"
               >
                 Удалить текущую область
             </v-list-tile>
             <v-divider></v-divider>
-          <!-- </mainboard-dialog-window> -->
+
           <v-list-tile
             v-for="(workspace, index) in workspaces"
             :key="index"
@@ -171,6 +174,7 @@ export default {
 
     createNewWorkspace(nameWorkspace) {
       this.$store.dispatch("actionCreateNewWorkspace", nameWorkspace);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     deleteCurrentWorkspace(accept) {
@@ -181,7 +185,10 @@ export default {
         return;
       }
 
-      if (accept) this.$store.dispatch("actionDeleteCurrentWorkspace");
+      if (accept) {
+        this.$store.dispatch("actionDeleteCurrentWorkspace");
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      }
     },
 
     toggleModeGrid() {
@@ -199,10 +206,19 @@ export default {
 
     setActiveWorkspace(index) {
       this.$store.dispatch("actionSetActiveWorkspace", index);
+      this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
+    setNotActiveWindows() {
+      this.$store.dispatch("actionSetNotActiveWindows");
+      this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
 };
 </script>
 
 <style scoped>
+.mainboard-toolbar {
+  height: 40px;
+}
 </style>

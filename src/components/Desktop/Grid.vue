@@ -1,6 +1,10 @@
 <template>
-  <div class="mainboard-workspace__grid">
-    <div v-for="y of countRows"
+  <div
+    class="mainboard-workspace__grid"
+    v-on:click="setNotActiveWindows"
+  >
+    <div class="mainboard-workspace__grid-container" v-if="isModeGrid">
+      <div v-for="y of countRows"
       :key=y
       :style="{
           'height': heightGridRow + '%',
@@ -19,6 +23,7 @@
 
       </div>
     </div>
+    </div>
   </div>
 </template>
 
@@ -29,17 +34,30 @@ export default {
     return {};
   },
   computed: {
+    isModeGrid() {
+      return this.$store.getters.isModeGrid;
+    },
+
     countRows() {
       return this.$store.getters.getCountRows;
     },
+
     countColumns() {
       return this.$store.getters.getCountColumns;
     },
+
     widthGridCell() {
       return 100 / this.$store.getters.getCountColumns;
     },
+
     heightGridRow() {
       return 100 / this.$store.getters.getCountRows;
+    }
+  },
+  methods: {
+    setNotActiveWindows() {
+      this.$store.dispatch("actionSetNotActiveWindows");
+      this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
 };
@@ -53,5 +71,10 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+.mainboard-workspace__grid-container {
+  width: 100%;
+  height: 100%;
 }
 </style>

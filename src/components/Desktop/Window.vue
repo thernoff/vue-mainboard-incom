@@ -1,11 +1,23 @@
 <template>
-<div class="mainboard-window"
+<!-- <div class="mainboard-window"
     :data-index="index"
     :style="{
         top: options.top + 'px',
         left: options.left + 'px',
         width: Math.floor(widthGrid * options.width / 100) + 'px',
         height: Math.floor(heightGrid * options.height / 100) + 'px',
+        zIndex: options.zIndex,
+    }"
+
+    :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
+> -->
+<div class="mainboard-window"
+    :data-index="index"
+    :style="{
+        top: options.top + 'px',
+        left: options.left + 'px',
+        width: options.width + '%',
+        height: options.height + '%',
         zIndex: options.zIndex,
     }"
 
@@ -36,12 +48,15 @@
     >
         <span >{{ options.title }}</span>
         <v-spacer></v-spacer>
-        <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
+        <v-btn icon small class="mainboard-window__btn" v-if="showBtnBack" v-on:click="back" title="Назад">
+            <v-icon color="white">fas fa-arrow-left</v-icon>
+        </v-btn>
+        <!-- <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
             <v-icon color="white">fas fa-arrows-alt-v</v-icon>
         </v-btn>
         <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullwidth')" title="Развернуть по ширине">
             <v-icon color="white">fas fa-arrows-alt-h</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-btn icon small class="mainboard-window__btn" @click="reloadWindow" title="Перезагрузить окно">
             <v-icon color="white">refresh</v-icon>
         </v-btn>
@@ -60,9 +75,9 @@
     <v-card-text class="mainboard-window__body">
         <div class="mainboard-window__cover-window"
             v-if="!options.active"
-            @mousedown="setActiveWindow"
+            v-on:click="setActiveWindow"
         ></div>
-        <base-mainboard-frame ref="baseMainboardFrame" :frameSrc="options.link"></base-mainboard-frame>
+        <base-mainboard-frame v-on:loadFrame="updateHistory($event)" ref="baseMainboardFrame" :backLink="backLink" :apiLink="apiLink"></base-mainboard-frame>
     </v-card-text>
 
     <v-divider></v-divider>
@@ -74,45 +89,95 @@
 import baseMainboardFrame from "../Base/BaseFrame";
 export default {
   props: ["options", "index"],
+
+  data() {
+    return {
+      apiLink: this.options.apiLink,
+      backLink: "",
+      history: [],
+      pressBtnReload: false,
+      pressBtnBack: false
+    };
+  },
   computed: {
     widthGrid() {
       return this.$store.getters.getWidthGrid;
     },
+
     heightGrid() {
       return this.$store.getters.getHeightGrid;
+    },
+
+    openMenu() {
+      return this.$store.getters.openMenu;
+    },
+
+    showBtnBack() {
+      return this.history.length > 1;
     }
   },
+
   components: {
     baseMainboardFrame
   },
+
   methods: {
     minimizeWindow() {
       this.$store.commit("toggleMinimizeWindow", this.index);
       if (this.options.active) {
         this.$store.commit("unsetActiveWindow");
       }
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
+
     toggleClassWindow(classCss) {
       this.$store.commit("toggleClassWindow", {
         index: this.index,
         classCss: classCss
       });
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
+
     reloadWindow() {
       this.$refs.baseMainboardFrame.$refs.baseFrame.src = this.options.apiLink;
     },
+
     closeWindow() {
-      //this.$store.commit('closeWindow', this.index)
       this.$store.dispatch("actionCloseWindow", this.index);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
+
     toggleFullscreenWindow() {
       this.$store.commit("toggleFullscreenWindow", this.index);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
+
     setActiveWindow() {
-      console.log("setActiveWindow");
+      console.log("setActiveWindow: index", this.index);
       this.$store.commit("setActiveWindow", this.index);
+      this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
+    updateHistory(apiLink) {
+      if (!this.pressBtnReload && !this.pressBtnBack) {
+        this.history.push(apiLink);
+      }
+
+      this.pressBtnReload = false;
+      this.pressBtnBack = false;
+      this.backLink = "";
+      console.log("Window.history", this.history);
+    },
+
+    back() {
+      if (this.history.length > 1) {
+        this.pressBtnBack = true;
+        this.backLink = this.history[this.history.length - 2];
+        this.history.pop();
+      }
     }
   },
+
   mounted() {
     var self = this;
     var countRows = self.$store.getters.getCountRows;
@@ -154,6 +219,7 @@ export default {
           };
 
           self.$store.dispatch("actionUpdateWindowCoords", options);
+          //self.$store.dispatch("actionSaveSettingsDesktop");
         }
       })
       .resizable({
@@ -170,7 +236,7 @@ export default {
           $window.find(".mainboard-frame__cover").show();
         },
         stop: function(event, ui) {
-          //console.log("ui", ui);
+          console.log("ui", ui);
           var $window = $(this);
           $window.find(".mainboard-frame__cover").hide();
 
@@ -184,10 +250,13 @@ export default {
             top: ui.position.top < 0 ? 0 : ui.position.top,
             left: ui.position.left < 0 ? 0 : ui.position.left,
             width: ui.size.width,
-            height: ui.size.height
+            height: ui.size.height,
+            diffTop: ui.position.top - ui.originalPosition.top,
+            diffLeft: ui.position.left - ui.originalPosition.left
           };
           //self.$store.dispatch("actionUpdateWindowCoords", options);
           self.$store.dispatch("actionUpdateWindowSize", options);
+          //self.$store.dispatch("actionSaveSettingsDesktop");
         }
       });
   }

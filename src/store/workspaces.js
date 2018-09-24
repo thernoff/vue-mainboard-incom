@@ -69,8 +69,18 @@ export default {
 
     setDashboard(state, dashboard) {
       state.dashboard = dashboard
+    },
+
+    recalcWindowsCoords(state, options) {
+      state.workspaces.forEach(function (workspace) {
+        workspace.windows.forEach(function (window) {
+          window.top = window.top * options.coefTop
+          window.left = window.left * options.coefLeft
+        })
+      })
     }
   },
+
   actions: {
 
     actionInitWorkspaces({ state, commit }, workspaces) {
@@ -106,8 +116,8 @@ export default {
         .then(
           response => {
             console.log('response', response.data)
-            //commit('setStartmenuItems', response.data.dashboard)
-            //dispatch('actionInitWorkspaces', response.data.workspaces)
+            commit('setStartmenuItems', response.data.dashboard)
+            dispatch('actionInitWorkspaces', response.data.workspaces)
           }
         )
         .catch(error => {
@@ -135,7 +145,7 @@ export default {
           }
         )
         .catch(error => {
-          console.log(error);
+          console.log('error', error);
         })
 
     },
@@ -147,6 +157,12 @@ export default {
         commit('setWindows', state.activeWorkspace.windows)
         commit('setActiveWindow')
       }
+    },
+
+    actionRecalcWindowsCoords({ commit, rootState }, options) {
+      const widthGrid = rootState.grid.widthGrid
+      const heightGrid = rootState.grid.heightGrid
+      commit('recalcWindowsCoords', options)
     }
   },
   getters: {
