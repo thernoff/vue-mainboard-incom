@@ -5,10 +5,10 @@
     v-on:click="setNotActive"
   >
     <div class="mainboard-workspace__grid-container" v-if="isModeGrid">
-      <div class="mainboard-workspace__grid-gradient"
+      <!-- <div class="mainboard-workspace__grid-gradient"
         :style="{backgroundSize: widthGridCell + '%' + ' ' + heightGridRow +'%'}"
-      ></div>
-      <!-- <div v-for="y of countRows"
+      ></div> -->
+      <div v-for="y of countRows"
       :key=y
       :style="{
           'height': heightGridRow + '%',
@@ -26,7 +26,7 @@
       >
 
       </div>
-    </div> -->
+    </div>
     </div>
   </div>
 </template>
@@ -91,8 +91,16 @@ export default {
 .mainboard-workspace__grid-gradient {
   width: 100%;
   height: 100%;
+  background: -moz-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
+  -moz-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+  background: -webkit-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
+  -webkit-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+  background: -o-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
+  -o-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+  background: -ms-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
+  -ms-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   background: linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-    linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+  linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   /* linear-gradient(90deg, mediumvioletred, transparent 1px); */
 
   /* background-position: center center; */
