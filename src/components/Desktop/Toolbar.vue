@@ -212,6 +212,7 @@ export default {
 
     setActiveWorkspace(index) {
       this.$store.dispatch("actionSetActiveWorkspace", index);
+      //this.$store.dispatch("actionSetActiveWindow");
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 

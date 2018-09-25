@@ -12,9 +12,9 @@
         v-model="startMenu"
       >
       <v-menu
-        v-model="contextMenu.visible"
-        :position-x="contextMenu.x"
-        :position-y="contextMenu.y"
+        v-model="contextMenu"
+        :position-x="x"
+        :position-y="y"
         absolute
         offset-y
       >
@@ -22,9 +22,7 @@
           <v-list-tile
             @click="''"
           >
-            <v-list-tile-title v-on:click="addShortcutToDesktop">
-              {{ 'Добавить ярлык на рабочий стол' }}
-            </v-list-tile-title>
+            <v-list-tile-title v-on="addShortcutToDesktop">{{ 'Добавить ярлык на рабочий стол' }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-menu>
@@ -113,14 +111,11 @@
                         :src="element.image"
                         v-bind:style="{width: '25px', marginRight: '5px'}"
                       />
-                      <!-- <v-list-tile-content> -->
+                      <v-list-tile-content>
                         <v-list-tile-title>
                           {{ element.label }}
                         </v-list-tile-title>
-                      <!-- </v-list-tile-content> -->
-                      <!-- <v-btn fab dark small color="primary" v-on:click.stop="showContextMenu(indexItem, indexElement, $event)">
-                        <v-icon dark>list</v-icon>
-                      </v-btn> -->
+                      </v-list-tile-content>
                     </v-list-tile>
                 </v-list-group>
         </v-list>
@@ -137,26 +132,28 @@ export default {
   data() {
     return {
       startMenu: false,
-      contextMenu: {
-        visible: false,
-        x: 0,
-        y: 0,
-        indexItem: null,
-        indexElement: null
-      }
+      contextMenu: false,
+      x: 0,
+      y: 0
     };
   },
 
   methods: {
-    /* createNewWorkspace() {
+    createNewWorkspace() {
+      //let activeWorkspace = this.$store.commit('createNewWorkspace')
       this.$store.dispatch("actionCreateNewWorkspace");
+      //let windows = this.$store.getters.getWindowsActiveWorkspace;
+      //this.$store.commit('setWindows', windows)
+      //this.$store.dispatch("actionSetWindows", windows);
+      //this.$store.dispatch("actionSetActiveWindow");
+
       this.$store.dispatch("actionToggleVisibleStartMenu");
     },
 
     setActiveWorkspace(index) {
       this.$store.dispatch("actionSetActiveWorkspace", index);
       this.$store.dispatch("actionToggleVisibleStartMenu");
-    }, */
+    },
 
     createNewWindow(indexItem, indexElement) {
       this.startMenu = false;
@@ -176,30 +173,12 @@ export default {
 
     showContextMenu(indexItem, indexElement, e) {
       e.preventDefault();
-      this.contextMenu.visible = false;
-      this.contextMenu.x = e.clientX;
-      this.contextMenu.y = e.clientY;
-      this.contextMenu.indexItem = indexItem;
-      this.contextMenu.indexElement = indexElement;
+      this.contextMenu = false;
+      this.x = e.clientX;
+      this.y = e.clientY;
       this.$nextTick(() => {
-        this.contextMenu.visible = true;
+        this.contextMenu = true;
       });
-    },
-
-    addShortcutToDesktop() {
-      const itemStartMenu = this.$store.getters.getItemStartMenu(
-        this.contextMenu.indexItem,
-        this.contextMenu.indexElement
-      );
-
-      const options = {
-        label: itemStartMenu.label,
-        image: itemStartMenu.image,
-        apiLink: itemStartMenu.apiLink
-      };
-
-      this.$store.commit("createNewShortcut", options);
-      this.$store.dispatch("actionSaveSettingsDesktop");
     }
   },
 

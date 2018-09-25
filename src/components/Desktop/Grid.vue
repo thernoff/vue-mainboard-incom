@@ -1,7 +1,7 @@
 <template>
   <div
     class="mainboard-workspace__grid"
-    v-on:click="setNotActiveWindows"
+    v-on:click="setNotActive"
   >
     <div class="mainboard-workspace__grid-container" v-if="isModeGrid">
       <div v-for="y of countRows"
@@ -55,8 +55,9 @@ export default {
     }
   },
   methods: {
-    setNotActiveWindows() {
+    setNotActive() {
       this.$store.dispatch("actionSetNotActiveWindows");
+      this.$store.dispatch("actionSetNotActiveShortcuts");
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }

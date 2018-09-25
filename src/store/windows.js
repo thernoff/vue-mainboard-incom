@@ -55,6 +55,7 @@ export default {
             }
 
             const length = state.windows.push(newWindow)
+            console.log('state.activeWorkspace', state.activeWorkspace)
             state.activeWindow = state.windows[length - 1]
             state.indexActiveWindow = length - 1
 

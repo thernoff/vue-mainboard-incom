@@ -16,6 +16,7 @@
           ref="grid"
         ></mainboard-grid>
           <!-- <v-layout row wrap> -->
+            <mainboard-shortcut-list :shortcuts="shortcuts"></mainboard-shortcut-list>
             <mainboard-window
               v-for="(window, index) in windows"
               v-if="!window.closed"
@@ -44,6 +45,8 @@ import Startmenu from "./components/Desktop/Startmenu";
 import Window from "./components/Desktop/Window";
 import Grid from "./components/Desktop/Grid";
 import Cover from "./components/Desktop/Cover";
+import Shortcut from "./components/Desktop/Shortcut";
+import ShortcutList from "./components/Desktop/ShortcutList";
 import ResizableBlock from "./components/Desktop/ResizableBlock";
 
 export default {
@@ -58,6 +61,8 @@ export default {
     mainboardWindow: Window,
     mainboardGrid: Grid,
     mainboardCover: Cover,
+    mainboardShortcut: Shortcut,
+    mainboardShortcutList: ShortcutList,
     mainboardResizableBlock: ResizableBlock
   },
 
@@ -72,6 +77,10 @@ export default {
 
     windows() {
       return this.$store.getters.windows;
+    },
+
+    shortcuts() {
+      return this.$store.getters.shortcuts;
     }
   },
 
