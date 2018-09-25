@@ -29,8 +29,9 @@
         </v-list>
       </v-menu>
       <v-btn
-          color="primary"
+          color="btnTaskbar"
           slot="activator"
+          dark
           v-on:click="onClickBtnStart"
         >
           <v-icon>home</v-icon>

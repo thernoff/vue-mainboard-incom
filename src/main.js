@@ -12,8 +12,12 @@ import colors from 'vuetify/es5/util/colors'
 
 Vue.use(Vuetify, {
   theme: {
-    primary: colors.indigo.darken1, // #E53935
-    minimizeWindowTaskbar: colors.indigo.darken3,
+    //primary: colors.indigo.darken1, // #E53935
+    primary: '#3b5375',
+    titleWindow: '#4a6588',
+    //minimizeWindowTaskbar: colors.indigo.darken3,
+    minimizeWindowTaskbar: '#293c56',
+    btnTaskbar: '#293c56',
     secondary: colors.red.lighten4, // #FFCDD2
     accent: colors.indigo.base // #3F51B5
   }

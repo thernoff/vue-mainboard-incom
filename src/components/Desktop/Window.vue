@@ -1,16 +1,4 @@
 <template>
-<!-- <div class="mainboard-window"
-    :data-index="index"
-    :style="{
-        top: options.top + 'px',
-        left: options.left + 'px',
-        width: Math.floor(widthGrid * options.width / 100) + 'px',
-        height: Math.floor(heightGrid * options.height / 100) + 'px',
-        zIndex: options.zIndex,
-    }"
-
-    :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
-> -->
 <div ref="window" class="mainboard-window"
     :data-index="index"
     :style="{
@@ -23,26 +11,14 @@
 
     :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
 >
-<!-- <div class="mainboard-window"
-    :data-index="index"
-    :style="{
-        top: options.top + 'px',
-        left: options.left + 'px',
-        width: options.width + '%',
-        height: options.height + '%',
-        zIndex: options.zIndex,
-    }"
-
-    :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
-> -->
-    <v-card
-      tile
-      class="mainboard-window__card"
-    >
+  <v-card
+    tile
+    class="mainboard-window__card"
+  >
 
     <v-card-title
         class="mainboard-window__title"
-        :class = "{'indigo lighten-1': options.active, 'indigo lighten-4': !options.active}"
+        :class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
         @mousedown="setActiveWindow"
         primary-title
     >
@@ -77,7 +53,7 @@
             v-if="!options.active"
             v-on:click="setActiveWindow"
         ></div>
-        <base-mainboard-frame v-on:loadFrame="updateHistory($event)" ref="baseMainboardFrame" :backLink="backLink" :apiLink="apiLink"></base-mainboard-frame>
+        <base-mainboard-frame v-on:loadFrame="updateWindow($event)" ref="baseMainboardFrame" :backLink="backLink" :apiLink="options.apiLink"></base-mainboard-frame>
     </v-card-text>
 
     <v-divider></v-divider>
@@ -88,11 +64,19 @@
 <script>
 import baseMainboardFrame from "../Base/BaseFrame";
 export default {
-  props: ["options", "index"],
-
+  props: {
+    index: {
+      type: Number,
+      required: true
+    },
+    options: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      apiLink: this.options.apiLink,
+      apiLink: "",
       backLink: "",
       history: [],
       pressBtnReload: false,
@@ -100,18 +84,6 @@ export default {
     };
   },
   computed: {
-    widthGrid() {
-      return this.$store.getters.getWidthGrid;
-    },
-
-    heightGrid() {
-      return this.$store.getters.getHeightGrid;
-    },
-
-    openMenu() {
-      return this.$store.getters.openMenu;
-    },
-
     showBtnBack() {
       return this.history.length > 1;
     },
@@ -163,6 +135,22 @@ export default {
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
+    updateWindow(data) {
+      this.updateHistory(data.apiLink);
+      this.updateWindowApiLink(data.apiLink);
+      this.updateWindowTitle(data.title);
+    },
+
+    updateWindowTitle(title) {
+      this.$store.commit("updateWindowTitle", { index: this.index, title });
+      this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
+    updateWindowApiLink(apiLink) {
+      this.$store.commit("updateWindowApiLink", { index: this.index, apiLink });
+      this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
     updateHistory(apiLink) {
       if (!this.pressBtnReload && !this.pressBtnBack) {
         this.history.push(apiLink);
@@ -183,6 +171,10 @@ export default {
     }
   },
 
+  created() {
+    this.apiLink = this.options.apiLink;
+  },
+
   mounted() {
     var self = this;
     var countRows = self.$store.getters.getCountRows;
@@ -195,21 +187,11 @@ export default {
         snap: !self.isModeGrid ? false : ".mainboard-window",
         start: function(event, ui) {
           var $window = $(this);
-          //$window.find('.mainboard-frame__cover').css({display: 'block'});
           $window.find(".mainboard-frame__cover").show();
         },
         stop: function(event, ui) {
           console.log("draggable ui", ui);
           var $window = $(this);
-          //console.log("$window.outerWidth", $window.outerWidth());
-          //console.log("$window.outerHeight", $window.outerHeight());
-          //var offset = $window.offset();
-          //var top = offset.top;
-          //var left = offset.left;
-          //var bottom = top + $window.outerHeight();
-          //var right = left + $window.outerWidth();
-          //console.log(left, top, right, bottom);
-
           $window.find(".mainboard-frame__cover").hide();
           console.log("draggable window self.index", self.index);
           console.log("draggable window data-index", $(this).data("index"));
@@ -277,8 +259,8 @@ export default {
   /* border: 2px solid rgba(92, 107, 192, 0.8); */
   border-radius: 5px;
   box-sizing: border-box;
-  webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
+  webkit-box-shadow: 1px 3px 9px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 3px 9px rgba(0, 0, 0, 0.5);
   background-color: #fff;
 }
 
@@ -309,7 +291,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  border: 2px solid rgba(92, 107, 192, 1);
+  border: 2px solid #5b7aa1;
   border-radius: inherit;
 }
 

@@ -59,8 +59,8 @@ export default {
             state.activeWindow = state.windows[length - 1]
             state.indexActiveWindow = length - 1
 
-            state.topPrevWindow += 50
-            state.leftPrevWindow += 50
+            state.topPrevWindow += 10
+            state.leftPrevWindow += 10
         },
 
         updateWindowCoords(state, options) {
@@ -85,6 +85,16 @@ export default {
             //window.height *= parseFloat(options.coefHeight)
             window.width = +options.width
             window.height = +options.height
+        },
+
+        updateWindowTitle(state, options) {
+            const window = state.windows[options.index]
+            window.title = options.title
+        },
+
+        updateWindowApiLink(state, options) {
+            const window = state.windows[options.index]
+            window.apiLink = options.apiLink
         },
 
         toggleClassWindow(state, data) {

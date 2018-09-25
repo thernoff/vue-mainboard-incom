@@ -79,6 +79,8 @@ export default {
 }
 
 .mainboard-shortcut__title {
+  color: #fff;
+  text-shadow: 1px 1px #000;
   text-align: center;
   font-size: 12px;
   line-height: 1;

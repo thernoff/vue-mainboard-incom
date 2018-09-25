@@ -40,6 +40,10 @@ export default {
       return state.widthGrid
     },
 
+    widthGrid(state) {
+      return state.widthGrid
+    },
+
     getHeightGrid(state) {
       return state.heightGrid
     },

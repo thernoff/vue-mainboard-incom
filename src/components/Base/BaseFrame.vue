@@ -25,8 +25,7 @@ export default {
     load() {
       console.log(
         "Load frame",
-        this.$refs.baseFrame.contentWindow.location.href,
-        this.apiLink
+        this.$refs.baseFrame.contentWindow.document.title
       );
       const posRedirurl = this.apiLink.search(/redirurl/i);
       let subApiLink = "";
@@ -38,7 +37,12 @@ export default {
         newRedirurl = newRedirurl.replace(/\//g, "_");
         newRedirurl = newRedirurl.replace(/=/g, ",");
 
-        this.$emit("loadFrame", subApiLink + "redirurl=" + newRedirurl);
+        const data = {
+          title: this.$refs.baseFrame.contentWindow.document.title,
+          apiLink: subApiLink + "redirurl=" + newRedirurl
+        };
+
+        this.$emit("loadFrame", data);
       }
     }
   },
