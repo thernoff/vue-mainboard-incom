@@ -67,6 +67,13 @@ export default {
             state.leftPrevWindow += 10
         },
 
+        updateWindow(state, options) {
+            console.log('updateWindow options', options)
+            let window = state.windows[options.index]
+            console.log('updateWindow window', window)
+            state.windows[options.index] = Object.assign(window, options)
+        },
+
         updateWindowCoords(state, options) {
             let window = state.windows[options.index]
             //window.top += parseInt(options.diffY)
@@ -235,6 +242,10 @@ export default {
 
         actionToggleWindows({ commit }, windows) {
             commit('toggleWindows', windows)
+        },
+
+        actionUpdateWindow({ commit }, options) {
+            commit('updateWindow', options)
         },
 
         actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {

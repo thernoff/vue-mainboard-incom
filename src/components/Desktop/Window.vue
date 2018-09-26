@@ -76,6 +76,7 @@ export default {
   },
   data() {
     return {
+      firstLoad: true,
       apiLink: "",
       backLink: "",
       history: [],
@@ -136,9 +137,17 @@ export default {
     },
 
     updateWindow(data) {
-      this.updateHistory(data.apiLink);
-      this.updateWindowApiLink(data.apiLink);
-      this.updateWindowTitle(data.title);
+      if (!this.firstLoad) {
+        this.updateHistory(data.apiLink);
+        let options = Object.assign({}, data, { index: this.index });
+        this.$store.dispatch("actionUpdateWindow", options);
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      } else {
+        this.firstLoad = false;
+      }
+
+      /* this.updateWindowApiLink(data.apiLink);
+      this.updateWindowTitle(data.title); */
     },
 
     updateWindowTitle(title) {
@@ -147,6 +156,11 @@ export default {
     },
 
     updateWindowApiLink(apiLink) {
+      this.$store.commit("updateWindowApiLink", { index: this.index, apiLink });
+      this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
+    updateWindowCurrentLink(currentLink) {
       this.$store.commit("updateWindowApiLink", { index: this.index, apiLink });
       this.$store.dispatch("actionSaveSettingsDesktop");
     },

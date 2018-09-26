@@ -17,32 +17,38 @@ export default {
 
   data() {
     return {
-      src: this.apiLink
+      src: this.apiLink,
+      firstLoad: true
     };
   },
 
   methods: {
     load() {
-      console.log(
-        "Load frame",
-        this.$refs.baseFrame.contentWindow.document.title
-      );
-      const posRedirurl = this.apiLink.search(/redirurl/i);
-      let subApiLink = "";
-      if (posRedirurl > 0) {
-        subApiLink = this.apiLink.slice(0, posRedirurl);
-        const currentLink = this.$refs.baseFrame.contentWindow.location.href;
-        let newRedirurl = btoa(currentLink);
-        newRedirurl = newRedirurl.replace(/\+/g, "-");
-        newRedirurl = newRedirurl.replace(/\//g, "_");
-        newRedirurl = newRedirurl.replace(/=/g, ",");
+      if (!this.firstLoad) {
+        console.log(
+          "Load frame",
+          this.$refs.baseFrame.contentWindow.document.title
+        );
+        const posRedirurl = this.apiLink.search(/redirurl/i);
+        let subApiLink = "";
+        if (posRedirurl > 0) {
+          subApiLink = this.apiLink.slice(0, posRedirurl);
+          const currentLink = this.$refs.baseFrame.contentWindow.location.href;
+          let newRedirurl = btoa(currentLink);
+          newRedirurl = newRedirurl.replace(/\+/g, "-");
+          newRedirurl = newRedirurl.replace(/\//g, "_");
+          newRedirurl = newRedirurl.replace(/=/g, ",");
 
-        const data = {
-          title: this.$refs.baseFrame.contentWindow.document.title,
-          apiLink: subApiLink + "redirurl=" + newRedirurl
-        };
+          const data = {
+            title: this.$refs.baseFrame.contentWindow.document.title,
+            apiLink: subApiLink + "redirurl=" + newRedirurl,
+            currentLink
+          };
 
-        this.$emit("loadFrame", data);
+          this.$emit("loadFrame", data);
+        }
+      } else {
+        this.firstLoad = false;
       }
     }
   },
