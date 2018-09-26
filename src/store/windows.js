@@ -15,8 +15,8 @@ function getRandomId() {
 export default {
     state: {
         maxZIndex: 0,
-        topPrevWindow: 50,
-        leftPrevWindow: 600,
+        topPrevWindow: 5,
+        leftPrevWindow: 5,
         indexActiveWindow: null,
         activeWindow: null,
         windows: [] // хранится ссылка на массив activeWorkspace.windows
@@ -29,7 +29,9 @@ export default {
         createNewWindow(state, itemStartMenu) {
             const title = itemStartMenu.title || itemStartMenu.label
             const link = itemStartMenu.link
+            const currentLink = itemStartMenu.link
             const apiLink = itemStartMenu.apiLink
+            const itemId = itemStartMenu.id
             //const id = Math.random()
             const id = getRandomId()
             //console.log('id', id)
@@ -38,6 +40,8 @@ export default {
                 title,
                 link,
                 apiLink,
+                currentLink,
+                itemId,
                 top: state.topPrevWindow,
                 left: state.leftPrevWindow,
                 width: 40,
@@ -55,7 +59,7 @@ export default {
             }
 
             const length = state.windows.push(newWindow)
-            console.log('state.activeWorkspace', state.activeWorkspace)
+            console.log('newWindow', newWindow)
             state.activeWindow = state.windows[length - 1]
             state.indexActiveWindow = length - 1
 

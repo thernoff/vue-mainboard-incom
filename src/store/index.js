@@ -4,6 +4,7 @@ import startmenu from './startmenu'
 import windows from './windows'
 import workspaces from './workspaces'
 import grid from './grid'
+import user from './user'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
         startmenu,
         windows,
         workspaces,
-        grid
+        grid,
+        user
     }
 })

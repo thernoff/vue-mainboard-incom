@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Startmenu from "./Startmenu";
+import Startmenu from "./Startmenu.vue";
 export default {
   data() {
     return {
@@ -80,8 +80,8 @@ export default {
       const widthGrid = this.$store.getters.widthGrid;
       const widthBtnMinimizeWindows = widthGrid / countWindows;
       return widthBtnMinimizeWindows > 100
-        ? Math.floor(1000 * 100 / widthGrid) / 10
-        : Math.floor(1000 * widthBtnMinimizeWindows / widthGrid) / 10;
+        ? Math.floor((1000 * 100) / widthGrid) / 10
+        : Math.floor((1000 * widthBtnMinimizeWindows) / widthGrid) / 10;
     }
   }
 };

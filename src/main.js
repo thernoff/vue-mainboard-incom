@@ -33,7 +33,10 @@ jQuery(document).ready(function () {
     router,
     store,
     components: { App },
-    template: '<App/>'
+    template: '<App/>',
+    created() {
+
+    }
   })
 })
 

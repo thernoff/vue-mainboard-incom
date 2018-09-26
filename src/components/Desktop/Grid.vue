@@ -5,28 +5,28 @@
     v-on:click="setNotActive"
   >
     <div class="mainboard-workspace__grid-container" v-if="isModeGrid">
-      <!-- <div class="mainboard-workspace__grid-gradient"
+      <div class="mainboard-workspace__grid-gradient"
         :style="{backgroundSize: widthGridCell + '%' + ' ' + heightGridRow +'%'}"
-      ></div> -->
-      <div v-for="y of countRows"
-      :key=y
-      :style="{
-          'height': heightGridRow + '%',
-        }"
-    >
-      <div v-for="x of countColumns"
-        :key=x
+      ></div>
+      <!-- <div v-for="y of countRows"
+        :key=y
         :style="{
-
-          'float': 'left',
-          'width': widthGridCell + '%',
-          'border': '1px dashed rgb(226, 238, 255, 0.2)',
-          'height': '100%'
-        }"
+            'height': heightGridRow + '%',
+          }"
       >
+        <div v-for="x of countColumns"
+          :key=x
+          :style="{
 
-      </div>
-    </div>
+            'float': 'left',
+            'width': widthGridCell + '%',
+            'border': '1px dashed rgb(226, 238, 255, 0.2)',
+            'height': '100%'
+          }"
+        >
+
+        </div>
+    </div> -->
     </div>
   </div>
 </template>
@@ -76,7 +76,8 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-position: 50% 50%;
+  /* background-position: 50% 50%; */
+  background-position: center center;
   -moz-background-size: 100%; /* Firefox 3.6+ */
   -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
   -o-background-size: 100%; /* Opera 9.6+ */
@@ -91,16 +92,18 @@ export default {
 .mainboard-workspace__grid-gradient {
   width: 100%;
   height: 100%;
+  background-size: 15px 15px;
+  background-position: center center;
   background: -moz-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-  -moz-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+    -moz-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   background: -webkit-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-  -webkit-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+    -webkit-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   background: -o-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-  -o-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+    -o-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   background: -ms-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-  -ms-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+    -ms-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   background: linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
-  linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
+    linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   /* linear-gradient(90deg, mediumvioletred, transparent 1px); */
 
   /* background-position: center center; */

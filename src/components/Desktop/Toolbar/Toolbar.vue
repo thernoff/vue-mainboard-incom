@@ -96,10 +96,10 @@
 </template>
 
 <script>
-import InputDialogWindow from "./ModalWindows/InputDialogWindow";
-import DialogWindow from "./ModalWindows/DialogWindow";
-import InfoDialogWindow from "./ModalWindows/InfoDialogWindow";
-import Cover from "./Cover";
+import InputDialogWindow from "../ModalWindows/InputDialogWindow";
+import DialogWindow from "../ModalWindows/DialogWindow";
+import InfoDialogWindow from "../ModalWindows/InfoDialogWindow";
+import Cover from "../Cover";
 
 export default {
   data() {

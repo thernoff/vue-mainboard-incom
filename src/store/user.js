@@ -1,63 +1,41 @@
-import * as firebase from 'firebase'
-
-class User {
-    constructor (id) {
-        this.id = id
-    }
-}
+import axios from 'axios'
 
 export default {
     state: {
-        user: null
+        user: {}
     },
     mutations: {
-        setUser (state, data) {
+        setUser(state, data) {
             state.user = data
+        },
+
+        saveUser(state, user) {
+            state.user.email = user.email
         }
     },
     actions: {
-        async registerUser ({commit}, {email, password}) {
-            commit('clearError')
-            commit('setLoading', true)
-            try {
-                const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
-                commit('setLoading', false)
-            } catch (error) {
-                commit('setLoading', false)
-                commit('setError', error.message)
-                throw error
-            }
-        },
-        /* registerUser ({commit}, {email, password}) {
-            commit('clearError')
-            commit('setLoading', true)
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then( user => {
-                    commit('setUser', new User(user.uid))
-                    commit('setLoading', false)
-                })
+        actionSaveUser({ commit }, user) {
+            axios({
+                method: 'post',
+                headers: { 'Content-Type': 'application/form-data' },
+                url: 'http://esv.elxis.test/extusers/fpage/saveuser/',
+                data: user
+            })
+                .then(
+                    response => {
+                        console.log('response', response)
+                        commit('saveUser', user)
+                    }
+                )
                 .catch(error => {
-                    commit('setLoading', false)
-                    commit('setError', error.message)
+                    console.log('error', error)
+                    commit('saveUser', user)
                 })
-        } */
-        async loginUser ({commit}, {email, password}) {
-            commit('clearError')
-            commit('setLoading', true)
-            try {
-                const user = await firebase.auth().signInWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
-                commit('setLoading', false)
-            } catch (error) {
-                commit('setLoading', false)
-                commit('setError', error.message)
-                throw error
-            }
+
         }
     },
     getters: {
-        user () {
+        user(state) {
             return state.user
         }
     }

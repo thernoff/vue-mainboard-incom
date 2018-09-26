@@ -162,6 +162,7 @@ export default {
           response => {
             console.log('response', response.data)
             commit('setStartmenuItems', response.data.dashboard)
+            commit('setUser', response.data.user)
             dispatch('actionInitWorkspaces', response.data.workspaces)
           }
         )
@@ -173,6 +174,17 @@ export default {
           const workspaces = [{ "title": "Рабочая область пользователя", "descripton": "", "active": true, "windows": [], "shortcuts": [] }, { "title": "Тесты", "descripton": "", "active": false, "windows": [{ "id": "5YDfqtnqzx1537796630", "title": "Сервис Авто-Инфо", "link": "http://system.elxis.test/inner.php/speedcams/carinfo/", "apiLink": "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvY2FyaW5mby8,", "top": 0, "left": 1080, "width": 41.66666666666667, "height": 50, "zIndex": 2, "minimize": false, "fullscreen": false, "closed": false, "active": false, "classesCss": [] }, { "id": "p6RipvAjOe1537796642", "title": "Аналитика платежей от ЦАФАП", "link": "http://system.elxis.test/inner.php/speedcams/violpayments/analitics.html", "apiLink": "http://system.elxis.test/inner.php/apiusers/api/login?uname=test2&pword=d58371c110100d4f9ff6d32aebdf6dc3d94c76c7&redirurl=aHR0cDovL3N5c3RlbS5lbHhpcy50ZXN0L2lubmVyLnBocC9zcGVlZGNhbXMvdmlvbHBheW1lbnRzL2FuYWxpdGljcy5odG1s", "top": 431, "left": 0, "width": 100, "height": 50, "zIndex": 1, "minimize": false, "fullscreen": false, "closed": false, "active": false, "classesCss": [] }], "shortcuts": [] }]
           dispatch('actionInitWorkspaces', workspaces)
           console.log('workspaces', state.workspaces)
+
+          const user = {
+            firstname: 'Владимир',
+            lastname: 'Дудиков',
+            uname: 'test2',
+            email: 'test2@test.com',
+            phone: '555-33-44',
+            gid: 5
+          }
+
+          commit('setUser', user)
         })
     },
 
@@ -270,7 +282,7 @@ export default {
       return (state.activeWorkspace) ? state.activeWorkspace.shortcuts : []
     },
 
-    indexActiveWorkspace() {
+    indexActiveWorkspace(state) {
       return state.indexActiveWorkspace
     }
   }

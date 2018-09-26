@@ -1,16 +1,16 @@
 <template>
     <!-- <v-layout row>
     <v-flex xs12 sm6 offset-sm3> -->
-      <v-menu
-        top
-        offset-y
-        light
-        z-index="9999"
-        close-on-click
-        :close-on-content-click="false"
-        :close-delay="50"
-        v-model="startMenu"
-      >
+    <v-menu
+      top
+      offset-y
+      light
+      z-index="9999"
+      close-on-click
+      :close-on-content-click="false"
+      :close-delay="50"
+      v-model="startMenu"
+    >
       <v-menu
         v-model="contextMenu.visible"
         :position-x="contextMenu.x"
@@ -41,13 +41,14 @@
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
 
           <v-toolbar-title>
-            Гость
+            {{ user.lastname + ' ' + user.firstname }}
           </v-toolbar-title>
-          <!-- <v-spacer></v-spacer> -->
+          <v-spacer></v-spacer>
 
           <!-- <v-btn icon>
-            <v-icon>search</v-icon>
+            <v-icon>settings</v-icon>
           </v-btn> -->
+          <mainboard-user-form v-bind:user="user" v-on:click.native="onClickBtnSettingsUser"></mainboard-user-form>
 
          <!--  <v-btn icon>
             <v-icon>view_module</v-icon>
@@ -127,13 +128,14 @@
         </v-list>
         </v-list>
       </v-card>
-      </v-menu>
+    </v-menu>
 
 <!--     </v-flex>
   </v-layout> -->
 </template>
 
 <script>
+import UserForm from "./UserForm.vue";
 export default {
   data() {
     return {
@@ -146,6 +148,22 @@ export default {
         indexElement: null
       }
     };
+  },
+  components: {
+    mainboardUserForm: UserForm
+  },
+  computed: {
+    workspaces() {
+      return this.$store.getters.getWorkspaces;
+    },
+
+    items() {
+      return this.$store.getters.getItems;
+    },
+
+    user() {
+      return this.$store.getters.user;
+    }
   },
 
   methods: {
@@ -165,14 +183,21 @@ export default {
         indexItem,
         indexElement
       );
+      console.log("itemStartmenu", itemStartMenu);
       this.$store.commit("createNewWindow", itemStartMenu);
       this.$store.dispatch("actionToggleVisibleStartMenu");
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     onClickBtnStart() {
+      this.$store.dispatch("actionToggleVisibleStartMenu");
       this.$store.dispatch("actionSetNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
+    onClickBtnSettingsUser() {
+      console.log("onClickBtnSettingsUser", this.user);
+      //this.startMenu = false;
     },
 
     showContextMenu(indexItem, indexElement, e) {
@@ -201,16 +226,6 @@ export default {
 
       this.$store.commit("createNewShortcut", options);
       this.$store.dispatch("actionSaveSettingsDesktop");
-    }
-  },
-
-  computed: {
-    workspaces() {
-      return this.$store.getters.getWorkspaces;
-    },
-
-    items() {
-      return this.$store.getters.getItems;
     }
   }
 };

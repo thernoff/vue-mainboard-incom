@@ -39,15 +39,15 @@
 </template>
 
 <script>
-import Taskbar from "./components/Desktop/Taskbar";
-import Toolbar from "./components/Desktop/Toolbar";
-import Startmenu from "./components/Desktop/Startmenu";
-import Window from "./components/Desktop/Window";
-import Grid from "./components/Desktop/Grid";
-import Cover from "./components/Desktop/Cover";
-import Shortcut from "./components/Desktop/Shortcut";
-import ShortcutList from "./components/Desktop/ShortcutList";
-import ResizableBlock from "./components/Desktop/ResizableBlock";
+import Taskbar from "@/components/Desktop/Taskbar/Taskbar.vue";
+import Toolbar from "@/components/Desktop/Toolbar/Toolbar.vue";
+import Startmenu from "@/components/Desktop/Taskbar/Startmenu.vue";
+import Window from "@/components/Desktop/Window.vue";
+import Grid from "@/components/Desktop/Grid.vue";
+import Cover from "@/components/Desktop/Cover.vue";
+import Shortcut from "@/components/Desktop/Shortcut.vue";
+import ShortcutList from "@/components/Desktop/ShortcutList.vue";
+import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
 
 export default {
   data() {
@@ -92,13 +92,10 @@ export default {
   },
 
   mounted() {
-    console.log("WINDOWS", this.windows);
     const self = this;
-
+    this.$store.dispatch("actionGetDashboard");
     this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
     this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
-    this.$store.dispatch("actionGetDashboard");
-
     window.addEventListener("resize", function() {
       const oldWidthGrid = self.$store.getters.getWidthGrid;
       const oldHeightGrid = self.$store.getters.getHeightGrid;
