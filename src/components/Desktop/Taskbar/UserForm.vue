@@ -49,6 +49,14 @@
                 label="Введите пароль еще раз"
                 v-bind:type="'password'">
               </v-text-field>
+              <v-select
+                v-bind:value="user.idActiveInterface"
+                v-on:input="idActiveInterface = $event"
+                :items="interfaces"
+                item-text="name"
+                item-value="id"
+                label="Тип интерфейса"
+              ></v-select>
               <v-btn
                 :disabled="!valid"
                 @click="saveUser"
@@ -80,6 +88,7 @@ export default {
       email: "",
       password: "",
       repassword: "",
+      idActiveInterface: null,
       //firstname: this.user.firstname,
       nameRules: [
         v => !!v || "Name is required"
@@ -107,6 +116,9 @@ export default {
   computed: {
     user() {
       return this.$store.getters.user;
+    },
+    interfaces() {
+      return this.$store.getters.interfaces;
     }
   },
   methods: {
@@ -122,17 +134,21 @@ export default {
         if (this.email) {
           user.email = this.email;
         }
-        if (this.password || this.email) {
-          console.log("user", user);
+        if (this.idActiveInterface) {
+          user.idActiveInterface = this.idActiveInterface;
+        }
+        if (this.password || this.email || this.idActiveInterface) {
           this.$store.dispatch("actionSaveUser", user);
         }
         this.password = this.repassword = "";
+        location.reload();
       }
     },
 
     cancel() {
       //this.$refs.form.reset();
       this.modal = false;
+      this.idActiveInterface = null;
     }
   },
   mounted() {}

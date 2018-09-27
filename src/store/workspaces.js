@@ -168,6 +168,7 @@ export default {
             console.log('response', response.data)
             commit('setStartmenuItems', response.data.dashboard)
             commit('setUser', response.data.user)
+            commit('setInterfaces', response.data.interfaces)
             dispatch('actionInitWorkspaces', response.data.workspaces)
           }
         )
@@ -186,10 +187,16 @@ export default {
             uname: 'test2',
             email: 'test2@test.com',
             phone: '555-33-44',
-            gid: 5
+            gid: 5,
+            idActiveInterface: 2
           }
-
           commit('setUser', user)
+
+          const interfaces = [
+            { id: 1, name: 'Таблица' },
+            { id: 2, name: 'Десктоп' }
+          ]
+          commit('setInterfaces', interfaces)
         })
     },
 

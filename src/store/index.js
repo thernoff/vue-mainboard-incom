@@ -5,6 +5,7 @@ import windows from './windows'
 import workspaces from './workspaces'
 import grid from './grid'
 import user from './user'
+import interfaces from './interfaces'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
         windows,
         workspaces,
         grid,
-        user
+        user,
+        interfaces
     }
 })
