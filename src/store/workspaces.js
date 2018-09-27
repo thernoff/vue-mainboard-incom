@@ -123,6 +123,10 @@ export default {
       console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
       //state.activeWorkspace.shortcuts.splice(stopIndex, 0, shortcut);
       console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
+    },
+
+    deleteShortcut(state, indexShortcut) {
+      state.activeWorkspace.shortcuts.splice(indexShortcut, 1)
     }
   },
 
@@ -235,6 +239,10 @@ export default {
 
     actionUpdateOrderShortcuts({ commit }, data) {
       commit('updateOrderShortcuts', data)
+    },
+
+    actionDeleteShortcut({ commit }, index) {
+      commit('deleteShortcut', index)
     }
   },
   getters: {

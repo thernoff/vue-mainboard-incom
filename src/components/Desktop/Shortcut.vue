@@ -1,19 +1,39 @@
 <template>
-<div
-  class="mainboard-shortcut"
-  ref="shortcut"
-  v-on:dblclick="createNewWindow"
-  v-on:mousedown="setActive"
-  :class = "{'mainboard-shortcut--active': shortcut.active}"
->
-<div class="mainboard-shortcut__img">
-  <img
-    :src="shortcut.image"
-    :alt="shortcut.label"
-  />
-</div>
-  <div class="mainboard-shortcut__title">
-    <p>{{ shortcut.label }}</p>
+<div>
+  <div
+    class="mainboard-shortcut"
+    ref="shortcut"
+    v-on:dblclick="createNewWindow"
+    v-on:mousedown="setActive"
+    v-on:contextmenu.prevent="showContextMenu"
+    :class = "{'mainboard-shortcut--active': shortcut.active}"
+  >
+  <v-menu
+    v-model="contextMenu.visible"
+    :position-x="contextMenu.x"
+    :position-y="contextMenu.y"
+    absolute
+    offset-y
+  >
+    <v-list>
+      <v-list-tile
+        @click="''"
+      >
+        <v-list-tile-title v-on:click="deleteShortcut">
+          {{ 'Удалить' }}
+        </v-list-tile-title>
+      </v-list-tile>
+    </v-list>
+  </v-menu>
+  <div class="mainboard-shortcut__img">
+    <img
+      :src="shortcut.image"
+      :alt="shortcut.label"
+    />
+  </div>
+    <div class="mainboard-shortcut__title">
+      <p>{{ shortcut.label }}</p>
+    </div>
   </div>
 </div>
 </template>
@@ -30,6 +50,16 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      contextMenu: {
+        visible: false,
+        x: 0,
+        y: 0,
+        indexShortcut: null
+      }
+    };
+  },
   mounted() {
     //$(this.$refs.shortcut).draggable({});
   },
@@ -41,6 +71,22 @@ export default {
     createNewWindow() {
       this.$store.commit("createNewWindow", this.shortcut);
       this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
+    showContextMenu(e) {
+      e.preventDefault();
+      this.contextMenu.visible = false;
+      this.contextMenu.x = e.clientX;
+      this.contextMenu.y = e.clientY;
+      this.$nextTick(() => {
+        this.contextMenu.visible = true;
+      });
+    },
+
+    deleteShortcut() {
+      this.$store.dispatch("actionSetActiveShortcut", this.index);
+      this.$store.dispatch("actionDeleteShortcut", this.index);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
 };
@@ -48,7 +94,8 @@ export default {
 
 <style scoped>
 .mainboard-shortcut {
-  margin: 5px auto;
+  display: inline-block;
+  margin: 5px;
   width: 100px;
   height: 100px;
   /* background-color: #fff;

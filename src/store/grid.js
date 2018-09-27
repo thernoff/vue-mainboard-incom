@@ -48,6 +48,10 @@ export default {
       return state.heightGrid
     },
 
+    heightGrid(state) {
+      return state.heightGrid
+    },
+
     isModeGrid(state) {
       return state.modeGrid
     }

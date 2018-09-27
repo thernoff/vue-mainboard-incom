@@ -1,6 +1,7 @@
 <template>
 <div
   class="mainboard-shortcut-list"
+  v-bind:style="{width: shortcutWidth + 'px'}"
   ref="shortcutList"
 >
   <div class="mainboard-shortcut-list__container">
@@ -25,8 +26,19 @@ export default {
       default: []
     }
   },
+  data() {
+    return {};
+  },
   components: {
     mainboardShortcut: Shortcut
+  },
+  computed: {
+    shortcutWidth() {
+      const heightGrid = this.$store.getters.heightGrid;
+      return (
+        120 * Math.ceil(this.shortcuts.length / Math.floor(heightGrid / 120))
+      );
+    }
   },
   mounted() {
     var self = this;
@@ -61,7 +73,7 @@ export default {
 <style scoped>
 .mainboard-shortcut-list {
   position: absolute;
-  width: 120px;
+  /* width: 120px; */
   height: 100%;
   top: 0;
   left: 0;
