@@ -69,6 +69,7 @@ export default {
     },
 
     createNewWindow() {
+      console.log("this.shortcut", this.shortcut);
       this.$store.commit("createNewWindow", this.shortcut);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },

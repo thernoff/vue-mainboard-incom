@@ -218,13 +218,13 @@ export default {
         this.contextMenu.indexElement
       );
 
-      const options = {
+      /*       const options = {
         label: itemStartMenu.label,
         image: itemStartMenu.image,
         apiLink: itemStartMenu.apiLink
-      };
+      }; */
 
-      this.$store.commit("createNewShortcut", options);
+      this.$store.commit("createNewShortcut", itemStartMenu);
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }

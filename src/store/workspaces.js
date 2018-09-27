@@ -92,6 +92,7 @@ export default {
         image: options.image,
         label: options.label,
         apiLink: options.apiLink,
+        id: options.id,
         top: top,
         left: 0,
         zIndex: 5,
