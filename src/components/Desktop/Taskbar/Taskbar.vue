@@ -1,6 +1,10 @@
 <template>
   <!-- <v-footer app dark color="primary"> -->
-    <v-footer class="mainboard-taskbar" dark color="primary" v-if="visibleTaskbar">
+    <v-footer
+      class="mainboard-taskbar"
+      dark
+      color="primary"
+    >
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
       <!-- <v-btn
           color="primary"

@@ -5,13 +5,18 @@
   ref="shortcutList"
 >
   <div class="mainboard-shortcut-list__container">
-    <mainboard-shortcut
+    <li
       v-for="(shortcut, index) in shortcuts"
-      :key="shortcut.title"
+      :key="shortcut.id"
+      class="sortable-element"
+    >
+    <mainboard-shortcut
       :index="index"
       :shortcut="shortcut"
     >
     </mainboard-shortcut>
+    </li>
+
   </div>
 
 </div>
@@ -40,23 +45,26 @@ export default {
       );
     }
   },
+  updated() {
+    console.log("shortcut list update");
+  },
   mounted() {
     var self = this;
     var startIndex, stopIndex;
     $(".mainboard-shortcut-list__container").sortable({
-      items: ".mainboard-shortcut",
+      items: ".sortable-element",
       connectWith: ".mainboard-shortcut-list__container",
       start: function(event, ui) {
         startIndex = $(this)
-          .find(".mainboard-shortcut")
+          .find(".sortable-element")
           .index(ui.item);
-        //console.log("startIndex", startIndex);
+        console.log("startIndex", startIndex);
       },
       stop: function(event, ui) {
         stopIndex = $(this)
-          .find(".mainboard-shortcut")
+          .find(".sortable-element")
           .index(ui.item);
-        //console.log("stopIndex", stopIndex);
+        console.log("stopIndex", stopIndex);
 
         self.$store.dispatch("actionUpdateOrderShortcuts", {
           startIndex,
@@ -71,10 +79,15 @@ export default {
 </script>
 
 <style scoped>
+.sortable-element {
+  list-style-type: none;
+  display: inline-block;
+}
+
 .mainboard-shortcut-list {
   position: absolute;
   /* width: 120px; */
-  height: 100%;
+  height: 0px;
   top: 0;
   left: 0;
   padding: 5px;

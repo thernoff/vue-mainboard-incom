@@ -1,5 +1,17 @@
 import axios from 'axios'
 
+function getRandomId() {
+  var id = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 10; i++) {
+    id += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  id += Math.floor(Date.now() / 1000)
+  return id;
+};
+
 export default {
   state: {
     indexActiveWorkspace: 0,
@@ -84,6 +96,7 @@ export default {
 
     createNewShortcut(state, options) {
       const shortcuts = state.activeWorkspace.shortcuts
+
       let top = 0
       if (shortcuts.length > 0) {
         top = shortcuts[shortcuts.length - 1].top + 100
@@ -100,7 +113,6 @@ export default {
       }
 
       state.activeWorkspace.shortcuts.push(newShortcut)
-      console.log(state.activeWorkspace)
     },
 
     setActiveShortcut(state, index) {
@@ -114,16 +126,28 @@ export default {
     },
 
     updateOrderShortcuts(state, { startIndex, stopIndex }) {
+      console.log('updateOrderShortcuts')
       console.log('startIndex', startIndex)
       console.log('stopIndex', stopIndex)
-      let shortcutStart = state.activeWorkspace.shortcuts[startIndex];
-      let shortcutStop = state.activeWorkspace.shortcuts[stopIndex];
-      state.activeWorkspace.shortcuts[startIndex] = shortcutStop
-      state.activeWorkspace.shortcuts[stopIndex] = shortcutStart
-      //state.activeWorkspace.shortcuts.splice(startIndex, 1);
+      //let shortcutStart = state.activeWorkspace.shortcuts[startIndex];
+      //let shortcutStop = state.activeWorkspace.shortcuts[stopIndex];
+      let arr = state.activeWorkspace.shortcuts.slice()
+      let shortcutStart = arr[startIndex];
+      let shortcutStop = arr[stopIndex];
+      console.log('arr', arr)
+      //state.activeWorkspace.shortcuts[startIndex] = shortcutStop
+      //state.activeWorkspace.shortcuts[stopIndex] = shortcutStart
+      arr[startIndex] = shortcutStop
+      arr[stopIndex] = shortcutStart
+      state.activeWorkspace.shortcuts = arr
       console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
-      //state.activeWorkspace.shortcuts.splice(stopIndex, 0, shortcut);
-      console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
+    },
+
+    updateShortcut(state, data) {
+      console.log('supdateShortcut', state.activeWorkspace.shortcuts)
+      const index = data.index;
+      const options = data.options;
+      state.activeWorkspace.shortcuts[index] = Object.assign(state.activeWorkspace.shortcuts[index], options)
     },
 
     deleteShortcut(state, indexShortcut) {
@@ -163,6 +187,7 @@ export default {
     actionGetDashboard({ commit, state, dispatch }) {
       axios
         .get('http://esv.elxis.test/extusers/fpage/desktop/')
+        //.get('http://esv.incom-sr.ru/extusers/fpage/desktop/')
         .then(
           response => {
             console.log('response', response.data)
@@ -207,6 +232,7 @@ export default {
         method: 'post',
         headers: { 'Content-Type': 'application/form-data' },
         url: 'http://esv.elxis.test/extusers/fpage/savedesktop/',
+        //url: 'http://esv.incom-sr.ru/extusers/fpage/savedesktop/',
         data: {
           settings: workspaces
         }
@@ -237,6 +263,19 @@ export default {
       commit('recalcWindowsCoords', options)
     },
 
+    actionCreateNewShortcut({ commit, state }, options) {
+      const shortcuts = state.activeWorkspace.shortcuts
+      const existShortcut = shortcuts.some((shortcut) => {
+        return options.id == shortcut.id
+      })
+
+      if (!existShortcut) {
+        commit('createNewShortcut', options)
+      } else {
+        commit('setError', 'Ярлык уже создан')
+      }
+    },
+
     actionSetActiveShortcut({ commit }, index) {
       commit('setActiveShortcut', index)
     },
@@ -251,6 +290,10 @@ export default {
 
     actionDeleteShortcut({ commit }, index) {
       commit('deleteShortcut', index)
+    },
+
+    actionUpdateShortcut({ commit }, data) {
+      commit('updateShortcut', data)
     }
   },
   getters: {

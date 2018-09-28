@@ -19,6 +19,7 @@ export default {
                 method: 'post',
                 headers: { 'Content-Type': 'application/form-data' },
                 url: 'http://esv.elxis.test/extusers/fpage/saveuser/',
+                //url: 'http://esv.incom-sr.ru/extusers/fpage/saveuser/',
                 data: user
             })
                 .then(

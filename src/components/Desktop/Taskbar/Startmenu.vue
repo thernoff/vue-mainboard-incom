@@ -190,7 +190,7 @@ export default {
     },
 
     onClickBtnStart() {
-      this.$store.dispatch("actionToggleVisibleStartMenu");
+      //this.$store.dispatch("actionToggleVisibleStartMenu");
       this.$store.dispatch("actionSetNotActiveWindows");
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
@@ -224,7 +224,7 @@ export default {
         apiLink: itemStartMenu.apiLink
       }; */
 
-      this.$store.commit("createNewShortcut", itemStartMenu);
+      this.$store.dispatch("actionCreateNewShortcut", itemStartMenu);
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
@@ -242,7 +242,7 @@ export default {
 }
 
 .mainboard-startmenu__categories {
-  height: 300px;
+  height: 500px;
   overflow-y: scroll;
   overflow-x: hidden;
   width: 320px;

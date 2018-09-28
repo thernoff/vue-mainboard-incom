@@ -2,11 +2,11 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router'
-import store from './store'
+import router from '@/router'
+import store from '@/store'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import './main.css'
+import '@/main.css'
 // Helpers
 import colors from 'vuetify/es5/util/colors'
 
@@ -33,10 +33,7 @@ jQuery(document).ready(function () {
     router,
     store,
     components: { App },
-    template: '<App/>',
-    created() {
-
-    }
+    template: '<App/>'
   })
 })
 

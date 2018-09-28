@@ -36,11 +36,11 @@ export default {
             commit('setLoading', data)
         },
 
-        setError({ commit }, data) {
+        actionSetError({ commit }, data) {
             commit('setError', data)
         },
 
-        clearError({ commit }) {
+        actionClearError({ commit }) {
             commit('clearError')
         },
 

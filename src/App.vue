@@ -33,6 +33,24 @@
       <!-- </v-container> -->
     </div>
     <mainboard-taskbar class="mainboard-taskbar"></mainboard-taskbar>
+    <template v-if="error">
+    <v-snackbar
+      :multi-line="true"
+      :timeout="3000"
+      color="error"
+      @input="closeError"
+      :value="true"
+    >
+      {{error}}
+      <v-btn
+        dark
+        flat
+        @click="closeError"
+      >
+        Закрыть
+      </v-btn>
+    </v-snackbar>
+  </template>
   </v-app>
 
 
@@ -81,6 +99,16 @@ export default {
 
     shortcuts() {
       return this.$store.getters.shortcuts;
+    },
+
+    error() {
+      return this.$store.getters.error;
+    }
+  },
+
+  watch: {
+    shortcuts() {
+      console.log("watch shortcuts", this.shortcuts);
     }
   },
 
@@ -92,6 +120,7 @@ export default {
   },
 
   mounted() {
+    console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
     this.$store.dispatch("actionGetDashboard");
     this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
@@ -101,8 +130,6 @@ export default {
       const oldHeightGrid = self.$store.getters.getHeightGrid;
       const newWidthGrid = self.$refs.grid.$el.clientWidth;
       const newHeightGrid = self.$refs.grid.$el.clientHeight;
-      console.log("resize window");
-      console.log(oldWidthGrid);
       const options = {
         coefLeft: newWidthGrid / oldWidthGrid,
         coefTop: newHeightGrid / oldHeightGrid
@@ -117,6 +144,10 @@ export default {
   methods: {
     toggleVisibleStartMenu() {
       this.$store.dispatch("actionToggleVisibleStartMenu");
+    },
+
+    closeError() {
+      this.$store.dispatch("actionClearError");
     }
   },
 
