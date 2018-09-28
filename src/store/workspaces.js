@@ -185,9 +185,12 @@ export default {
     },
 
     actionGetDashboard({ commit, state, dispatch }) {
+      console.log('window.location.href', window.location.href)
+      const url = (process.env.NODE_ENV === 'development') ? 'http://esv.elxis.test/extusers/fpage/desktop/' : 'http://esv.incom-sr.ru/extusers/fpage/desktop/'
+
       axios
-        .get('http://esv.elxis.test/extusers/fpage/desktop/')
-        //.get('http://esv.incom-sr.ru/extusers/fpage/desktop/')
+        //.get('http://esv.elxis.test/extusers/fpage/desktop/')
+        .get(window.location.href + 'extusers/fpage/desktop/')
         .then(
           response => {
             console.log('response', response.data)
@@ -231,8 +234,8 @@ export default {
       axios({
         method: 'post',
         headers: { 'Content-Type': 'application/form-data' },
-        url: 'http://esv.elxis.test/extusers/fpage/savedesktop/',
-        //url: 'http://esv.incom-sr.ru/extusers/fpage/savedesktop/',
+        //url: 'http://esv.elxis.test/extusers/fpage/savedesktop/',
+        url: window.location.href + 'extusers/fpage/savedesktop/',
         data: {
           settings: workspaces
         }

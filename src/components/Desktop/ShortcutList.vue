@@ -52,6 +52,7 @@ export default {
     var self = this;
     var startIndex, stopIndex;
     $(".mainboard-shortcut-list__container").sortable({
+      distance: 5,
       items: ".sortable-element",
       connectWith: ".mainboard-shortcut-list__container",
       start: function(event, ui) {
@@ -91,6 +92,7 @@ export default {
   top: 0;
   left: 0;
   padding: 5px;
+  z-index: 1;
 }
 
 .mainboard-shortcut-list__container {

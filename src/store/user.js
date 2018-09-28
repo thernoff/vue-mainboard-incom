@@ -18,8 +18,8 @@ export default {
             axios({
                 method: 'post',
                 headers: { 'Content-Type': 'application/form-data' },
-                url: 'http://esv.elxis.test/extusers/fpage/saveuser/',
-                //url: 'http://esv.incom-sr.ru/extusers/fpage/saveuser/',
+                //url: 'http://esv.elxis.test/extusers/fpage/saveuser/',
+                url: window.location.href + 'extusers/fpage/saveuser/',
                 data: user
             })
                 .then(

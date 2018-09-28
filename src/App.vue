@@ -12,19 +12,19 @@
       >
       </mainboard-cover> -->
       <!-- <v-container fluid> -->
+          <!-- <v-layout row wrap> -->
+        <mainboard-shortcut-list :shortcuts="shortcuts"></mainboard-shortcut-list>
+        <mainboard-window
+          v-for="(window, index) in windows"
+          v-if="!window.closed"
+          v-show="!window.minimize"
+          :key="window.id"
+          :index="index"
+          :options="window"
+        ></mainboard-window>
         <mainboard-grid
           ref="grid"
         ></mainboard-grid>
-          <!-- <v-layout row wrap> -->
-            <mainboard-shortcut-list :shortcuts="shortcuts"></mainboard-shortcut-list>
-            <mainboard-window
-              v-for="(window, index) in windows"
-              v-if="!window.closed"
-              v-show="!window.minimize"
-              :key="window.id"
-              :index="index"
-              :options="window"
-            ></mainboard-window>
           <!-- </v-layout> -->
         <mainboard-startmenu
           v-if="visibleStartmenu"

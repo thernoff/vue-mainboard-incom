@@ -20,7 +20,7 @@
 
             'float': 'left',
             'width': widthGridCell + '%',
-            'border': '1px dashed rgb(226, 238, 255, 0.2)',
+            'border': '1px dashed rgb(191, 100, 155, 1)',
             'height': '100%'
           }"
         >
@@ -51,11 +51,11 @@ export default {
     },
 
     widthGridCell() {
-      return 100 / this.$store.getters.getCountColumns;
+      return Math.ceil(10000000 / this.$store.getters.getCountColumns) / 100000;
     },
 
     heightGridRow() {
-      return 100 / this.$store.getters.getCountRows;
+      return Math.ceil(100000000 / this.$store.getters.getCountRows) / 1000000;
     }
   },
   methods: {
@@ -70,6 +70,7 @@ export default {
 
 <style scoped>
 .mainboard-workspace__grid {
+  position: relative;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -85,15 +86,24 @@ export default {
 }
 
 .mainboard-workspace__grid-container {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
 }
 
 .mainboard-workspace__grid-gradient {
+  /* display: inline-block; */
+  position: relative;
   width: 100%;
   height: 100%;
-  background-size: 15px 15px;
-  background-position: center center;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  /* background-size: 15px 15px; */
+  /* background-position: center center; */
   background: -moz-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),
     -moz-linear-gradient(90deg, rgb(226, 238, 255, 0.3), transparent 1px);
   background: -webkit-linear-gradient(rgb(226, 238, 255, 0.3), transparent 1px),

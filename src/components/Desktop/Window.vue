@@ -202,6 +202,11 @@ export default {
         start: function(event, ui) {
           var $window = $(this);
           $window.find(".mainboard-frame__cover").show();
+          /* if (self.options.height == 100) {
+            $window.addClass("half-height");
+            $window.css("height", "90%");
+          }
+          console.log("drag", self.options.height); */
         },
         stop: function(event, ui) {
           console.log("draggable ui", ui);
@@ -219,6 +224,8 @@ export default {
             diffTop: ui.position.top - ui.originalPosition.top,
             diffLeft: ui.position.left - ui.originalPosition.left
           };
+
+          $window.removeClass("half-height");
 
           self.$store.dispatch("actionUpdateWindowCoords", options);
           //self.$store.dispatch("actionSaveSettingsDesktop");
@@ -347,6 +354,14 @@ export default {
   left: 0 !important;
   bottom: 0 !important;
   right: 0 !important;
+}
+
+.half-height {
+  height: 90% !important;
+}
+
+.half-width {
+  width: 90% !important;
 }
 </style>
 

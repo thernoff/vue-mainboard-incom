@@ -46,7 +46,7 @@ export default {
                 left: state.leftPrevWindow,
                 width: 40,
                 height: 45,
-                zIndex: state.windows.length + 1,
+                zIndex: state.windows.length + 2,
                 minimize: false,
                 fullscreen: false,
                 closed: false,
@@ -179,7 +179,7 @@ export default {
                         window.zIndex -= 1
                     }
                 })
-                state.activeWindow.zIndex = state.windows.length
+                state.activeWindow.zIndex = state.windows.length + 1
                 //console.log('store:setActiveWindow state.activeWindow.zIndex', state.activeWindow.zIndex)
                 console.log('store:setActiveWindow', state.windows)
             }
@@ -258,9 +258,9 @@ export default {
                 const widthOneColumn = widthGrid / countColumns
                 //options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
 
-                console.log('countColumns', countColumns)
-                console.log('widthGrid', widthGrid)
-                console.log('widthOneColumn', widthOneColumn)
+                //console.log('countColumns', countColumns)
+                //console.log('widthGrid', widthGrid)
+                //console.log('widthOneColumn', widthOneColumn)
 
                 if (options.diffLeft) {
                     options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
@@ -272,9 +272,9 @@ export default {
                 const heightGrid = rootState.grid.heightGrid
                 const heightOneRow = heightGrid / countRows
 
-                console.log('countRows', countRows)
-                console.log('heightGrid', heightGrid)
-                console.log('heightOneRow', heightOneRow)
+                //console.log('countRows', countRows)
+                //console.log('heightGrid', heightGrid)
+                //console.log('heightOneRow', heightOneRow)
 
                 if (options.diffTop) {
                     options.top = Math.floor(options.top / heightOneRow) * heightOneRow
@@ -289,8 +289,17 @@ export default {
                 const widthColumnPercent = 100 / countColumns
                 options.width = Math.ceil(options.width / widthColumnPercent) * (widthColumnPercent)
 
+                if (options.width > 100) {
+                    options.width = 100
+                }
+
                 const heightRowPercent = 100 / countRows
                 options.height = Math.ceil(options.height / heightRowPercent) * (heightRowPercent)
+
+                if (options.height > 100) {
+                    options.height = 100
+                }
+
                 setTimeout(function () {
                     commit('updateWindowSize', options)
                     commit('updateWindowCoords', options)
@@ -304,8 +313,8 @@ export default {
         actionUpdateWindowSize({ commit, dispatch, rootState }, options) {
             const widthGrid = rootState.grid.widthGrid
             const heightGrid = rootState.grid.heightGrid
-            options.width = 100 * options.width / widthGrid
-            options.height = 100 * options.height / heightGrid
+            options.width = ((100 * options.width / widthGrid) <= 100) ? 100 * options.width / widthGrid : 100;
+            options.height = ((100 * options.height / heightGrid) <= 100) ? 100 * options.height / heightGrid : 100;
             commit('updateWindowCoords', options)
             commit('updateWindowSize', options)
             if (rootState.grid.modeGrid) {
@@ -334,10 +343,18 @@ export default {
                 const widthColumnPercent = 100 / countColumns
                 options.width = Math.ceil(options.width / widthColumnPercent) * (widthColumnPercent)
 
+                if (options.width > 100) {
+                    options.width = 100
+                }
+
                 const heightRowPercent = 100 / countRows
                 options.height = Math.ceil(options.height / heightRowPercent) * (heightRowPercent)
 
-                console.log('actionUpdateWindowSize', options.width)
+                if (options.height > 100) {
+                    options.height = 100
+                }
+
+                //console.log('actionUpdateWindowSize', options.width)
                 setTimeout(function () {
                     commit('updateWindowCoords', options)
                     commit('updateWindowSize', options)
