@@ -98,6 +98,7 @@
                   v-bind:key="item.id"
                 >
                   <v-list-tile slot="activator">
+                    <i class="material-icons icon-folder">folder</i>
                     <v-list-tile-content>
                       <v-list-tile-title>
                         {{ item.label }}
@@ -252,6 +253,11 @@ export default {
   overflow-y: scroll;
   overflow-x: hidden;
   width: 320px;
+}
+
+.icon-folder {
+  margin-right: 3px;
+  color: #f58815;
 }
 </style>
 

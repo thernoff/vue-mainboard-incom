@@ -28,13 +28,10 @@
            </v-card-text>
           </v-flex>
         </v-layout>
-        <v-layout row>
-          <v-flex xs12>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn class="warning" v-on:click="onCancel">Отмена</v-btn>
-              <v-btn class="success" v-on:click="onSave">Сохранить</v-btn>
-            </v-card-actions>
+        <v-layout row align-center>
+          <v-flex xs12 text-xs-center>
+              <v-btn class="error" v-on:click="onCancel">Отмена</v-btn>
+              <v-btn class="info" v-on:click="onSave">Сохранить</v-btn>
           </v-flex>
         </v-layout>
       </v-container>

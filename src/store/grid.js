@@ -1,8 +1,8 @@
 export default {
   state: {
     modeGrid: true,
-    countRows: 2,
-    countColumns: 2,
+    countRows: 25,
+    countColumns: 50,
     grid: [10, 5],
     widthGrid: 0,
     heightGrid: 0,

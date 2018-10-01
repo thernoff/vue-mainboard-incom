@@ -20,7 +20,7 @@
         :color="(!window.minimize) ? 'primary' : 'minimizeWindowTaskbar'"
         class="mainboard-taskbar__btn-minimize-window"
         :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
-        @click="toggleMinimizedWindow(index, window.minimize)"
+        v-on:click="toggleMinimizedWindow(index, window.minimize)"
       >
         <i class="material-icons" small v-if="window.minimize">
             expand_less
@@ -40,6 +40,7 @@
 
 <script>
 import Startmenu from "./Startmenu.vue";
+
 export default {
   data() {
     return {
@@ -75,16 +76,15 @@ export default {
 
   computed: {
     windows() {
-      console.log("Taskbar windows", this.$store.getters.windows);
       return this.$store.getters.windows;
     },
 
     widthBtnMinimizeWindows() {
-      const countWindows = this.windows.length + 3; // +1 - кнопка Пуск
+      const countWindows = this.windows.length + 3;
       const widthGrid = this.$store.getters.widthGrid;
       const widthBtnMinimizeWindows = widthGrid / countWindows;
-      return widthBtnMinimizeWindows > 100
-        ? Math.floor((1000 * 100) / widthGrid) / 10
+      return widthBtnMinimizeWindows > 120
+        ? Math.floor((1000 * 120) / widthGrid) / 10
         : Math.floor((1000 * widthBtnMinimizeWindows) / widthGrid) / 10;
     }
   }
@@ -99,8 +99,9 @@ export default {
 }
 
 .mainboard-taskbar__btn-minimize-window {
-  max-width: 100px;
+  max-width: 120px;
   margin: 8px 3px;
+  padding: 5px;
 }
 </style>
 
