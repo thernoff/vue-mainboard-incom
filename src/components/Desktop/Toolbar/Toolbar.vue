@@ -1,33 +1,30 @@
 <template>
 <div class="mainboard-toolbar">
-    <!-- <v-toolbar
-      app
-      dark
-      color="primary"
-      height="40"
-    > -->
     <mainboard-info-dialog-window
-      v-bind:title="'Нельзя удалить текущую рабочую область'"
-      v-bind:text="'Для работы необходима хотя бы одна рабочая область.'"
       v-bind:visible="visibleInfoDialogWindow"
-
+      v-bind:options="{
+        title: 'Нельзя удалить текущую рабочую область',
+        text: 'Для работы необходима хотя бы одна рабочая область.'
+      }"
       v-on:hideInfoDialogWindow="hideInfoDialogWindow"
     ></mainboard-info-dialog-window>
 
     <mainboard-input-dialog-window
-      v-bind:title="'Введите название рабочей области'"
-      v-bind:label="'Название рабочей области'"
+      v-bind:options="{
+        title: 'Введите название рабочей области',
+        label: 'Название рабочей области'
+      }"
       v-bind:visible="visibleInputDialogWindow"
-
       v-on:input="createNewWorkspace($event)"
       v-on:hideInputDialogWindow="hideInputDialogWindow"
     ></mainboard-input-dialog-window>
 
     <mainboard-dialog-window
-      v-bind:title="'Удаление рабочей области'"
-      v-bind:text="'Вы действительно хотите удалить текущую рабочую область?'"
+      v-bind:options="{
+        title: 'Удаление рабочей области',
+        text: 'Вы действительно хотите удалить текущую рабочую область?'
+      }"
       v-bind:visible="visibleDialogWindow"
-
       v-on:hideDialogWindow="deleteCurrentWorkspace($event)"
     ></mainboard-dialog-window>
     <mainboard-cover
@@ -40,7 +37,7 @@
       color="primary"
       height="40"
     >
-      <v-toolbar-side-icon></v-toolbar-side-icon>
+      <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
       <v-toolbar-title>Incom</v-toolbar-title>
       <v-spacer></v-spacer>
         <v-menu offset-y light z-index="9999">
@@ -53,25 +50,18 @@
           {{ titleActiveWorkspace }}
         </v-btn>
         <v-list>
-            <!-- <mainboard-input-dialog-window
-              v-bind:title="'Введите название рабочей области'"
-              v-bind:label="'Название рабочей области'"
-              v-on:input="createNewWorkspace($event)"
-            > -->
-                <v-list-tile
-                  v-on:click="showInputDialogWindow"
-                >
+          <v-list-tile
+            v-on:click="showInputDialogWindow"
+          >
+            Создать новую рабочую область
+          </v-list-tile>
 
-                  Создать новую рабочую область
-              </v-list-tile>
-            <!-- </mainboard-input-dialog-window> -->
-
-            <v-list-tile
-                v-on:click="showDialogWindow"
-              >
-                Удалить текущую область
-            </v-list-tile>
-            <v-divider></v-divider>
+          <v-list-tile
+              v-on:click="showDialogWindow"
+            >
+              Удалить текущую область
+          </v-list-tile>
+          <v-divider></v-divider>
 
           <v-list-tile
             v-for="(workspace, index) in workspaces"
@@ -96,11 +86,6 @@
 </template>
 
 <script>
-import InputDialogWindow from "../ModalWindows/InputDialogWindow";
-import DialogWindow from "../ModalWindows/DialogWindow";
-import InfoDialogWindow from "../ModalWindows/InfoDialogWindow";
-import Cover from "../Cover";
-
 export default {
   data() {
     return {
@@ -113,10 +98,13 @@ export default {
   },
 
   components: {
-    mainboardInputDialogWindow: InputDialogWindow,
-    mainboardDialogWindow: DialogWindow,
-    mainboardInfoDialogWindow: InfoDialogWindow,
-    mainboardCover: Cover
+    mainboardInputDialogWindow: () =>
+      import("@/components/Desktop/Toolbar/InputDialogWindow.vue"),
+    mainboardDialogWindow: () =>
+      import("@/components/Desktop/Toolbar/DialogWindow.vue"),
+    mainboardInfoDialogWindow: () =>
+      import("@/components/Desktop/Toolbar/InfoDialogWindow.vue"),
+    mainboardCover: () => import("@/components/Desktop/Cover.vue")
   },
 
   computed: {
@@ -200,14 +188,6 @@ export default {
       } else {
         $(".mainboard-window").draggable("option", "snap", ".mainboard-window");
       }
-    },
-
-    consoleData() {
-      console.log(JSON.stringify(this.$store.getters.workspaces));
-    },
-
-    saveSettingsDesktop() {
-      this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     setActiveWorkspace(index) {

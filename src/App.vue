@@ -120,7 +120,7 @@ export default {
   },
 
   mounted() {
-    console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+    //console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
     this.$store.dispatch("actionGetDashboard");
     this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
