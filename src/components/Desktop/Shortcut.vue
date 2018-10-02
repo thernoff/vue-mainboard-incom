@@ -1,58 +1,62 @@
 <template>
-<div
-  class="mainboard-shortcut"
-  ref="shortcut"
-  v-on:dblclick="createNewWindow"
-  v-on:mousedown="setActive"
-  v-on:contextmenu.prevent="showContextMenu"
-  :class = "{'mainboard-shortcut--active': shortcut.active}"
->
-<v-menu
-  v-model="contextMenu.visible"
-  :position-x="contextMenu.x"
-  :position-y="contextMenu.y"
-  absolute
-  offset-y
->
-  <v-list>
-    <v-list-tile
-      @click="''"
+  <div
+    class="mainboard-shortcut"
+    ref="shortcut"
+    v-on:dblclick="createNewWindow"
+    v-on:mousedown="setActive"
+    v-on:contextmenu.prevent="showContextMenu"
+    :class = "{'mainboard-shortcut--active': shortcut.active}"
+  >
+    <v-menu
+      v-model="contextMenu.visible"
+      :position-x="contextMenu.x"
+      :position-y="contextMenu.y"
+      absolute
+      offset-y
     >
-      <v-list-tile-title
-        v-on:click="renameShortcut"
-      >
-        {{ 'Переименовать' }}
-      </v-list-tile-title>
-    </v-list-tile>
-    <v-list-tile
-      @click="''"
-    >
-      <v-list-tile-title
-        v-on:click="deleteShortcut"
-      >
-        {{ 'Удалить' }}
-      </v-list-tile-title>
-    </v-list-tile>
-  </v-list>
-</v-menu>
-<div class="mainboard-shortcut__img">
-  <img
-    :src="shortcut.image"
-    :alt="shortcut.label"
-  />
-</div>
-  <div class="mainboard-shortcut__title">
-    <p v-if="!rename">{{ shortcut.label }}</p>
-    <input
-      class="mainboard-shortcut__input"
-      ref="renameinput"
-      v-show="rename"
-      v-bind:value="shortcut.label"
-      v-on:blur="updateShortcut"
-      v-on:keyup.enter="updateShortcut"
-    />
+      <v-list>
+        <v-list-tile
+          @click="''"
+        >
+          <v-list-tile-title
+            v-on:click="renameShortcut"
+          >
+            {{ 'Переименовать' }}
+          </v-list-tile-title>
+        </v-list-tile>
+
+        <v-list-tile
+          @click="''"
+        >
+          <v-list-tile-title
+            v-on:click="deleteShortcut"
+          >
+            {{ 'Удалить' }}
+          </v-list-tile-title>
+        </v-list-tile>
+
+      </v-list>
+    </v-menu>
+
+    <div class="mainboard-shortcut__img">
+      <img
+        :src="shortcut.image"
+        :alt="shortcut.label"
+      />
+    </div>
+
+    <div class="mainboard-shortcut__title">
+      <p v-if="!rename">{{ shortcut.label }}</p>
+      <input
+        class="mainboard-shortcut__input"
+        ref="renameinput"
+        v-show="rename"
+        v-bind:value="shortcut.label"
+        v-on:blur="updateShortcut"
+        v-on:keyup.enter="updateShortcut"
+      />
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -78,17 +82,12 @@ export default {
       rename: false
     };
   },
-  mounted() {
-    //$(this.$refs.shortcut).draggable({});
-  },
   methods: {
     setActive() {
-      console.log("setActive index", this.index);
       this.$store.dispatch("actionSetActiveShortcut", this.index);
     },
 
     createNewWindow() {
-      console.log("this.shortcut", this.shortcut);
       this.$store.commit("createNewWindow", this.shortcut);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
@@ -105,7 +104,6 @@ export default {
 
     renameShortcut() {
       this.rename = true;
-      //this.$refs.baseMainboardFrame.$refs.baseFrame.src = this.options.apiLink;
       this.$nextTick(() => this.$refs.renameinput.focus());
     },
 

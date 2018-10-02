@@ -16,14 +16,11 @@
     >
     </mainboard-shortcut>
     </li>
-
   </div>
-
 </div>
 </template>
 
 <script>
-import Shortcut from "./Shortcut.vue";
 export default {
   props: {
     shortcuts: {
@@ -35,7 +32,7 @@ export default {
     return {};
   },
   components: {
-    mainboardShortcut: Shortcut
+    mainboardShortcut: () => import("@/components/Desktop/Shortcut.vue")
   },
   computed: {
     shortcutWidth() {
@@ -44,9 +41,6 @@ export default {
         120 * Math.ceil(this.shortcuts.length / Math.floor(heightGrid / 120))
       );
     }
-  },
-  updated() {
-    console.log("shortcut list update");
   },
   mounted() {
     var self = this;
