@@ -30,11 +30,9 @@ export default {
 
   mutations: {
     createNewWorkspace(state, nameWorkspace) {
-      const title = nameWorkspace
-      const descripton = ''
       const newWorkspace = {
-        title,
-        descripton,
+        title: nameWorkspace,
+        descripton: '',
         active: true,
         windows: [],
         shortcuts: []
@@ -47,8 +45,6 @@ export default {
       const length = state.workspaces.push(newWorkspace)
       state.activeWorkspace = state.workspaces[length - 1]
       state.indexActiveWorkspace = length - 1
-
-      //return state.activeWorkspace
     },
 
     deleteCurrentWorkspace(state) {
@@ -70,7 +66,6 @@ export default {
           }
         }
       }
-      console.log('setActiveWorkspace', state.activeWorkspace)
     },
 
     setWorkspaces(state, workspaces) {
@@ -116,7 +111,6 @@ export default {
     },
 
     setActiveShortcut(state, index) {
-      console.log('index', index)
       state.activeWorkspace.shortcuts.forEach(shortcut => { shortcut.active = false })
       state.activeWorkspace.shortcuts[index].active = true
     },
@@ -126,21 +120,20 @@ export default {
     },
 
     updateOrderShortcuts(state, { startIndex, stopIndex }) {
-      console.log('updateOrderShortcuts')
-      console.log('startIndex', startIndex)
-      console.log('stopIndex', stopIndex)
+      //console.log('updateOrderShortcuts')
+      //console.log('startIndex', startIndex)
+      //console.log('stopIndex', stopIndex)
       //let shortcutStart = state.activeWorkspace.shortcuts[startIndex];
       //let shortcutStop = state.activeWorkspace.shortcuts[stopIndex];
       let arr = state.activeWorkspace.shortcuts.slice()
       let shortcutStart = arr[startIndex];
       let shortcutStop = arr[stopIndex];
-      console.log('arr', arr)
       //state.activeWorkspace.shortcuts[startIndex] = shortcutStop
       //state.activeWorkspace.shortcuts[stopIndex] = shortcutStart
       arr[startIndex] = shortcutStop
       arr[stopIndex] = shortcutStart
       state.activeWorkspace.shortcuts = arr
-      console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
+      //console.log('state.activeWorkspace.shortcuts', state.activeWorkspace.shortcuts)
     },
 
     updateShortcut(state, data) {
@@ -160,7 +153,6 @@ export default {
     actionInitWorkspaces({ state, commit }, workspaces) {
       if (workspaces && workspaces.length > 0) {
         commit('setWorkspaces', workspaces)
-        console.log('actionInitWorkspaces', state.workspaces)
         commit('setActiveWorkspace')
         if (state.activeWorkspace.windows) {
           commit('setWindows', state.activeWorkspace.windows)
@@ -185,19 +177,39 @@ export default {
     },
 
     actionGetDashboard({ commit, state, dispatch }) {
-      console.log('window.location.href', window.location.href)
-      const url = (process.env.NODE_ENV === 'development') ? 'http://esv.elxis.test/extusers/fpage/desktop/' : 'http://esv.incom-sr.ru/extusers/fpage/desktop/'
-
       axios
-        //.get('http://esv.elxis.test/extusers/fpage/desktop/')
         .get(window.location.href + 'extusers/fpage/desktop/')
         .then(
           response => {
             console.log('response', response.data)
-            commit('setStartmenuItems', response.data.dashboard)
-            commit('setUser', response.data.user)
-            commit('setInterfaces', response.data.interfaces)
-            dispatch('actionInitWorkspaces', response.data.workspaces)
+            // Массив данных для отображения стартового меню
+            const dashboard = response.data.dashboard
+            if (dashboard && dashboard.length > 0) {
+              commit('setStartmenuItems', dashboard)
+            }
+
+            const user = response.data.user
+            if (user) {
+              commit('setUser', user)
+            }
+
+            const interfaces = response.data.interfaces
+            if (interfaces && interfaces.length > 0) {
+              commit('setInterfaces', interfaces)
+            }
+
+            const workspaces = response.data.workspaces
+            if (workspaces && workspaces.length > 0) {
+              commit('setWorkspaces', workspaces)
+              commit('setActiveWorkspace')
+              if (state.activeWorkspace.windows) {
+                commit('setWindows', state.activeWorkspace.windows)
+                commit('setActiveWindow')
+              }
+            } else {
+              commit('setActiveWorkspace')
+              commit('setWindows', state.activeWorkspace.windows)
+            }
           }
         )
         .catch(error => {
@@ -346,6 +358,13 @@ export default {
 
     indexActiveWorkspace(state) {
       return state.indexActiveWorkspace
+    },
+
+    isActiveShortcut(state) {
+      const activeShortcuts = state.activeWorkspace.shortcuts.filter(function (shorcut) {
+        return shorcut.active
+      })
+      return (activeShortcuts.length > 0) ? true : false
     }
   }
 }

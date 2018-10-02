@@ -6,12 +6,10 @@ export default {
     mutations: {
         toggleVisibleStartMenu(state) {
             state.visible = !state.visible
-            console.log('state.visible', state.visible)
         },
 
         setStartmenuItems(state, items) {
             state.items = items
-            console.log(items)
         }
     },
     actions: {

@@ -39,8 +39,7 @@
 </template>
 
 <script>
-import Startmenu from "./Startmenu.vue";
-
+import StartMenu from "@/components/Desktop/Taskbar/Startmenu.vue";
 export default {
   data() {
     return {
@@ -49,7 +48,7 @@ export default {
     };
   },
   components: {
-    mainboardStartmenu: Startmenu
+    mainboardStartmenu: StartMenu
   },
   methods: {
     toggleVisibleTaskbar() {

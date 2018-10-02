@@ -76,24 +76,12 @@ export default {
 
         updateWindowCoords(state, options) {
             let window = state.windows[options.index]
-            //window.top += parseInt(options.diffY)
-            //window.left += parseInt(options.diffX)
-            //Vue.set(window, 'left', +options.left)
-            //Vue.set(window, 'top', +options.top)
-            //Vue.set(window, 'left', +options.left)
-            //Vue.set(window, 'top', +options.top)
             window.top = +options.top
             window.left = +options.left
-            //state.obj = { ...state.obj, newProp: 123 };
-            //state.windows[options.index] = { ...state.windows[options.index], top: +options.top, left: +options.left };
         },
 
         updateWindowSize(state, options) {
             const window = state.windows[options.index]
-            //window.top = +options.top
-            //window.left = +options.left
-            //window.width *= parseFloat(options.coefWidth)
-            //window.height *= parseFloat(options.coefHeight)
             window.width = +options.width
             window.height = +options.height
         },
@@ -120,7 +108,6 @@ export default {
         },
 
         closeWindow(state, index) {
-            //state.windows[index].closed = true
             state.activeWindow = null
             state.indexActiveWindow = null
             state.windows.splice(index, 1)
@@ -132,7 +119,6 @@ export default {
 
         toggleMinimizeWindow(state, index) {
             state.windows[index].minimize = !state.windows[index].minimize
-            //state.windows[index] = {...state.windows[index], minimize: !state.windows[index].minimize}
         },
 
         toggleFullscreenWindow(state, index) {
@@ -168,7 +154,7 @@ export default {
 
             } else {
                 state.activeWindow = null
-                state.indexActiveWindow = 0
+                state.indexActiveWindow = null
             }
 
             if (state.activeWindow) {
@@ -180,8 +166,6 @@ export default {
                     }
                 })
                 state.activeWindow.zIndex = state.windows.length + 1
-                //console.log('store:setActiveWindow state.activeWindow.zIndex', state.activeWindow.zIndex)
-                console.log('store:setActiveWindow', state.windows)
             }
 
 
@@ -223,9 +207,7 @@ export default {
         actionCloseWindow({ state, commit, dispatch }, index) {
             commit("closeWindow", index)
             commit("setActiveWindow", 0)
-            console.log('after close activeWindow', state.activeWindow)
-            console.log('after close indexActiveWindow', state.indexActiveWindow)
-            dispatch("actionSaveSettingsDesktop");
+            //dispatch("actionSaveSettingsDesktop");
         },
 
         actionSetActiveWindow({ commit }) {
@@ -368,6 +350,10 @@ export default {
         },
     },
     getters: {
+        indexActiveWindow(state) {
+            return state.indexActiveWindow
+        },
+
         windows(state) {
             return state.windows
         },
@@ -376,6 +362,10 @@ export default {
             return state.windows.filter((window) => {
                 return window.minimize
             })
+        },
+
+        isActiveWindow(state) {
+            return (state.indexActiveWindow !== null) ? true : false
         }
     }
 }

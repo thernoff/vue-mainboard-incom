@@ -7,6 +7,7 @@
     <div class="mainboard-workspace__grid-container" v-if="isModeGrid">
       <div class="mainboard-workspace__grid-gradient"
         :style="{backgroundSize: widthGridCell + '%' + ' ' + heightGridRow +'%'}"
+        v-on:contextmenu.stop.prevent="''"
       ></div>
       <!-- <div v-for="y of countRows"
         :key=y
@@ -60,9 +61,15 @@ export default {
   },
   methods: {
     setNotActive() {
-      this.$store.dispatch("actionSetNotActiveWindows");
-      this.$store.dispatch("actionSetNotActiveShortcuts");
-      this.$store.dispatch("actionSaveSettingsDesktop");
+      const isActive =
+        this.$store.getters.isActiveWindow ||
+        this.$store.getters.isActiveShortcut;
+
+      if (isActive) {
+        this.$store.dispatch("actionSetNotActiveWindows");
+        this.$store.dispatch("actionSetNotActiveShortcuts");
+        this.$store.dispatch("actionSaveSettingsDesktop");
+      }
     }
   }
 };

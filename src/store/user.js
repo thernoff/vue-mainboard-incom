@@ -2,7 +2,15 @@ import axios from 'axios'
 
 export default {
     state: {
-        user: {}
+        user: {
+            firstname: 'Guest',
+            lastname: 'Guest',
+            uname: 'guest',
+            email: '',
+            phone: '',
+            gid: 7,
+            idActiveInterface: 2
+        }
     },
     mutations: {
         setUser(state, data) {

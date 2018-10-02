@@ -86,6 +86,10 @@
 </template>
 
 <script>
+import InputDialogWindow from "@/components/Desktop/Toolbar/InputDialogWindow.vue";
+import DialogWindow from "@/components/Desktop/Toolbar/DialogWindow.vue";
+import InfoDialogWindow from "@/components/Desktop/Toolbar/InfoDialogWindow.vue";
+import Cover from "@/components/Desktop/Cover.vue";
 export default {
   data() {
     return {
@@ -98,13 +102,10 @@ export default {
   },
 
   components: {
-    mainboardInputDialogWindow: () =>
-      import("@/components/Desktop/Toolbar/InputDialogWindow.vue"),
-    mainboardDialogWindow: () =>
-      import("@/components/Desktop/Toolbar/DialogWindow.vue"),
-    mainboardInfoDialogWindow: () =>
-      import("@/components/Desktop/Toolbar/InfoDialogWindow.vue"),
-    mainboardCover: () => import("@/components/Desktop/Cover.vue")
+    mainboardInputDialogWindow: InputDialogWindow,
+    mainboardDialogWindow: DialogWindow,
+    mainboardInfoDialogWindow: InfoDialogWindow,
+    mainboardCover: Cover
   },
 
   computed: {

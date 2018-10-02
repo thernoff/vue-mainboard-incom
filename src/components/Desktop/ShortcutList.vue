@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import Shortcut from "@/components/Desktop/Shortcut.vue";
 export default {
   props: {
     shortcuts: {
@@ -32,7 +33,7 @@ export default {
     return {};
   },
   components: {
-    mainboardShortcut: () => import("@/components/Desktop/Shortcut.vue")
+    mainboardShortcut: Shortcut
   },
   computed: {
     shortcutWidth() {

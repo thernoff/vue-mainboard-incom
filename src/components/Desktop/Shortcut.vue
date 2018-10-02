@@ -85,6 +85,7 @@ export default {
   methods: {
     setActive() {
       this.$store.dispatch("actionSetActiveShortcut", this.index);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     createNewWindow() {

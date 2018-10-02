@@ -1,5 +1,7 @@
 <template>
-<div ref="window" class="mainboard-window"
+<div
+    ref="window"
+    class="mainboard-window"
     :data-index="index"
     :style="{
         top: options.top + 'px',
@@ -15,7 +17,6 @@
     tile
     class="mainboard-window__card"
   >
-
     <v-card-title
         class="mainboard-window__title"
         :class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import baseMainboardFrame from "../Base/BaseFrame";
+import baseFrame from "@/components/Base/BaseFrame.vue";
 export default {
   props: {
     index: {
@@ -93,9 +94,8 @@ export default {
       return this.$store.isModeGrid;
     }
   },
-
   components: {
-    baseMainboardFrame
+    baseMainboardFrame: baseFrame
   },
 
   methods: {
@@ -121,8 +121,8 @@ export default {
 
     closeWindow() {
       this.$store.dispatch("actionCloseWindow", this.index);
-      /* this.$store.commit("setActiveWindow");
-      this.$store.dispatch("actionSaveSettingsDesktop"); */
+      //this.$store.commit("setActiveWindow");
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     toggleFullscreenWindow() {
@@ -131,7 +131,6 @@ export default {
     },
 
     setActiveWindow() {
-      console.log("setActiveWindow: index", this.index);
       this.$store.commit("setActiveWindow", this.index);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
@@ -145,9 +144,6 @@ export default {
       } else {
         this.firstLoad = false;
       }
-
-      /* this.updateWindowApiLink(data.apiLink);
-      this.updateWindowTitle(data.title); */
     },
 
     updateWindowTitle(title) {
@@ -202,11 +198,11 @@ export default {
         start: function(event, ui) {
           var $window = $(this);
           $window.find(".mainboard-frame__cover").show();
-          /* if (self.options.height == 100) {
-            $window.addClass("half-height");
+          if (self.options.height == 100) {
+            //$window.addClass("half-height");
             $window.css("height", "90%");
           }
-          console.log("drag", self.options.height); */
+          console.log("drag", self.options.height);
         },
         stop: function(event, ui) {
           console.log("draggable ui", ui);

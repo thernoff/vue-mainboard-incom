@@ -15,12 +15,11 @@
           <!-- <v-layout row wrap> -->
         <mainboard-shortcut-list :shortcuts="shortcuts"></mainboard-shortcut-list>
         <mainboard-window
-          v-for="(window, index) in windows"
-          v-if="!window.closed"
-          v-show="!window.minimize"
           :key="window.id"
           :index="index"
           :options="window"
+          v-show="!window.minimize"
+          v-for="(window, index) in windows"
         ></mainboard-window>
         <mainboard-grid
           ref="grid"
@@ -112,19 +111,14 @@ export default {
     }
   },
 
-  beforeCreate() {
-    /* this.$store.commit("setActiveWorkspace");
-    let activeWorkspace = this.$store.getters.getActiveWorkspace;
-    this.$store.commit("setWindows", activeWorkspace.windows);
-    this.$store.commit("setActiveWindow"); */
-  },
-
   mounted() {
     //console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
     this.$store.dispatch("actionGetDashboard");
+
     this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
     this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
+
     window.addEventListener("resize", function() {
       const oldWidthGrid = self.$store.getters.getWidthGrid;
       const oldHeightGrid = self.$store.getters.getHeightGrid;
@@ -134,7 +128,7 @@ export default {
         coefLeft: newWidthGrid / oldWidthGrid,
         coefTop: newHeightGrid / oldHeightGrid
       };
-      console.log("options", options);
+
       self.$store.dispatch("actionRecalcWindowsCoords", options);
       self.$store.commit("setWidthGrid", self.$refs.grid.$el.clientWidth);
       self.$store.commit("setHeightGrid", self.$refs.grid.$el.clientHeight);
