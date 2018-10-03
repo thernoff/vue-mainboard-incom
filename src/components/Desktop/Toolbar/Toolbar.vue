@@ -3,16 +3,16 @@
     <mainboard-info-dialog-window
       v-bind:visible="visibleInfoDialogWindow"
       v-bind:options="{
-        title: 'Нельзя удалить текущую рабочую область',
-        text: 'Для работы необходима хотя бы одна рабочая область.'
+        title: 'Нельзя удалить текущую рабочий стол',
+        text: 'Для работы необходима хотя бы один рабочий стол.'
       }"
       v-on:hideInfoDialogWindow="hideInfoDialogWindow"
     ></mainboard-info-dialog-window>
 
     <mainboard-input-dialog-window
       v-bind:options="{
-        title: 'Введите название рабочей области',
-        label: 'Название рабочей области'
+        title: 'Введите название рабочего стола',
+        label: 'Название рабочего стола'
       }"
       v-bind:visible="visibleInputDialogWindow"
       v-on:input="createNewWorkspace($event)"
@@ -21,8 +21,8 @@
 
     <mainboard-dialog-window
       v-bind:options="{
-        title: 'Удаление рабочей области',
-        text: 'Вы действительно хотите удалить текущую рабочую область?'
+        title: 'Удаление рабочего стола',
+        text: 'Вы действительно хотите удалить текущий рабочий стол?'
       }"
       v-bind:visible="visibleDialogWindow"
       v-on:hideDialogWindow="deleteCurrentWorkspace($event)"
@@ -53,13 +53,13 @@
           <v-list-tile
             v-on:click="showInputDialogWindow"
           >
-            Создать новую рабочую область
+            Создать новый рабочий стол
           </v-list-tile>
 
           <v-list-tile
               v-on:click="showDialogWindow"
             >
-              Удалить текущую область
+              Удалить текущий рабочий стол
           </v-list-tile>
           <v-divider></v-divider>
 

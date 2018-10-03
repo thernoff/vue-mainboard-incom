@@ -18,7 +18,7 @@ export default {
     activeWorkspace: null,
     workspaces: [
       {
-        title: 'Рабочая область пользователя',
+        title: 'Рабочий стол пользователя',
         descripton: '',
         active: true,
         windows: [],
