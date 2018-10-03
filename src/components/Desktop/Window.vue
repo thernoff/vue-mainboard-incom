@@ -20,7 +20,8 @@
     <v-card-title
         class="mainboard-window__title"
         :class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
-        @mousedown="setActiveWindow"
+        v-on:mousedown="setActiveWindow"
+        v-on:dblclick="toggleFullscreenWindow"
         primary-title
     >
         <span >{{ options.title }}</span>
@@ -77,7 +78,6 @@ export default {
   },
   data() {
     return {
-      firstLoad: true,
       apiLink: "",
       backLink: "",
       history: [],
@@ -136,14 +136,11 @@ export default {
     },
 
     updateWindow(data) {
-      if (!this.firstLoad) {
-        this.updateHistory(data.apiLink);
-        let options = Object.assign({}, data, { index: this.index });
-        this.$store.dispatch("actionUpdateWindow", options);
-        this.$store.dispatch("actionSaveSettingsDesktop");
-      } else {
-        this.firstLoad = false;
-      }
+      console.log("updateWindow data", data);
+      this.updateHistory(data.apiLink);
+      let options = Object.assign({}, data, { index: this.index });
+      this.$store.dispatch("actionUpdateWindow", options);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
     updateWindowTitle(title) {
@@ -183,6 +180,7 @@ export default {
 
   created() {
     this.apiLink = this.options.apiLink;
+    this.history.push(this.options.apiLink);
   },
 
   mounted() {

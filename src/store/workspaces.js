@@ -89,6 +89,16 @@ export default {
       })
     },
 
+    minimizeWindows(state) {
+      state.activeWorkspace.windows.forEach(function (window) {
+        window.minimize = true
+      })
+    },
+
+    restoreMinimizeWindows(state, arrIndexesWindowsRestore) {
+      arrIndexesWindowsRestore.forEach(index => state.activeWorkspace.windows[index].minimize = false)
+    },
+
     createNewShortcut(state, options) {
       const shortcuts = state.activeWorkspace.shortcuts
 
@@ -276,6 +286,14 @@ export default {
       const widthGrid = rootState.grid.widthGrid
       const heightGrid = rootState.grid.heightGrid
       commit('recalcWindowsCoords', options)
+    },
+
+    actionMinimizeWindows({ commit }) {
+      commit('minimizeWindows')
+    },
+
+    actionRestoreMinimizeWindows({ commit }, arrIndexesWindowsRestore) {
+      commit('restoreMinimizeWindows', arrIndexesWindowsRestore)
     },
 
     actionCreateNewShortcut({ commit, state }, options) {

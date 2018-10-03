@@ -24,6 +24,7 @@ export default {
 
   methods: {
     load() {
+      console.log("Load frame first");
       if (!this.firstLoad) {
         console.log(
           "Load frame",

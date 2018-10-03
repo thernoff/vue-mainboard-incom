@@ -50,6 +50,11 @@
             <v-icon>settings</v-icon>
           </v-btn> -->
           <mainboard-user-form v-bind:user="user" v-on:click.native="onClickBtnSettingsUser"></mainboard-user-form>
+          <!-- <mainboard-window-settings
+            v-bind:user="user"
+            v-on:click.native="onClickBtnSettingsUser"
+            v-bind:items="items"
+          ></mainboard-window-settings> -->
 
          <!--  <v-btn icon>
             <v-icon>view_module</v-icon>
@@ -165,11 +170,8 @@
 
          <v-divider></v-divider>
 
-        <v-list >
-
-          <v-list-tile
-
-          >
+        <v-list>
+          <v-list-tile>
             <v-list-tile-content>
               <!-- <v-list-tile-title></v-list-tile-title> -->
               <v-text-field
@@ -191,6 +193,7 @@
 
 <script>
 import UserForm from "@/components/Desktop/Taskbar/UserForm.vue";
+import WindowSettings from "@/components/Desktop/WindowSettings/WindowSettings.vue";
 
 export default {
   data() {
@@ -207,7 +210,8 @@ export default {
     };
   },
   components: {
-    mainboardUserForm: UserForm
+    mainboardUserForm: UserForm,
+    mainboardWindowSettings: WindowSettings
   },
   computed: {
     workspaces() {

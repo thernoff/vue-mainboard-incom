@@ -30,11 +30,26 @@
         </span>
       </v-btn>
       <v-spacer></v-spacer>
-      <!-- <v-btn
-          color="primary"
+      <v-btn
+        class="btn-minimize-windows"
+        color="primary"
+        title="Свернуть все окна"
+        icon
+        v-if="!showBtnRestoreMinimizeWindow"
+        v-on:click="minimizeWindows"
       >
           <v-icon>expand_more</v-icon>
-      </v-btn> -->
+      </v-btn>
+      <v-btn
+        class="btn-restore-windows"
+        color="primary"
+        title="Восстановить свернутые окна"
+        icon
+        v-if="showBtnRestoreMinimizeWindow"
+        v-on:click="restoreMinimizeWindows"
+      >
+          <v-icon>expand_less</v-icon>
+      </v-btn>
   </v-footer>
 </template>
 
@@ -43,13 +58,33 @@ import StartMenu from "@/components/Desktop/Taskbar/Startmenu.vue";
 export default {
   data() {
     return {
-      visibleTaskbar: true
-      //windows: this.getWindows()
+      visibleTaskbar: true,
+      arrIndexesWindowsRestore: []
     };
   },
   components: {
     mainboardStartmenu: StartMenu
   },
+
+  computed: {
+    showBtnRestoreMinimizeWindow() {
+      return this.arrIndexesWindowsRestore.length;
+    },
+
+    windows() {
+      return this.$store.getters.windows;
+    },
+
+    widthBtnMinimizeWindows() {
+      const countWindows = this.windows.length + 3;
+      const widthGrid = this.$store.getters.widthGrid;
+      const widthBtnMinimizeWindows = widthGrid / countWindows;
+      return widthBtnMinimizeWindows > 120
+        ? Math.floor((1000 * 120) / widthGrid) / 10
+        : Math.floor((1000 * widthBtnMinimizeWindows) / widthGrid) / 10;
+    }
+  },
+
   methods: {
     toggleVisibleTaskbar() {
       this.visibleTaskbar = !this.visibleTaskbar;
@@ -70,21 +105,21 @@ export default {
 
     titleMinimizeWindow(title) {
       return title.length < 10 ? title : title.substr(0, 10) + "...";
-    }
-  },
-
-  computed: {
-    windows() {
-      return this.$store.getters.windows;
     },
 
-    widthBtnMinimizeWindows() {
-      const countWindows = this.windows.length + 3;
-      const widthGrid = this.$store.getters.widthGrid;
-      const widthBtnMinimizeWindows = widthGrid / countWindows;
-      return widthBtnMinimizeWindows > 120
-        ? Math.floor((1000 * 120) / widthGrid) / 10
-        : Math.floor((1000 * widthBtnMinimizeWindows) / widthGrid) / 10;
+    minimizeWindows() {
+      this.windows.forEach((window, index) => {
+        if (!window.minimize) {
+          this.arrIndexesWindowsRestore.push(index);
+        }
+      });
+      this.$store.dispatch("actionMinimizeWindows");
+    },
+
+    restoreMinimizeWindows() {
+      this.$store
+        .dispatch("actionRestoreMinimizeWindows", this.arrIndexesWindowsRestore)
+        .then((this.arrIndexesWindowsRestore = []));
     }
   }
 };
@@ -101,6 +136,9 @@ export default {
   max-width: 120px;
   margin: 8px 3px;
   padding: 5px;
+}
+
+.btn-minimize-windows {
 }
 </style>
 

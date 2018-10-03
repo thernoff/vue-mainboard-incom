@@ -1,21 +1,12 @@
 <template>
-<div class="mainboard-userform">
-  <v-layout row justify-center>
-      <v-btn icon v-on:click="modal=true">
-        <v-icon>settings</v-icon>
-      </v-btn>
-    <v-dialog width="400px" v-model="modal">
-      <!-- <v-btn icon slot="activator">
-        <v-icon>settings</v-icon>
-      </v-btn> -->
-      <v-card light>
-        <v-layout row>
+  <v-card light>
+        <!-- <v-layout row>
             <v-flex xs12>
               <v-card-title class="primary mainboard-userform__title">
                 <div class="headline">Настройки пользователя</div>
               </v-card-title>
             </v-flex>
-          </v-layout>
+          </v-layout> -->
         <v-container>
           <v-layout row>
             <v-flex xs12>
@@ -87,9 +78,6 @@
           </v-layout>
         </v-container>
       </v-card>
-    </v-dialog>
-  </v-layout>
-</div>
 </template>
 
 <script>
