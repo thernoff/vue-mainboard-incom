@@ -30,11 +30,11 @@
         </span>
       </v-btn>
       <v-spacer></v-spacer>
+      <mainboard-system-clock></mainboard-system-clock>
       <v-btn
         class="btn-minimize-windows"
         color="primary"
         title="Свернуть все окна"
-        icon
         v-if="!showBtnRestoreMinimizeWindow"
         v-on:click="minimizeWindows"
       >
@@ -44,7 +44,6 @@
         class="btn-restore-windows"
         color="primary"
         title="Восстановить свернутые окна"
-        icon
         v-if="showBtnRestoreMinimizeWindow"
         v-on:click="restoreMinimizeWindows"
       >
@@ -55,6 +54,7 @@
 
 <script>
 import StartMenu from "@/components/Desktop/Taskbar/Startmenu.vue";
+import SystemClock from "@/components/Desktop/Taskbar/SystemClock.vue";
 export default {
   data() {
     return {
@@ -63,7 +63,8 @@ export default {
     };
   },
   components: {
-    mainboardStartmenu: StartMenu
+    mainboardStartmenu: StartMenu,
+    mainboardSystemClock: SystemClock
   },
 
   computed: {
@@ -138,7 +139,10 @@ export default {
   padding: 5px;
 }
 
-.btn-minimize-windows {
+.btn-minimize-windows,
+.btn-restore-windows {
+  min-width: 30px;
+  padding: 0 10px;
 }
 </style>
 
