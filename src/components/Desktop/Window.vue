@@ -137,7 +137,8 @@ export default {
 
     updateWindow(data) {
       console.log("updateWindow data", data);
-      this.updateHistory(data.apiLink);
+      //this.updateHistory(data.apiLink);
+      this.updateHistory(data.currentLink);
       let options = Object.assign({}, data, { index: this.index });
       this.$store.dispatch("actionUpdateWindow", options);
       this.$store.dispatch("actionSaveSettingsDesktop");

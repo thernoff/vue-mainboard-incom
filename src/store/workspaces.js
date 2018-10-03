@@ -107,14 +107,15 @@ export default {
         top = shortcuts[shortcuts.length - 1].top + 100
       }
       const newShortcut = {
-        image: options.image,
+        image: options.image || '',
         label: options.label,
-        apiLink: options.apiLink,
-        id: options.id,
+        apiLink: options.apiLink || options.url,
+        id: options.id || getRandomId(),
         top: top,
         left: 0,
         zIndex: 5,
-        active: false
+        active: false,
+        type: options.type || 'api'
       }
 
       state.activeWorkspace.shortcuts.push(newShortcut)

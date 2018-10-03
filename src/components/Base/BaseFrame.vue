@@ -30,24 +30,25 @@ export default {
           "Load frame",
           this.$refs.baseFrame.contentWindow.document.title
         );
+        let apiLink = "";
+        const currentLink = this.$refs.baseFrame.contentWindow.location.href;
         const posRedirurl = this.apiLink.search(/redirurl/i);
-        let subApiLink = "";
+
         if (posRedirurl > 0) {
-          subApiLink = this.apiLink.slice(0, posRedirurl);
-          const currentLink = this.$refs.baseFrame.contentWindow.location.href;
+          let subApiLink = this.apiLink.slice(0, posRedirurl);
           let newRedirurl = btoa(currentLink);
           newRedirurl = newRedirurl.replace(/\+/g, "-");
           newRedirurl = newRedirurl.replace(/\//g, "_");
           newRedirurl = newRedirurl.replace(/=/g, ",");
-
-          const data = {
-            title: this.$refs.baseFrame.contentWindow.document.title,
-            apiLink: subApiLink + "redirurl=" + newRedirurl,
-            currentLink
-          };
-
-          this.$emit("loadFrame", data);
+          apiLink = subApiLink + "redirurl=" + newRedirurl;
         }
+        const data = {
+          title: this.$refs.baseFrame.contentWindow.document.title,
+          apiLink,
+          currentLink
+        };
+
+        this.$emit("loadFrame", data);
       } else {
         this.firstLoad = false;
       }

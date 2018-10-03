@@ -26,12 +26,13 @@ export default {
             state.windows = windows
         },
 
-        createNewWindow(state, itemStartMenu) {
-            const title = itemStartMenu.title || itemStartMenu.label
-            const link = itemStartMenu.link
-            const currentLink = itemStartMenu.link
-            const apiLink = itemStartMenu.apiLink
-            const itemId = itemStartMenu.id
+        createNewWindow(state, element) {
+            console.log('createNewWindow', element)
+            const title = element.title || element.label
+            const link = element.link
+            const currentLink = element.link
+            const apiLink = element.apiLink
+            const itemId = element.id
             //const id = Math.random()
             const id = getRandomId()
             //console.log('id', id)

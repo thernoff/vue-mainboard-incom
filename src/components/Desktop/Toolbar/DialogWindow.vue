@@ -1,7 +1,7 @@
 <template>
 <div class="mainboard-dialog-window">
   <slot></slot>
-  <v-dialog width="400px" v-model="visible">
+  <v-dialog width="400px" v-model="visible" persistent>
     <v-card light>
       <v-container>
         <v-layout row>

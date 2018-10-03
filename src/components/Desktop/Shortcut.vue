@@ -4,8 +4,8 @@
     ref="shortcut"
     v-on:dblclick="createNewWindow"
     v-on:mousedown="setActive"
-    v-on:contextmenu.prevent="showContextMenu"
-    :class = "{'mainboard-shortcut--active': shortcut.active}"
+    v-on:contextmenu.prevent.stop="showContextMenu"
+    :class = "{'mainboard-shortcut--active': shortcut.active, 'mainboard-shortcut--noimage': !shortcut.image}"
   >
     <v-menu
       v-model="contextMenu.visible"
@@ -38,11 +38,20 @@
       </v-list>
     </v-menu>
 
-    <div class="mainboard-shortcut__img">
+    <div
+      v-if="shortcut.image"
+      class="mainboard-shortcut__img"
+    >
       <img
         :src="shortcut.image"
         :alt="shortcut.label"
       />
+    </div>
+    <div
+      v-else
+      class="mainboard-shortcut__icon-firstletter"
+    >
+      <span>{{ firstLetterLabel }}</span>
     </div>
 
     <div class="mainboard-shortcut__title">
@@ -81,6 +90,11 @@ export default {
       },
       rename: false
     };
+  },
+  computed: {
+    firstLetterLabel() {
+      return this.shortcut.label[0].toUpperCase();
+    }
   },
   methods: {
     setActive() {
@@ -155,6 +169,13 @@ export default {
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2); */
 }
 
+.mainboard-shortcut--noimage {
+  /* background-color: #fff; */
+  /*  border-radius: 50%; */
+  /* border: 5px solid rgb(155, 46, 46); */
+  overflow: hidden;
+}
+
 .mainboard-shortcut__img {
   padding: 5px;
   text-align: center;
@@ -162,6 +183,14 @@ export default {
 
 .mainboard-shortcut__img img {
   width: 50px;
+}
+
+.mainboard-shortcut__icon-firstletter {
+  color: rgb(126, 26, 26);
+  padding: 5px;
+  text-align: center;
+  font-size: 35px;
+  font-weight: 600;
 }
 
 .mainboard-shortcut__title {

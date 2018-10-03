@@ -7,7 +7,7 @@
     <div class="mainboard-workspace__grid-container" v-if="isModeGrid">
       <div class="mainboard-workspace__grid-gradient"
         :style="{backgroundSize: widthGridCell + '%' + ' ' + heightGridRow +'%'}"
-        v-on:contextmenu.stop.prevent="''"
+
       ></div>
       <!-- <div v-for="y of countRows"
         :key=y

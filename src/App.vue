@@ -1,11 +1,46 @@
 <template>
-
   <v-app class="mainboard">
+    <mainboard-dialog-window-create-shortcut
+      v-bind:visible="visibleDialogWindowCreateShortcut"
+      v-on:hideDialogWindow="createCustomShortcut"
+    ></mainboard-dialog-window-create-shortcut>
+    <v-menu
+      v-model="contextMenu.visible"
+      :position-x="contextMenu.x"
+      :position-y="contextMenu.y"
+      absolute
+      offset-y
+    >
+      <v-list>
+        <v-list-tile
+          v-on:click="showDialogWindowCreateShortcut"
+        >
+          <v-list-tile-title
+            v-on:click="''"
+          >
+            {{ 'Создать ярлык' }}
+          </v-list-tile-title>
+        </v-list-tile>
 
+        <v-list-tile
+          @click="''"
+        >
+          <v-list-tile-title
+            v-on:click="''"
+          >
+            {{ 'Упорядочить ярлыки' }}
+          </v-list-tile-title>
+        </v-list-tile>
+
+      </v-list>
+    </v-menu>
     <!-- <v-navigation-drawer app temporary></v-navigation-drawer> -->
     <mainboard-toolbar class="mainboard-toolbar"></mainboard-toolbar>
 
-    <div class="mainboard-workspace">
+    <div
+      class="mainboard-workspace"
+      v-on:contextmenu.stop.prevent="showContextMenu"
+    >
       <!-- <mainboard-cover
         v-if="visibleStartmenu"
         v-on:click.native="toggleVisibleStartMenu"
@@ -65,10 +100,18 @@ import Cover from "@/components/Desktop/Cover.vue";
 import Shortcut from "@/components/Desktop/Shortcut.vue";
 import ShortcutList from "@/components/Desktop/ShortcutList.vue";
 import ResizableBlock from "@/components/Desktop/ResizableBlock.vue";
+import DialogWindowCreateShortcut from "@/components/Desktop/DialogWindowCreateShortcut.vue";
 
 export default {
   data() {
-    return {};
+    return {
+      visibleDialogWindowCreateShortcut: false,
+      contextMenu: {
+        visible: false,
+        x: 0,
+        y: 0
+      }
+    };
   },
 
   components: {
@@ -80,7 +123,8 @@ export default {
     mainboardCover: Cover,
     mainboardShortcut: Shortcut,
     mainboardShortcutList: ShortcutList,
-    mainboardResizableBlock: ResizableBlock
+    mainboardResizableBlock: ResizableBlock,
+    mainboardDialogWindowCreateShortcut: DialogWindowCreateShortcut
   },
 
   computed: {
@@ -142,6 +186,27 @@ export default {
 
     closeError() {
       this.$store.dispatch("actionClearError");
+    },
+
+    showContextMenu(event) {
+      event.preventDefault();
+      this.contextMenu.visible = false;
+      this.contextMenu.x = event.clientX;
+      this.contextMenu.y = event.clientY;
+      this.$nextTick(() => {
+        this.contextMenu.visible = true;
+      });
+    },
+
+    showDialogWindowCreateShortcut() {
+      this.visibleDialogWindowCreateShortcut = true;
+    },
+
+    createCustomShortcut(customShortcut) {
+      console.log("customShortcut", customShortcut);
+      this.visibleDialogWindowCreateShortcut = false;
+      this.$store.dispatch("actionCreateNewShortcut", customShortcut);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     }
   },
 
