@@ -18,11 +18,13 @@
                 v-bind:key="category.id"
                 v-bind:title="category.label"
                 v-bind:elements="category.elements"
-                v-on:createNewCategory="createNewCategory"
+                v-bind:visibleCategory="parseInt(category.visible)"
                 v-on:startSortable="startSortable"
                 v-on:receiveSortable="receiveSortable"
                 v-on:stopSortable="stopSortable"
+                v-on:createNewCategory="createNewCategory(index)"
                 v-on:updateTitleCategory="updateTitleCategory(index, $event)"
+                v-on:toggleVisibityCategory="toggleVisibityCategory(index)"
               >
               </mainboard-panel-elements>
             </div>
@@ -119,8 +121,7 @@ export default {
     });
   },
   methods: {
-    createNewCategory() {
-      console.log("createNewCategory categories", this.categories);
+    createNewCategory(index) {
       let newCategory = {
         id: 0,
         server_id: 0,
@@ -129,7 +130,7 @@ export default {
         visible: 1,
         elements: []
       };
-      this.categories.push(newCategory);
+      this.localCategories.splice(index + 1, 0, newCategory);
     },
 
     startSortable({ startIndexElement, startIndexCategory }) {
@@ -195,7 +196,11 @@ export default {
 
     updateTitleCategory(index, title) {
       this.localCategories[index].label = title;
-      console.log("updateTitleCategory", this.localCategories);
+    },
+
+    toggleVisibityCategory(index) {
+      const value = parseInt(this.localCategories[index].visible);
+      this.localCategories[index].visible = value ? 0 : 1;
     },
 
     saveCategories() {

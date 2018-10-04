@@ -91,6 +91,7 @@
             <v-list-group
               class="mainboard-startmenu__category"
               v-for="category in categories"
+              v-if="parseInt(category.visible)"
               v-bind:key="category.id"
             >
               <v-list-tile slot="activator">

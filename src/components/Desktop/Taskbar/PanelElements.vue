@@ -36,17 +36,20 @@
                 <!-- <v-icon color="white">fas fa-arrow-left</v-icon> -->
                 <v-icon color="white">create</v-icon>
             </v-btn>
-            <v-btn icon small class="mainboard-panel__btn" title="Сохранить" v-show="renameTitleCategory" v-on:click.stop.prevent="updateTitleCategory">
+            <v-btn icon small class="mainboard-panel__btn" title="Сохранить" v-show="renameTitleCategory" v-on:click="updateTitleCategory">
                 <v-icon color="white">save</v-icon>
             </v-btn>
-            <v-btn icon small class="mainboard-panel__btn" title="Добавить" v-on:click="createNewCategory">
+            <v-btn icon small class="mainboard-panel__btn" title="Создать новую категорию" v-on:click="createNewCategory">
                 <v-icon color="white">add</v-icon>
             </v-btn>
-            <v-btn icon small class="mainboard-panel__btn" title="Отображать">
+            <v-btn icon small class="mainboard-panel__btn" title="Отображать" v-show="visibleCategory" v-on:click="toggleVisibityCategory">
                 <v-icon color="white">visibility</v-icon>
             </v-btn>
-            <v-btn icon small class="mainboard-panel__btn" title="Скрыть">
+            <v-btn icon small class="mainboard-panel__btn" title="Скрыть" v-show="!visibleCategory" v-on:click="toggleVisibityCategory">
                 <v-icon color="white">visibility_off</v-icon>
+            </v-btn>
+            <v-btn icon small class="mainboard-panel__btn" title="Удалить" v-show="!countElements">
+                <v-icon color="white">delete</v-icon>
             </v-btn>
           </v-card-title>
 
@@ -74,6 +77,10 @@ export default {
     },
     elements: {
       type: Array,
+      required: true
+    },
+    visibleCategory: {
+      type: Number,
       required: true
     }
   },
@@ -165,6 +172,10 @@ export default {
         this.$emit("updateTitleCategory", newTitleCategory);
       }
       this.renameTitleCategory = false;
+    },
+
+    toggleVisibityCategory() {
+      this.$emit("toggleVisibityCategory");
     }
   }
 };
