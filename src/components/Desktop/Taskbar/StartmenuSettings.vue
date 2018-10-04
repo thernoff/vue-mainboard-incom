@@ -14,7 +14,7 @@
           <v-flex xs12>
             <div class="container-categories" ref="categories">
               <mainboard-panel-elements
-                v-for="category in localCategories"
+                v-for="(category, index) in localCategories"
                 v-bind:key="category.id"
                 v-bind:title="category.label"
                 v-bind:elements="category.elements"
@@ -22,6 +22,7 @@
                 v-on:startSortable="startSortable"
                 v-on:receiveSortable="receiveSortable"
                 v-on:stopSortable="stopSortable"
+                v-on:updateTitleCategory="updateTitleCategory(index, $event)"
               >
               </mainboard-panel-elements>
             </div>
@@ -80,13 +81,16 @@ export default {
     this.localCategories = Object.assign([], this.categories);
   },
   watch: {
-    categories(newVal, oldVal) {
-      //this.localCategories = Object.assign([], this.categories);
-      this.localCategories = JSON.parse(JSON.stringify(this.categories));
-      console.log(
-        "watch categories this.localCategories",
-        this.localCategories
-      );
+    categories: {
+      handler() {
+        //this.localCategories = Object.assign([], this.categories);
+        this.localCategories = JSON.parse(JSON.stringify(this.categories));
+        console.log(
+          "watch categories this.localCategories",
+          this.localCategories
+        );
+      },
+      deep: true
     }
   },
   mounted() {
@@ -97,7 +101,7 @@ export default {
       tolerance: "pointer",
       items: ".mainboard-panel",
       connectWith: ".container-categories",
-      handle: ".mainboard-panel-elements__title",
+      handle: ".mainboard-panel__title",
       //placeholder: "placeholder-row",
       start: function(event, ui) {
         const startIndexCategory = $(this)
@@ -187,6 +191,11 @@ export default {
 
       this.startIndexCategory = null;
       this.stopIndexCategory = null;
+    },
+
+    updateTitleCategory(index, title) {
+      this.localCategories[index].label = title;
+      console.log("updateTitleCategory", this.localCategories);
     },
 
     saveCategories() {

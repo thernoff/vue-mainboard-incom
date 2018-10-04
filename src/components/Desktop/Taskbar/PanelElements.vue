@@ -8,32 +8,50 @@
     >
       <v-card
           tile
-          class="mainboard-panel-elements__card"
+          class="mainboard-panel__card"
           light
         >
           <v-card-title
-            class="mainboard-panel-elements__title"
+            class="mainboard-panel__title title-panel"
             primary-title
           >
-            <h3 >{{ title }}</h3>
+            <span v-if="!renameTitleCategory">{{ title }}</span>
+            <input
+              class="panel-title__input"
+              ref="inputRenameTitleCategory"
+              v-show="renameTitleCategory"
+              v-bind:value="title"
+              v-on:blur="updateTitleCategory"
+              v-on:keyup.enter="updateTitleCategory"
+            />
             <v-spacer></v-spacer>
-            <v-btn icon small class="mainboard-panel-elements__btn" title="Редактировать">
+            <v-btn
+              icon
+              small
+              class="mainboard-panel__btn"
+              title="Редактировать"
+              v-show="!renameTitleCategory"
+              v-on:click="showInputRenameTitleCategory"
+            >
                 <!-- <v-icon color="white">fas fa-arrow-left</v-icon> -->
                 <v-icon color="white">create</v-icon>
             </v-btn>
-            <v-btn icon small class="mainboard-panel-elements__btn" title="Добавить" v-on:click="createNewCategory">
+            <v-btn icon small class="mainboard-panel__btn" title="Сохранить" v-show="renameTitleCategory" v-on:click.stop.prevent="updateTitleCategory">
+                <v-icon color="white">save</v-icon>
+            </v-btn>
+            <v-btn icon small class="mainboard-panel__btn" title="Добавить" v-on:click="createNewCategory">
                 <v-icon color="white">add</v-icon>
             </v-btn>
-            <v-btn icon small class="mainboard-panel-elements__btn" title="Отображать">
+            <v-btn icon small class="mainboard-panel__btn" title="Отображать">
                 <v-icon color="white">visibility</v-icon>
             </v-btn>
-            <v-btn icon small class="mainboard-panel-elements__btn" title="Скрыть">
+            <v-btn icon small class="mainboard-panel__btn" title="Скрыть">
                 <v-icon color="white">visibility_off</v-icon>
             </v-btn>
           </v-card-title>
 
-          <v-card-text class="mainboard-panel-elements__body" ref="body">
-            <div class="mainboard-panel-elements__element sortable-element"
+          <v-card-text class="mainboard-panel__body" ref="body">
+            <div class="mainboard-panel__element sortable-element"
               v-for="element in elements"
               v-bind:key="element.id"
             >
@@ -61,14 +79,7 @@ export default {
   },
   data() {
     return {
-      orderElement: {
-        startIndexElement: null,
-        startIndexCategory: null,
-        stopIndexElement: null,
-        stopIndexCategory: null,
-        stopIndexElement: null,
-        stopIndexCategory: null
-      }
+      renameTitleCategory: false
     };
   },
   computed: {
@@ -81,22 +92,16 @@ export default {
     $(this.$refs.body).sortable({
       tolerance: "pointer",
       items: ".sortable-element",
-      connectWith: ".mainboard-panel-elements__body",
+      connectWith: ".mainboard-panel__body",
       distance: 5,
       start: function(event, ui) {
         const $body = $(this);
-        self.orderElement.startIndexElement = $(this)
-          .find(".sortable-element")
-          .index(ui.item);
         const startIndexElement = $(this)
           .find(".sortable-element")
           .index(ui.item);
         //console.log("startIndexElement", startIndexElement);
 
         const $panel = $body.closest(".mainboard-panel");
-        self.orderElement.startIndexCategory = $(".mainboard-panel").index(
-          $panel
-        );
         const startIndexCategory = $(".mainboard-panel").index($panel);
         self.$emit("startSortable", {
           startIndexElement,
@@ -117,7 +122,6 @@ export default {
 
         const stopIndexCategory = $(".mainboard-panel").index($panel);
         //console.log("stopIndexCategory", stopIndexCategory);
-        //self.updateOrderElements();
 
         self.$emit("receiveSortable", {
           stopIndexElement,
@@ -135,7 +139,7 @@ export default {
           const $panel = $body.closest(".mainboard-panel");
           const stopIndexCategory = $(".mainboard-panel").index($panel);
           //console.log("stopIndexCategory", stopIndexCategory);
-          //self.updateOrderElements();
+
           self.$emit("stopSortable", {
             stopIndexElement,
             stopIndexCategory
@@ -150,9 +154,17 @@ export default {
       this.$emit("createNewCategory");
     },
 
-    updateOrderElements(data) {
-      //this.$emit("updateOrderElements", data);
-      console.log(this.orderElement);
+    showInputRenameTitleCategory() {
+      this.renameTitleCategory = true;
+      this.$nextTick(() => this.$refs.inputRenameTitleCategory.focus());
+    },
+
+    updateTitleCategory() {
+      const newTitleCategory = this.$refs.inputRenameTitleCategory.value;
+      if (this.title !== newTitleCategory) {
+        this.$emit("updateTitleCategory", newTitleCategory);
+      }
+      this.renameTitleCategory = false;
     }
   }
 };
@@ -174,27 +186,40 @@ export default {
   height: 100%;
 }
 
-.mainboard-panel-elements__card {
+.mainboard-panel__card {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.mainboard-panel-elements__title {
+.mainboard-panel__title {
+  padding: 0 8px;
   height: 30px;
-  background-color: #4470e9;
-  border-color: #d5b5c4;
-  border-bottom-color: rgb(213, 181, 196);
-  border-bottom: 1px solid transparent;
+  background-color: #3b5375;
+  color: #fff;
+  font-size: 16px;
   overflow: hidden;
   cursor: move;
 }
 
-.mainboard-panel-elements__body {
+.panel-title__input {
+  padding: 0 8px;
+  background-color: #fff;
+  color: #000;
+  font-size: 16px;
+  height: 22px;
+  border-radius: 2px;
+}
+
+.mainboard-panel__btn {
+  margin: 0;
+}
+
+.mainboard-panel__body {
   height: calc(100% - 30px);
 }
 
-.mainboard-panel-elements__element {
+.mainboard-panel__element {
   width: 80px;
   position: relative;
   display: inline-block;
@@ -210,7 +235,7 @@ export default {
   cursor: move;
 }
 
-.mainboard-panel-elements__img {
+.mainboard-panel__img {
   margin: 0px auto;
   width: 64px;
   height: 64px;
