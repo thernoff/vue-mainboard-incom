@@ -1,21 +1,26 @@
 export default {
     state: {
         visible: false,
-        items: []
+        categories: []
     },
     mutations: {
         toggleVisibleStartMenu(state) {
             state.visible = !state.visible
         },
 
-        setStartmenuItems(state, items) {
-            state.items = items
+        setStartmenuItems(state, categories) {
+            console.log('commit setStartmenuItems')
+            state.categories = categories
         }
     },
     actions: {
         actionToggleVisibleStartMenu({ commit }) {
             commit('toggleVisibleStartMenu')
         },
+
+        actionSaveCategories({ commit }, categories) {
+            commit('setStartmenuItems', Object.assign([], categories))
+        }
     },
     getters: {
         visibleStartmenu(state) {
@@ -23,11 +28,15 @@ export default {
         },
 
         getItems(state) {
-            return state.items
+            return state.categories
+        },
+
+        categories(state) {
+            return state.categories
         },
 
         getItemStartMenu(state) {
-            return (indexItem, indexElement) => state.items[indexItem].elements[indexElement]
+            return (indexItem, indexElement) => state.categories[indexItem].elements[indexElement]
         }
     }
 }

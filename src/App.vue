@@ -60,9 +60,7 @@
           ref="grid"
         ></mainboard-grid>
           <!-- </v-layout> -->
-        <mainboard-startmenu
-          v-if="visibleStartmenu"
-        ></mainboard-startmenu>
+        <mainboard-startmenu></mainboard-startmenu>
         <!-- <router-view></router-view> -->
       <!-- </v-container> -->
     </div>
@@ -155,11 +153,13 @@ export default {
     }
   },
 
+  created() {
+    this.$store.dispatch("actionGetDashboard");
+  },
+
   mounted() {
     //console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
-    this.$store.dispatch("actionGetDashboard");
-
     this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
     this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
 

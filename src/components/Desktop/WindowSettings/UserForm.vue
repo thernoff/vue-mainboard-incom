@@ -1,83 +1,74 @@
 <template>
-  <v-card light>
-        <!-- <v-layout row>
-            <v-flex xs12>
-              <v-card-title class="primary mainboard-userform__title">
-                <div class="headline">Настройки пользователя</div>
-              </v-card-title>
-            </v-flex>
-          </v-layout> -->
-        <v-container>
-          <v-layout row>
-            <v-flex xs12>
-              <v-form ref="form" v-model="valid" lazy-validation>
-                <v-text-field
-                  name="firstname"
-                  v-bind:value="user.firstname"
-                  label="Имя"
-                  required
-                  readonly
-                ></v-text-field>
-                <v-text-field
-                  name="lastname"
-                  v-bind:value="user.lastname"
-                  :rules="nameRules"
-                  label="Фамилия"
-                  required
-                  readonly
-                ></v-text-field>
-                <v-text-field
-                  name="email"
-                  v-bind:value="user.email"
-                  v-on:input="email = $event"
-                  :rules="emailRules"
-                  label="E-mail"
-                  required
-                ></v-text-field>
-                <v-text-field
-                  name="password"
-                  v-model="password"
-                  :rules="passwordRules"
-                  label="Пароль"
-                  v-bind:type="'password'">
-                </v-text-field>
-                <v-text-field
-                  name="repassword"
-                  v-model="repassword"
-                  :rules="repasswordRules"
-                  label="Введите пароль еще раз"
-                  v-bind:type="'password'">
-                </v-text-field>
-                <v-select
-                  v-bind:value="user.idActiveInterface"
-                  v-on:input="idActiveInterface = $event"
-                  :items="interfaces"
-                  item-text="name"
-                  item-value="id"
-                  label="Тип интерфейса"
-                ></v-select>
-                <v-layout align-center>
-                  <v-flex text-xs-center>
-                    <v-btn
-                      :disabled="!valid"
-                      @click="saveUser"
-                      color="info"
-                    >
-                      Сохранить
-                    </v-btn>
-                    <v-btn
-                      v-on:click="cancel"
-                      color="error"
-                    >
-                      Отмена
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
-              </v-form>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card>
+<v-container>
+  <v-layout row>
+    <v-flex xs12>
+      <v-form ref="form" v-model="valid" lazy-validation>
+        <v-text-field
+          name="firstname"
+          v-bind:value="user.firstname"
+          label="Имя"
+          required
+          readonly
+        ></v-text-field>
+        <v-text-field
+          name="lastname"
+          v-bind:value="user.lastname"
+          :rules="nameRules"
+          label="Фамилия"
+          required
+          readonly
+        ></v-text-field>
+        <v-text-field
+          name="email"
+          v-bind:value="user.email"
+          v-on:input="changeEmail"
+          :rules="emailRules"
+          label="E-mail"
+          required
+        ></v-text-field>
+        <v-text-field
+          name="password"
+          v-model="password"
+          :rules="passwordRules"
+          label="Пароль"
+          v-bind:type="'password'">
+        </v-text-field>
+        <v-text-field
+          name="repassword"
+          v-model="repassword"
+          :rules="repasswordRules"
+          label="Введите пароль еще раз"
+          v-bind:type="'password'">
+        </v-text-field>
+        <v-select
+          v-bind:value="user.idActiveInterface"
+          v-on:input="selectInterface"
+          :items="interfaces"
+          item-text="name"
+          item-value="id"
+          label="Тип интерфейса"
+        ></v-select>
+        <v-layout align-center>
+          <v-flex text-xs-center>
+            <v-btn
+              :disabled="disableBtnSave"
+              @click="saveUser"
+              color="info"
+            >
+              Сохранить
+            </v-btn>
+            <v-btn
+              v-on:click="cancel"
+              color="error"
+            >
+              Отмена
+            </v-btn>
+          </v-flex>
+        </v-layout>
+      </v-form>
+    </v-flex>
+  </v-layout>
+</v-container>
 </template>
 
 <script>
@@ -92,6 +83,7 @@ export default {
     return {
       modal: false,
       valid: false,
+      change: false,
       email: "",
       password: "",
       repassword: "",
@@ -126,9 +118,24 @@ export default {
     }, */
     interfaces() {
       return this.$store.getters.interfaces;
+    },
+    disableBtnSave() {
+      return !this.valid || !this.change;
     }
   },
   methods: {
+    selectInterface(value) {
+      if (this.idActiveInterface !== value) {
+        this.idActiveInterface = value;
+        this.change = true;
+      } else {
+        this.change = false;
+      }
+    },
+    changeEmail(value) {
+      this.email = value;
+      this.change = true;
+    },
     saveUser() {
       if (this.$refs.form.validate()) {
         // Native form submission is not yet supported
@@ -154,11 +161,11 @@ export default {
 
     cancel() {
       //this.$refs.form.reset();
+      console.log("test");
       this.modal = false;
       this.idActiveInterface = null;
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 

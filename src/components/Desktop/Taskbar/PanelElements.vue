@@ -32,7 +32,7 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-text class="mainboard-panel-elements__body">
+          <v-card-text class="mainboard-panel-elements__body" ref="body">
             <div class="mainboard-panel-elements__element sortable-element"
               v-for="element in elements"
               v-bind:key="element.id"
@@ -59,15 +59,100 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      orderElement: {
+        startIndexElement: null,
+        startIndexCategory: null,
+        stopIndexElement: null,
+        stopIndexCategory: null,
+        stopIndexElement: null,
+        stopIndexCategory: null
+      }
+    };
+  },
   computed: {
     countElements() {
       return this.elements.length;
     }
   },
+  mounted() {
+    const self = this;
+    $(this.$refs.body).sortable({
+      tolerance: "pointer",
+      items: ".sortable-element",
+      connectWith: ".mainboard-panel-elements__body",
+      distance: 5,
+      start: function(event, ui) {
+        const $body = $(this);
+        self.orderElement.startIndexElement = $(this)
+          .find(".sortable-element")
+          .index(ui.item);
+        const startIndexElement = $(this)
+          .find(".sortable-element")
+          .index(ui.item);
+        //console.log("startIndexElement", startIndexElement);
+
+        const $panel = $body.closest(".mainboard-panel");
+        self.orderElement.startIndexCategory = $(".mainboard-panel").index(
+          $panel
+        );
+        const startIndexCategory = $(".mainboard-panel").index($panel);
+        self.$emit("startSortable", {
+          startIndexElement,
+          startIndexCategory
+        });
+
+        //console.log("startIndexCategory", startIndexCategory);
+      },
+      receive: function(event, ui) {
+        //console.log("element receive ui", ui);
+        const $body = $(this);
+        const stopIndexElement = $(this)
+          .find(".sortable-element")
+          .index(ui.item);
+        //console.log("stopIndexElement", stopIndexElement);
+
+        const $panel = $body.closest(".mainboard-panel");
+
+        const stopIndexCategory = $(".mainboard-panel").index($panel);
+        //console.log("stopIndexCategory", stopIndexCategory);
+        //self.updateOrderElements();
+
+        self.$emit("receiveSortable", {
+          stopIndexElement,
+          stopIndexCategory
+        });
+      },
+      stop: function(event, ui) {
+        //console.log("element stop ui", ui);
+        const $body = $(this);
+        const stopIndexElement = $(this)
+          .find(".sortable-element")
+          .index(ui.item);
+        if (stopIndexElement >= 0) {
+          //console.log("stopIndexElement", stopIndexElement);
+          const $panel = $body.closest(".mainboard-panel");
+          const stopIndexCategory = $(".mainboard-panel").index($panel);
+          //console.log("stopIndexCategory", stopIndexCategory);
+          //self.updateOrderElements();
+          self.$emit("stopSortable", {
+            stopIndexElement,
+            stopIndexCategory
+          });
+        }
+      }
+    });
+  },
   methods: {
     createNewCategory() {
       console.log("createNewCategory");
       this.$emit("createNewCategory");
+    },
+
+    updateOrderElements(data) {
+      //this.$emit("updateOrderElements", data);
+      console.log(this.orderElement);
     }
   }
 };
@@ -110,14 +195,19 @@ export default {
 }
 
 .mainboard-panel-elements__element {
-  width: 100px;
+  width: 80px;
   position: relative;
   display: inline-block;
-  margin-top: 5px;
+  margin: 5px;
+  /* margin-top: 5px;
   margin-right: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 5px; */
   vertical-align: top;
   text-align: center;
+}
+
+.sortable-element {
+  cursor: move;
 }
 
 .mainboard-panel-elements__img {

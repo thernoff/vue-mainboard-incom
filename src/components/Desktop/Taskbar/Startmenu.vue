@@ -1,42 +1,69 @@
 <template>
-    <!-- <v-layout row>
-    <v-flex xs12 sm6 offset-sm3> -->
+  <div class="mainboard-startmenu">
+    <mainboard-startmenu-settings
+      v-bind:categories="categories"
+      v-bind:visible="visibleStartmenuSettings"
+      v-on:hideDialogWindow="visibleStartmenuSettings = false"
+    ></mainboard-startmenu-settings>
+    <v-menu
+      class="mainboard-startmenu__contextmenu-item"
+      v-model="contextMenuItem.visible"
+      :position-x="contextMenuItem.x"
+      :position-y="contextMenuItem.y"
+      absolute
+      offset-y
+      light
+      z-index=1000
+    >
+      <v-list>
+        <v-list-tile
+          @click="''"
+        >
+          <v-list-tile-title v-on:click="addShortcutToDesktop">
+            {{ 'Добавить ярлык на рабочий стол' }}
+          </v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
+    <v-menu
+      class="mainboard-startmenu__contextmenu-startbutton"
+      v-model="contextMenuStartbutton.visible"
+      :position-x="contextMenuStartbutton.x"
+      :position-y="contextMenuStartbutton.y"
+      absolute
+      offset-y
+      light
+      z-index=1000
+    >
+      <v-list>
+        <v-list-tile
+          @click="''"
+        >
+          <v-list-tile-title v-on:click="showStartmenuSettings">
+            {{ 'Свойства' }}
+          </v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
     <v-menu
       top
       offset-y
       light
-      z-index="9999"
+      z-index="999"
       close-on-click
       :close-on-content-click="false"
       :close-delay="50"
       v-model="startMenu"
     >
-      <v-menu
-        v-model="contextMenu.visible"
-        :position-x="contextMenu.x"
-        :position-y="contextMenu.y"
-        absolute
-        offset-y
-      >
-        <v-list>
-          <v-list-tile
-            @click="''"
-          >
-            <v-list-tile-title v-on:click="addShortcutToDesktop">
-              {{ 'Добавить ярлык на рабочий стол' }}
-            </v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
-
-        <v-btn
-            color="btnTaskbar"
-            slot="activator"
-            dark
-            v-on:click="onClickBtnStart"
-          >
-            <v-icon>home</v-icon>
-        </v-btn>
+      <v-btn
+          color="btnTaskbar"
+          slot="activator"
+          dark
+          v-on:click="onClickBtnStart"
+          v-on:contextmenu.prevent.stop="showContextMenuStartbutton($event)"
+        >
+          <v-icon>home</v-icon>
+      </v-btn>
       <v-card class="mainboard-startmenu">
         <v-toolbar color="primary" dark depressed>
           <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
@@ -53,87 +80,41 @@
           <!-- <mainboard-window-settings
             v-bind:user="user"
             v-on:click.native="onClickBtnSettingsUser"
-            v-bind:items="items"
+            v-bind:categories="categories"
           ></mainboard-window-settings> -->
 
-         <!--  <v-btn icon>
-            <v-icon>view_module</v-icon>
-          </v-btn> -->
         </v-toolbar>
-
-        <!-- <v-list> -->
-          <!-- <v-subheader inset>Рабочие области</v-subheader>
-          <v-list-tile
-            @click="createNewWorkspace"
-          >
-            <v-list-tile-content>
-              <v-list-tile-title>
-                Создать новую рабочую область
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-list-tile
-            v-for="(workspace, index) in workspaces"
-            :key="index"
-            avatar
-            v-on:click="setActiveWorkspace(index)"
-          >
-            <v-list-tile-avatar>
-              <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon>
-              <v-icon>view_module</v-icon>
-            </v-list-tile-avatar>
-
-            <v-list-tile-content>
-              <v-list-tile-title>{{ workspace.title }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ workspace.description }}</v-list-tile-sub-title>
-            </v-list-tile-content>
-
-            <v-list-tile-action>
-              <v-btn icon ripple>
-                <v-icon color="grey lighten-1">info</v-icon>
-              </v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-
-          <v-divider></v-divider> -->
-
           <v-list
             v-if="!countSearchElements"
             class="mainboard-startmenu__categories"
           >
             <v-list-group
-
               class="mainboard-startmenu__category"
-              v-for="item in items"
-              v-bind:key="item.id"
+              v-for="category in categories"
+              v-bind:key="category.id"
             >
               <v-list-tile slot="activator">
                 <i class="material-icons icon-folder">folder</i>
                 <v-list-tile-content>
                   <v-list-tile-title>
-                    {{ item.label }}
+                    {{ category.label }}
                   </v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
 
                 <v-list-tile
-                  v-for="element in item.elements"
+                  v-for="element in category.elements"
                   v-bind:key="element.id"
                   v-on:click="createNewWindow(element)"
-                  v-on:contextmenu.prevent="showContextMenu(element, $event)"
+                  v-on:contextmenu.prevent="showContextMenuItem(element, $event)"
                 >
                   <img
                     :src="element.image"
                     v-bind:style="{width: '25px', marginRight: '5px'}"
                   />
-                  <!-- <v-list-tile-content> -->
                     <v-list-tile-title>
                       {{ element.label }}
                     </v-list-tile-title>
-                  <!-- </v-list-tile-content> -->
-                  <!-- <v-btn fab dark small color="primary" v-on:click.stop="showContextMenu(indexItem, indexElement, $event)">
-                    <v-icon dark>list</v-icon>
-                  </v-btn> -->
                 </v-list-tile>
             </v-list-group>
           </v-list>
@@ -141,31 +122,21 @@
             v-else
             class="mainboard-startmenu__categories"
           >
-            <!-- <v-list-group
-              v-else
-              class="mainboard-startmenu__category"
-            > -->
               <v-list-tile
 
                 v-for="element in searchElements"
                 v-bind:key="element.id"
                 v-on:click="createNewWindow(element)"
-                v-on:contextmenu.prevent="showContextMenu(element, $event)"
+                v-on:contextmenu.prevent="showContextMenuItem(element, $event)"
               >
                 <img
                   :src="element.image"
                   v-bind:style="{width: '25px', marginRight: '5px'}"
                 />
-                <!-- <v-list-tile-content> -->
                   <v-list-tile-title>
                     {{ element.label }}
                   </v-list-tile-title>
-                <!-- </v-list-tile-content> -->
-                <!-- <v-btn fab dark small color="primary" v-on:click.stop="showContextMenu(indexItem, indexElement, $event)">
-                  <v-icon dark>list</v-icon>
-                </v-btn> -->
               </v-list-tile>
-            <!-- </v-list-group> -->
           </v-list>
 
          <v-divider></v-divider>
@@ -173,7 +144,6 @@
         <v-list>
           <v-list-tile>
             <v-list-tile-content>
-              <!-- <v-list-tile-title></v-list-tile-title> -->
               <v-text-field
                 class="mainboard-startmenu__input-search"
                 label="Поиск"
@@ -183,55 +153,59 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
-        <!-- </v-list> -->
       </v-card>
     </v-menu>
-
-<!--     </v-flex>
-  </v-layout> -->
+  </div>
 </template>
 
 <script>
 import UserForm from "@/components/Desktop/Taskbar/UserForm.vue";
 import WindowSettings from "@/components/Desktop/WindowSettings/WindowSettings.vue";
+import StartmenuSettings from "@/components/Desktop/Taskbar/StartmenuSettings.vue";
 
 export default {
   data() {
     return {
       startMenu: false,
-      contextMenu: {
+      visibleStartmenuSettings: false,
+      contextMenuItem: {
         visible: false,
         x: 0,
         y: 0,
         indexItem: null,
         indexElement: null
       },
+      contextMenuStartbutton: {
+        visible: false,
+        x: 0,
+        y: 0
+      },
       inputSearch: ""
     };
   },
   components: {
     mainboardUserForm: UserForm,
-    mainboardWindowSettings: WindowSettings
+    mainboardWindowSettings: WindowSettings,
+    mainboardStartmenuSettings: StartmenuSettings
   },
   computed: {
     workspaces() {
       return this.$store.getters.getWorkspaces;
     },
 
-    items() {
-      return this.$store.getters.getItems;
+    categories() {
+      return this.$store.getters.categories;
     },
 
     searchElements() {
       let arrElements = [];
       if (this.inputSearch) {
         let regexp = new RegExp(this.inputSearch, "i");
-        for (let i = 0; i < this.items.length; i++) {
+        for (let i = 0; i < this.categories.length; i++) {
           console.log("i", i);
-          this.items[i].elements.forEach(function(element) {
+          this.categories[i].elements.forEach(function(element) {
             if (regexp.test(element.label)) {
               arrElements.push(element);
-              console.log("element", element);
             }
           });
         }
@@ -247,7 +221,9 @@ export default {
       return this.$store.getters.user;
     }
   },
-
+  mounted() {
+    console.log("Startmenu categories", this.categories);
+  },
   methods: {
     createNewWindow(element) {
       this.startMenu = false;
@@ -268,19 +244,34 @@ export default {
       //this.startMenu = false;
     },
 
-    showContextMenu(element, event) {
+    showContextMenuItem(element, event) {
       event.preventDefault();
-      this.contextMenu.visible = false;
-      this.contextMenu.x = event.clientX;
-      this.contextMenu.y = event.clientY;
-      this.contextMenu.element = element;
+      this.contextMenuItem.visible = false;
+      this.contextMenuItem.x = event.clientX;
+      this.contextMenuItem.y = event.clientY;
+      this.contextMenuItem.element = element;
       this.$nextTick(() => {
-        this.contextMenu.visible = true;
+        this.contextMenuItem.visible = true;
       });
     },
 
+    showContextMenuStartbutton(event) {
+      this.startMenu = false;
+      event.preventDefault();
+      this.contextMenuStartbutton.visible = false;
+      this.contextMenuStartbutton.x = event.clientX;
+      this.contextMenuStartbutton.y = event.clientY;
+      this.$nextTick(() => {
+        this.contextMenuStartbutton.visible = true;
+      });
+    },
+
+    showStartmenuSettings() {
+      this.visibleStartmenuSettings = true;
+    },
+
     addShortcutToDesktop() {
-      const element = this.contextMenu.element;
+      const element = this.contextMenuItem.element;
       this.$store.dispatch("actionCreateNewShortcut", element);
       this.$store.dispatch("actionSaveSettingsDesktop");
     }

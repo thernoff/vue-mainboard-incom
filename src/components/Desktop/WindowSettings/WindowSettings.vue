@@ -19,15 +19,16 @@
         {{tab.title}}
       </v-tab>
       <v-tab-item>
-        <v-card flat>
+        <v-card flat light>
           <!-- <v-card-text>Text</v-card-text> -->
           <mainboard-user-form v-bind:user="user"></mainboard-user-form>
         </v-card>
       </v-tab-item>
       <v-tab-item>
-        <v-card flat>
+        <v-card flat light>
           <!-- <v-card-text>Text</v-card-text> -->
-          <mainboard-settings-items v-bind:items="items"></mainboard-settings-items>
+          <mainboard-settings-categories v-bind:categories="categories"></mainboard-settings-categories>
+          <!-- <mainboard-settings-categories v-bind:categories="localCategories"></mainboard-settings-categories> -->
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -38,7 +39,7 @@
 
 <script>
 import UserForm from "@/components/Desktop/WindowSettings/UserForm.vue";
-import SettingsItems from "@/components/Desktop/WindowSettings/SettingsItems.vue";
+import SettingsCategories from "@/components/Desktop/WindowSettings/SettingsCategories.vue";
 
 export default {
   props: {
@@ -46,7 +47,7 @@ export default {
       type: Object,
       required: true
     },
-    items: {
+    categories: {
       type: Array,
       required: true
     }
@@ -55,12 +56,17 @@ export default {
     return {
       visible: false,
       active: null,
-      tabs: [{ title: "Пользователь" }, { title: "Меню 'Пуск'" }]
+      tabs: [{ title: "Пользователь" }, { title: "Меню 'Пуск'" }],
+      localCategories: []
     };
   },
   components: {
     mainboardUserForm: UserForm,
-    mainboardSettingsItems: SettingsItems
+    mainboardSettingsCategories: SettingsCategories
+  },
+  created() {
+    console.log("WindowSettings created this.categories", this.categories);
+    this.localCategories = Object.assign([], this.categories);
   },
   methods: {
     cancel() {
