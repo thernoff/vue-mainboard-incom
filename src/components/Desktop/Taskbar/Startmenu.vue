@@ -104,6 +104,7 @@
               </v-list-tile>
 
                 <v-list-tile
+                  v-if="element.visible"
                   v-for="element in category.elements"
                   v-bind:key="element.id"
                   v-on:click="createNewWindow(element)"
@@ -282,7 +283,7 @@ export default {
 
 <style scoped>
 .mainboard-startmenu {
-  width: 300px;
+  /* width: 300px; */
   overflow: hidden;
   /* position: absolute;
   left: 5px;
@@ -294,13 +295,13 @@ export default {
   height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
-  /* width: 320px; */
+  width: 320px;
 }
 
 .mainboard-startmenu__category {
-  padding-right: 10px;
+  /* padding-right: 10px;
   overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: hidden; */
   width: 320px;
 }
 

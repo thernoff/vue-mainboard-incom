@@ -1,5 +1,37 @@
 <template>
 <div class="mainboard-startmenu-settings">
+  <v-menu
+    v-model="contextMenu.visible"
+    :position-x="contextMenu.x"
+    :position-y="contextMenu.y"
+    absolute
+    offset-y
+    light
+    z-index=2000
+  >
+    <v-list>
+      <v-list-tile
+        @click="''"
+      >
+        <v-list-tile-title
+          v-on:click="''"
+        >
+          {{ 'Переименовать' }}
+        </v-list-tile-title>
+      </v-list-tile>
+
+      <v-list-tile
+        @click="''"
+      >
+        <v-list-tile-title
+          v-on:click="''"
+        >
+          {{ 'Скрыть' }}
+        </v-list-tile-title>
+      </v-list-tile>
+
+    </v-list>
+  </v-menu>
 <v-dialog width="800px" v-model="visible" persistent>
     <v-card light>
       <v-layout row>
@@ -25,6 +57,10 @@
                 v-on:createNewCategory="createNewCategory(index)"
                 v-on:updateTitleCategory="updateTitleCategory(index, $event)"
                 v-on:toggleVisibityCategory="toggleVisibityCategory(index)"
+                v-on:removeCategory="removeCategory(index)"
+                v-on:showContextMenuElement="showContextMenuElement(index, $event)"
+                v-on:updateTitleElement="updateTitleElement(index, $event)"
+                v-on:toggleVisibityElement="toggleVisibityElement(index, $event)"
               >
               </mainboard-panel-elements>
             </div>
@@ -72,7 +108,12 @@ export default {
       startIndexElement: null,
       stopIndexElement: null,
       startIndexCategory: null,
-      stopIndexCategory: null
+      stopIndexCategory: null,
+      contextMenu: {
+        visible: false,
+        x: 0,
+        y: 0
+      }
     };
   },
   components: {
@@ -121,6 +162,17 @@ export default {
     });
   },
   methods: {
+    showContextMenuElement(indexCategory, { indexElement, event }) {
+      console.log(indexCategory, indexElement, event);
+      event.preventDefault();
+      this.contextMenu.visible = false;
+      this.contextMenu.x = event.clientX;
+      this.contextMenu.y = event.clientY;
+      this.$nextTick(() => {
+        this.contextMenu.visible = true;
+      });
+    },
+
     createNewCategory(index) {
       let newCategory = {
         id: 0,
@@ -198,9 +250,39 @@ export default {
       this.localCategories[index].label = title;
     },
 
+    updateTitleElement(indexCategory, { indexElement, newTitleElement }) {
+      //console.log(indexCategory, indexElement, newTitleElement);
+      this.localCategories[indexCategory].elements[
+        indexElement
+      ].label = newTitleElement;
+    },
+
+    toggleVisibityElement(indexCategory, indexElement) {
+      console.log(
+        "toggleVisibityElement",
+        this.localCategories[indexCategory].elements[indexElement].visible
+      );
+      const value = parseInt(
+        this.localCategories[indexCategory].elements[indexElement].visible
+      );
+      console.log("value", value);
+      this.localCategories[indexCategory].elements[indexElement].visible = value
+        ? 0
+        : 1;
+
+      console.log(
+        "toggleVisibityElement",
+        this.localCategories[indexCategory].elements[indexElement].visible
+      );
+    },
+
     toggleVisibityCategory(index) {
       const value = parseInt(this.localCategories[index].visible);
       this.localCategories[index].visible = value ? 0 : 1;
+    },
+
+    removeCategory(index) {
+      this.localCategories.splice(index, 1);
     },
 
     saveCategories() {

@@ -1,3 +1,4 @@
+import axios from 'axios'
 export default {
     state: {
         visible: false,
@@ -19,7 +20,25 @@ export default {
         },
 
         actionSaveCategories({ commit }, categories) {
-            commit('setStartmenuItems', Object.assign([], categories))
+            console.log('actionSaveCategories', categories)
+            commit('setStartmenuItems', categories)
+            axios({
+                method: 'post',
+                headers: { 'Content-Type': 'application/form-data' },
+                //url: 'http://esv.elxis.test/extusers/fpage/saveuser/',
+                url: window.location.href + 'extusers/fpage/savedashboard/',
+                data: { categories: categories }
+            })
+                .then(
+                    response => {
+                        console.log('response', response)
+                        //commit('saveUser', user)
+                    }
+                )
+                .catch(error => {
+                    console.log('error', error)
+                    //commit('saveUser', user)
+                })
         }
     },
     getters: {
