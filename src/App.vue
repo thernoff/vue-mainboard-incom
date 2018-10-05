@@ -189,13 +189,13 @@ export default {
     },
 
     showContextMenu(event) {
-      event.preventDefault();
+      /* event.preventDefault();
       this.contextMenu.visible = false;
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;
       this.$nextTick(() => {
         this.contextMenu.visible = true;
-      });
+      }); */
     },
 
     showDialogWindowCreateShortcut() {

@@ -104,7 +104,7 @@
               </v-list-tile>
 
                 <v-list-tile
-                  v-if="element.visible"
+                  v-if="parseInt(element.visible)"
                   v-for="element in category.elements"
                   v-bind:key="element.id"
                   v-on:click="createNewWindow(element)"

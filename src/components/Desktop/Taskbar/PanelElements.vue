@@ -19,7 +19,6 @@
             :class="{
               'hidden': !visibleCategory
             }"
-            primary-title
           >
             <span v-if="!renameTitleCategory">{{ title }}</span>
             <input
@@ -273,7 +272,8 @@ export default {
 <style>
 .mainboard-panel {
   position: relative;
-  min-height: 170px;
+  padding-bottom: 10px;
+  /* min-height: 170px; */
 }
 
 .mainboard-panel--hidden {
@@ -294,10 +294,11 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 170px;
 }
 
 .mainboard-panel__title {
-  padding: 0 8px;
+  padding: 0 8px !important;
   height: 30px;
   background-color: #3b5375;
   color: #fff;
@@ -320,12 +321,13 @@ export default {
 }
 
 .mainboard-panel__btn {
-  margin: 0;
+  margin: 0 !important;
   opacity: 1 !important;
 }
 
 .mainboard-panel__body {
   height: calc(100% - 30px);
+  padding: 5px;
 }
 
 .mainboard-panel__element {
@@ -367,11 +369,12 @@ export default {
 .element-buttons__button {
   width: 23px !important;
   height: 23px !important;
-  margin: 2px 3px;
+  margin: 2px 3px !important;
 }
 
 .element-buttons__icon {
   font-size: 1.2em !important;
+  display: inline-flex !important;
 }
 
 .sortable-element {
@@ -394,6 +397,7 @@ export default {
 
 .sortable-element__caption {
   font-size: 12px;
+  overflow: hidden;
 }
 
 .hidden {

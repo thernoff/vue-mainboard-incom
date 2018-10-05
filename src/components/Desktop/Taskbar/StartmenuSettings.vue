@@ -302,6 +302,10 @@ export default {
 </script>
 
 <style scoped>
+.mainboard-userform__title {
+  color: #fff;
+}
+
 .mainboard-panel-container {
   margin-bottom: 5px;
   border-radius: 4px;

@@ -322,7 +322,7 @@ export default {
   font-size: 16px;
   color: #fff;
   cursor: move;
-  padding: 5px;
+  padding: 0 5px;
   height: 30px;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
