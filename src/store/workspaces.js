@@ -78,13 +78,13 @@ export default {
       state.dashboard = dashboard
     },
 
-    recalcWindowsCoords(state, options) {
-      console.log('recalcWindowsCoords', options)
+    recalcWindowsCoords(state, { options, widthWorkspace, heightWorkspace }) {
+      console.log('recalcWindowsCoords', widthWorkspace, heightWorkspace)
       state.workspaces.forEach(function (workspace) {
         workspace.windows.forEach(function (window) {
           console.log('window', window)
-          window.top = window.top * options.coefTop
-          window.left = window.left * options.coefLeft
+          //window.top = window.top * options.coefTop
+          //window.left = window.left * options.coefLeft
         })
       })
     },
@@ -284,9 +284,9 @@ export default {
     },
 
     actionRecalcWindowsCoords({ commit, rootState }, options) {
-      const widthGrid = rootState.desktop.widthGrid
-      const heightGrid = rootState.desktop.heightGrid
-      commit('recalcWindowsCoords', options)
+      const widthWorkspace = rootState.desktop.widthWorkspace
+      const heightWorkspace = rootState.desktop.heightWorkspace
+      commit('recalcWindowsCoords', { options, widthWorkspace, heightWorkspace })
     },
 
     actionMinimizeWindows({ commit }) {

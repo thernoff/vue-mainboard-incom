@@ -4,8 +4,8 @@
     class="mainboard-window"
     :data-index="index"
     :style="{
-        top: options.top + 'px',
-        left: options.left + 'px',
+        top: options.top * heightWorkspace / 100 + 'px',
+        left: options.left * widthWorkspace / 100 + 'px',
         width: options.width + '%',
         height: options.height + '%',
         zIndex: options.zIndex,
@@ -92,6 +92,14 @@ export default {
 
     isModeGrid() {
       return this.$store.isModeGrid;
+    },
+
+    widthWorkspace() {
+      return this.$store.state.desktop.widthWorkspace;
+    },
+
+    heightWorkspace() {
+      return this.$store.state.desktop.heightWorkspace;
     }
   },
   components: {

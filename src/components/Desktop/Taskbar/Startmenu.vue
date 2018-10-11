@@ -253,7 +253,7 @@ export default {
   methods: {
     createNewWindow(element) {
       this.startMenu = false;
-      this.$store.commit("createNewWindow", element);
+      this.$store.dispatch("actionCreateNewWindow", element);
       this.$store.dispatch("actionToggleVisibleStartMenu");
       this.$store.dispatch("actionSaveSettingsDesktop");
     },

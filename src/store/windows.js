@@ -26,8 +26,7 @@ export default {
             state.windows = windows
         },
 
-        createNewWindow(state, element) {
-            console.log('createNewWindow', element)
+        createNewWindow(state, { element, widthWorkspace, heightWorkspace }) {
             const title = element.title || element.label
             const link = element.link
             const currentLink = element.link
@@ -43,8 +42,8 @@ export default {
                 apiLink,
                 currentLink,
                 itemId,
-                top: state.topPrevWindow,
-                left: state.leftPrevWindow,
+                top: 100 * state.topPrevWindow / heightWorkspace,
+                left: 100 * state.leftPrevWindow / widthWorkspace,
                 width: 40,
                 height: 45,
                 zIndex: state.windows.length + 2,
@@ -75,13 +74,12 @@ export default {
             state.windows[options.index] = Object.assign(window, options)
         },
 
-        updateWindowCoords(state, options) {
+        updateWindowCoords(state, { options, widthWorkspace, heightWorkspace }) {
             console.log('updateWindowCoords options', options)
             let window = state.windows[options.index]
             if (!window.fullscreen) {
-                console.log('updateWindowCoords window.fullscreen', window.fullscreen)
-                window.top = +options.top
-                window.left = +options.left
+                window.top = +options.top / heightWorkspace * 100
+                window.left = +options.left / widthWorkspace * 100
             }
         },
 
@@ -120,6 +118,9 @@ export default {
             state.activeWindow = null
             state.indexActiveWindow = null
             state.windows.splice(index, 1)
+
+            state.topPrevWindow -= 10
+            state.leftPrevWindow -= 10
         },
 
         minimizeWindow(state, index) {
@@ -213,6 +214,12 @@ export default {
         }
     },
     actions: {
+        actionCreateNewWindow({ commit, rootState }, element) {
+            const widthWorkspace = rootState.desktop.widthWorkspace
+            const heightWorkspace = rootState.desktop.heightWorkspace
+            commit('createNewWindow', { element, widthWorkspace, heightWorkspace })
+        },
+
         actionCloseWindow({ state, commit, dispatch }, index) {
             commit("closeWindow", index)
             commit("setActiveWindow", 0)
@@ -240,8 +247,10 @@ export default {
         },
 
         actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {
-            console.log('actionUpdateWindowCoords.options', options)
-            commit('updateWindowCoords', options)
+            const widthWorkspace = rootState.desktop.widthWorkspace
+            const heightWorkspace = rootState.desktop.heightWorkspace
+            console.log('actionUpdateWindowCoords.options', { options, widthWorkspace, heightWorkspace })
+            commit('updateWindowCoords', { options, widthWorkspace, heightWorkspace })
             if (rootState.desktop.modeGrid) {
                 //console.log('old left', options.left, 'old top', options.top)
                 const countColumns = rootState.desktop.countColumns
@@ -284,7 +293,7 @@ export default {
 
                 setTimeout(function () {
                     commit('updateWindowSize', options)
-                    commit('updateWindowCoords', options)
+                    commit('updateWindowCoords', { options, widthWorkspace, heightWorkspace })
                     dispatch("actionSaveSettingsDesktop");
                 }, 1)
             } else {
@@ -297,7 +306,7 @@ export default {
             const heightWorkspace = rootState.desktop.heightWorkspace
             options.width = ((100 * options.width / widthWorkspace) <= 100) ? 100 * options.width / widthWorkspace : 100;
             options.height = ((100 * options.height / heightWorkspace) <= 100) ? 100 * options.height / heightWorkspace : 100;
-            commit('updateWindowCoords', options)
+            commit('updateWindowCoords', { options, widthWorkspace, heightWorkspace })
             commit('updateWindowSize', options)
             if (rootState.desktop.modeGrid) {
                 //console.log('old left', options.left, 'old top', options.top)
@@ -338,7 +347,7 @@ export default {
 
                 //console.log('actionUpdateWindowSize', options.width)
                 setTimeout(function () {
-                    commit('updateWindowCoords', options)
+                    commit('updateWindowCoords', { options, widthWorkspace, heightWorkspace })
                     commit('updateWindowSize', options)
                     dispatch("actionSaveSettingsDesktop");
                 }, 1)

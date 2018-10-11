@@ -105,7 +105,7 @@ export default {
     },
 
     createNewWindow() {
-      this.$store.commit("createNewWindow", this.shortcut);
+      this.$store.dispatch("actionCreateNewWindow", this.shortcut);
       this.$store.dispatch("actionSaveSettingsDesktop");
     },
 
