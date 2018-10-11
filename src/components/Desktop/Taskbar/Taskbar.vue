@@ -5,6 +5,26 @@
       dark
       color="primary"
     >
+    <v-menu
+      v-model="contextMenuMinimizeButton.visible"
+      :position-x="contextMenuMinimizeButton.x"
+      :position-y="contextMenuMinimizeButton.y"
+      absolute
+      offset-y
+      light
+    >
+      <v-list>
+        <v-list-tile
+          v-on:click="closeWindow"
+        >
+          <v-list-tile-title
+            v-on:click="''"
+          >
+            {{ 'Закрыть окно' }}
+          </v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
       <!-- <v-btn
           color="primary"
@@ -21,6 +41,7 @@
         class="mainboard-taskbar__btn-minimize-window"
         :style="{minWidth: widthBtnMinimizeWindows + '%', width: widthBtnMinimizeWindows + '%'}"
         v-on:click="toggleMinimizedWindow(index, window.minimize)"
+        v-on:contextmenu.prevent.stop="showContextMenuMinimizeButton(index, $event)"
       >
         <i class="material-icons" small v-if="window.minimize">
             expand_less
@@ -59,7 +80,13 @@ export default {
   data() {
     return {
       visibleTaskbar: true,
-      arrIndexesWindowsRestore: []
+      arrIndexesWindowsRestore: [],
+      indexCloseWindow: null,
+      contextMenuMinimizeButton: {
+        visible: false,
+        x: 0,
+        y: 0
+      }
     };
   },
   components: {
@@ -125,6 +152,22 @@ export default {
       this.$store
         .dispatch("actionRestoreMinimizeWindows", this.arrIndexesWindowsRestore)
         .then((this.arrIndexesWindowsRestore = []));
+    },
+
+    showContextMenuMinimizeButton(index, event) {
+      event.preventDefault();
+      this.indexCloseWindow = index;
+      this.contextMenuMinimizeButton.visible = false;
+      this.contextMenuMinimizeButton.x = event.clientX;
+      this.contextMenuMinimizeButton.y = event.clientY;
+      this.$nextTick(() => {
+        this.contextMenuMinimizeButton.visible = true;
+      });
+    },
+
+    closeWindow() {
+      this.$store.dispatch("actionCloseWindow", this.indexCloseWindow);
+      this.$store.dispatch("actionSaveSettingsDesktop");
     }
   }
 };
