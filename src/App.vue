@@ -39,6 +39,7 @@
 
     <div
       class="mainboard-workspace"
+      ref="workspace"
       v-on:contextmenu.stop.prevent="showContextMenu"
     >
       <!-- <mainboard-cover
@@ -50,39 +51,39 @@
           <!-- <v-layout row wrap> -->
         <mainboard-shortcut-list :shortcuts="shortcuts"></mainboard-shortcut-list>
         <mainboard-window
+          v-show="!window.minimize"
+          v-for="(window, index) in windows"
           :key="window.id"
           :index="index"
           :options="window"
-          v-show="!window.minimize"
-          v-for="(window, index) in windows"
         ></mainboard-window>
         <mainboard-grid
           ref="grid"
         ></mainboard-grid>
           <!-- </v-layout> -->
-        <mainboard-startmenu></mainboard-startmenu>
+        <!-- <mainboard-startmenu v-bind:heightWorkspace="heightWorkspace"></mainboard-startmenu> -->
         <!-- <router-view></router-view> -->
       <!-- </v-container> -->
     </div>
     <mainboard-taskbar class="mainboard-taskbar"></mainboard-taskbar>
     <template v-if="error">
-    <v-snackbar
-      :multi-line="true"
-      :timeout="3000"
-      color="error"
-      @input="closeError"
-      :value="true"
-    >
-      {{error}}
-      <v-btn
-        dark
-        flat
-        @click="closeError"
+      <v-snackbar
+        :multi-line="true"
+        :timeout="3000"
+        color="error"
+        @input="closeError"
+        :value="true"
       >
-        Закрыть
-      </v-btn>
-    </v-snackbar>
-  </template>
+        {{error}}
+        <v-btn
+          dark
+          flat
+          @click="closeError"
+        >
+          Закрыть
+        </v-btn>
+      </v-snackbar>
+    </template>
   </v-app>
 
 
@@ -160,22 +161,39 @@ export default {
   mounted() {
     //console.log("process.env.NODE_ENV", process.env.NODE_ENV);
     const self = this;
-    this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
-    this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
+    //this.$store.commit("setWidthGrid", this.$refs.grid.$el.clientWidth);
+    //this.$store.commit("setHeightGrid", this.$refs.grid.$el.clientHeight);
+
+    this.$store.commit("setWidthWorkspace", this.$refs.workspace.clientWidth);
+    this.$store.commit("setHeightWorkspace", this.$refs.workspace.clientHeight);
 
     window.addEventListener("resize", function() {
       const oldWidthGrid = self.$store.getters.getWidthGrid;
       const oldHeightGrid = self.$store.getters.getHeightGrid;
       const newWidthGrid = self.$refs.grid.$el.clientWidth;
       const newHeightGrid = self.$refs.grid.$el.clientHeight;
+
+      const oldWidthWorkspace = self.$store.state.desktop.widthWorkspace;
+      const oldHeightWorkspace = self.$store.state.desktop.heightWorkspace;
+      const newWidthWorkspace = self.$refs.workspace.clientWidth;
+      const newHeightWorkspace = self.$refs.workspace.clientHeight;
+
       const options = {
-        coefLeft: newWidthGrid / oldWidthGrid,
-        coefTop: newHeightGrid / oldHeightGrid
+        coefLeft: newWidthWorkspace / oldWidthWorkspace,
+        coefTop: newHeightWorkspace / oldHeightWorkspace
       };
 
       self.$store.dispatch("actionRecalcWindowsCoords", options);
-      self.$store.commit("setWidthGrid", self.$refs.grid.$el.clientWidth);
-      self.$store.commit("setHeightGrid", self.$refs.grid.$el.clientHeight);
+      //self.$store.commit("setWidthGrid", self.$refs.grid.$el.clientWidth);
+      //self.$store.commit("setHeightGrid", self.$refs.grid.$el.clientHeight);
+
+      self.$store.commit("setWidthWorkspace", self.$refs.workspace.clientWidth);
+      self.$store.commit(
+        "setHeightWorkspace",
+        self.$refs.workspace.clientHeight
+      );
+
+      self.$store.dispatch("actionSaveSettingsDesktop");
     });
   },
 

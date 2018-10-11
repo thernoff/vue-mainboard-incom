@@ -284,8 +284,8 @@ export default {
     },
 
     actionRecalcWindowsCoords({ commit, rootState }, options) {
-      const widthGrid = rootState.grid.widthGrid
-      const heightGrid = rootState.grid.heightGrid
+      const widthGrid = rootState.desktop.widthGrid
+      const heightGrid = rootState.desktop.heightGrid
       commit('recalcWindowsCoords', options)
     },
 

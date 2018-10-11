@@ -87,6 +87,7 @@
           <v-list
             v-if="!countSearchElements"
             class="mainboard-startmenu__categories"
+            :style="{height: heightWorkspace * 0.45 + 'px'}"
           >
             <v-list-group
               class="mainboard-startmenu__category"
@@ -155,17 +156,43 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
+        <div class="text-md-center">
+          <v-btn
+            title="Обновить страницу"
+            color="btnReload"
+            dark
+            v-on:click="reloadApp"
+          >
+            <i class="material-icons">cached</i>
+          </v-btn>
+          <v-btn
+            title="Выход из системы"
+            color="btnLogout"
+            dark
+            v-on:click="logoutApp"
+          >
+            <i class="material-icons">power_settings_new</i>
+          </v-btn>
+        </div>
       </v-card>
     </v-menu>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 import UserForm from "@/components/Desktop/Taskbar/UserForm.vue";
 import WindowSettings from "@/components/Desktop/WindowSettings/WindowSettings.vue";
 import StartmenuSettings from "@/components/Desktop/Taskbar/StartmenuSettings.vue";
 
 export default {
+  props: {
+    heightWorkspace: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       startMenu: false,
@@ -223,9 +250,6 @@ export default {
       return this.$store.getters.user;
     }
   },
-  mounted() {
-    console.log("Startmenu categories", this.categories);
-  },
   methods: {
     createNewWindow(element) {
       this.startMenu = false;
@@ -276,6 +300,24 @@ export default {
       const element = this.contextMenuItem.element;
       this.$store.dispatch("actionCreateNewShortcut", element);
       this.$store.dispatch("actionSaveSettingsDesktop");
+    },
+
+    reloadApp() {
+      window.location.href = "/";
+    },
+
+    logoutApp() {
+      axios({
+        method: "post",
+        headers: { "Content-Type": "application/form-data" },
+        url: window.location.href + "inner.php/extusers/fpage/logout/"
+      })
+        .then(() => {
+          window.location.href = "/";
+        })
+        .catch(error => {
+          console.log("error", error);
+        });
     }
   }
 };
@@ -292,7 +334,7 @@ export default {
 }
 
 .mainboard-startmenu__categories {
-  height: 500px;
+  /* height: 500px; */
   overflow-y: auto;
   overflow-x: hidden;
   width: 320px;

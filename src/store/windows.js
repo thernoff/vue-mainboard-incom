@@ -76,24 +76,32 @@ export default {
         },
 
         updateWindowCoords(state, options) {
+            console.log('updateWindowCoords options', options)
             let window = state.windows[options.index]
-            window.top = +options.top
-            window.left = +options.left
+            if (!window.fullscreen) {
+                console.log('updateWindowCoords window.fullscreen', window.fullscreen)
+                window.top = +options.top
+                window.left = +options.left
+            }
         },
 
         updateWindowSize(state, options) {
-            const window = state.windows[options.index]
-            window.width = +options.width
-            window.height = +options.height
+            console.log('updateWindowSize options', options)
+            let window = state.windows[options.index]
+            if (!window.fullscreen) {
+                console.log('updateWindowSize window.fullscreen', window.fullscreen)
+                window.width = +options.width
+                window.height = +options.height
+            }
         },
 
         updateWindowTitle(state, options) {
-            const window = state.windows[options.index]
+            let window = state.windows[options.index]
             window.title = options.title
         },
 
         updateWindowApiLink(state, options) {
-            const window = state.windows[options.index]
+            let window = state.windows[options.index]
             window.apiLink = options.apiLink
         },
 
@@ -234,16 +242,11 @@ export default {
         actionUpdateWindowCoords({ commit, dispatch, rootState }, options) {
             console.log('actionUpdateWindowCoords.options', options)
             commit('updateWindowCoords', options)
-            if (rootState.grid.modeGrid) {
+            if (rootState.desktop.modeGrid) {
                 //console.log('old left', options.left, 'old top', options.top)
-                const countColumns = rootState.grid.countColumns
-                const widthGrid = rootState.grid.widthGrid
-                const widthOneColumn = widthGrid / countColumns
-                //options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
-
-                //console.log('countColumns', countColumns)
-                //console.log('widthGrid', widthGrid)
-                //console.log('widthOneColumn', widthOneColumn)
+                const countColumns = rootState.desktop.countColumns
+                const widthWorkspace = rootState.desktop.widthWorkspace
+                const widthOneColumn = widthWorkspace / countColumns
 
                 if (options.diffLeft) {
                     options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
@@ -251,13 +254,9 @@ export default {
                     options.left = Math.round(options.left / widthOneColumn) * widthOneColumn
                 }
 
-                const countRows = rootState.grid.countRows
-                const heightGrid = rootState.grid.heightGrid
-                const heightOneRow = heightGrid / countRows
-
-                //console.log('countRows', countRows)
-                //console.log('heightGrid', heightGrid)
-                //console.log('heightOneRow', heightOneRow)
+                const countRows = rootState.desktop.countRows
+                const heightWorkspace = rootState.desktop.heightWorkspace
+                const heightOneRow = heightWorkspace / countRows
 
                 if (options.diffTop) {
                     options.top = Math.floor(options.top / heightOneRow) * heightOneRow
@@ -266,8 +265,8 @@ export default {
                 }
 
                 options.top = Math.floor(options.top / heightOneRow) * heightOneRow
-                options.width = 100 * options.width / widthGrid
-                options.height = 100 * options.height / heightGrid
+                options.width = 100 * options.width / widthWorkspace
+                options.height = 100 * options.height / heightWorkspace
 
                 const widthColumnPercent = 100 / countColumns
                 options.width = Math.ceil(options.width / widthColumnPercent) * (widthColumnPercent)
@@ -294,17 +293,17 @@ export default {
         },
 
         actionUpdateWindowSize({ commit, dispatch, rootState }, options) {
-            const widthGrid = rootState.grid.widthGrid
-            const heightGrid = rootState.grid.heightGrid
-            options.width = ((100 * options.width / widthGrid) <= 100) ? 100 * options.width / widthGrid : 100;
-            options.height = ((100 * options.height / heightGrid) <= 100) ? 100 * options.height / heightGrid : 100;
+            const widthWorkspace = rootState.desktop.widthWorkspace
+            const heightWorkspace = rootState.desktop.heightWorkspace
+            options.width = ((100 * options.width / widthWorkspace) <= 100) ? 100 * options.width / widthWorkspace : 100;
+            options.height = ((100 * options.height / heightWorkspace) <= 100) ? 100 * options.height / heightWorkspace : 100;
             commit('updateWindowCoords', options)
             commit('updateWindowSize', options)
-            if (rootState.grid.modeGrid) {
+            if (rootState.desktop.modeGrid) {
                 //console.log('old left', options.left, 'old top', options.top)
-                const countColumns = rootState.grid.countColumns
-                const widthGrid = rootState.grid.widthGrid
-                const widthOneColumn = widthGrid / countColumns
+                const countColumns = rootState.desktop.countColumns
+                const widthWorkspace = rootState.desktop.widthWorkspace
+                const widthOneColumn = widthWorkspace / countColumns
                 //options.left = Math.floor(options.left / widthOneColumn) * widthOneColumn
 
                 if (options.diffLeft) {
@@ -313,9 +312,9 @@ export default {
                     options.left = Math.round(options.left / widthOneColumn) * widthOneColumn
                 }
 
-                const countRows = rootState.grid.countRows
-                const heightGrid = rootState.grid.heightGrid
-                const heightOneRow = heightGrid / countRows
+                const countRows = rootState.desktop.countRows
+                const heightWorkspace = rootState.desktop.heightWorkspace
+                const heightOneRow = heightWorkspace / countRows
 
                 if (options.diffTop) {
                     options.top = Math.floor(options.top / heightOneRow) * heightOneRow

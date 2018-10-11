@@ -86,10 +86,11 @@ export default {
   overflow: hidden;
   /* background-position: 50% 50%; */
   background-position: center center;
-  -moz-background-size: 100%; /* Firefox 3.6+ */
-  -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
-  -o-background-size: 100%; /* Opera 9.6+ */
-  background-size: 100%;
+  -moz-background-size: cover; /* Firefox 3.6+ */
+  -webkit-background-size: cover; /* Safari 3.1+ и Chrome 4.0+ */
+  -o-background-size: cover; /* Opera 9.6+ */
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .mainboard-workspace__grid-container {

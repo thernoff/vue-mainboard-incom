@@ -1,5 +1,9 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+//import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
+//import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+//import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loader
+
 import Vue from 'vue'
 import App from './App'
 import router from '@/router'
@@ -12,12 +16,14 @@ import colors from 'vuetify/es5/util/colors'
 
 Vue.use(Vuetify, {
   theme: {
-    //primary: colors.indigo.darken1, // #E53935
+    // primary: colors.indigo.darken1, // #E53935
     primary: '#3b5375',
     titleWindow: '#4a6588',
-    //minimizeWindowTaskbar: colors.indigo.darken3,
+    // minimizeWindowTaskbar: colors.indigo.darken3,
     minimizeWindowTaskbar: '#293c56',
     btnTaskbar: '#293c56',
+    btnReload: colors.blue.lighten1,
+    btnLogout: colors.red.darken1,
     secondary: colors.red.lighten4, // #FFCDD2
     accent: colors.indigo.base // #3F51B5
   }
@@ -36,4 +42,3 @@ jQuery(document).ready(function () {
     template: '<App/>'
   })
 })
-

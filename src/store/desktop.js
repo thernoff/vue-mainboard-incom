@@ -6,6 +6,8 @@ export default {
     grid: [10, 5],
     widthGrid: 0,
     heightGrid: 0,
+    widthWorkspace: 0,
+    heightWorkspace: 0
   },
   mutations: {
     setWidthGrid(state, widthGrid) {
@@ -16,13 +18,19 @@ export default {
       state.heightGrid = heightGrid
     },
 
+    setWidthWorkspace(state, widthWorkspace) {
+      state.widthWorkspace = widthWorkspace
+    },
+
+    setHeightWorkspace(state, heightWorkspace) {
+      state.heightWorkspace = heightWorkspace
+    },
+
     toggleModeGrid(state) {
       state.modeGrid = !state.modeGrid
     }
   },
-  actions: {
 
-  },
   getters: {
     getGrid() {
       return state.grid

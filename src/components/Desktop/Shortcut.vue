@@ -3,6 +3,8 @@
     class="mainboard-shortcut"
     ref="shortcut"
     v-on:dblclick="createNewWindow"
+    v-on:tap="createNewWindow"
+    v-on:touchstart="createNewWindow"
     v-on:mousedown="setActive"
     v-on:contextmenu.prevent.stop="showContextMenu"
     :class = "{'mainboard-shortcut--active': shortcut.active, 'mainboard-shortcut--noimage': !shortcut.image}"
@@ -195,7 +197,7 @@ export default {
 
 .mainboard-shortcut__title {
   color: #fff;
-  text-shadow: 1px 1px #000;
+  text-shadow: 1px 2px 5px #000;
   text-align: center;
   font-size: 12px;
   line-height: 1;

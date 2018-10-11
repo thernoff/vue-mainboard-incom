@@ -37,9 +37,10 @@ export default {
   },
   computed: {
     shortcutWidth() {
-      const heightGrid = this.$store.getters.heightGrid;
+      const heightWorkspace = this.$store.state.desktop.heightWorkspace;
       return (
-        120 * Math.ceil(this.shortcuts.length / Math.floor(heightGrid / 120))
+        120 *
+        Math.ceil(this.shortcuts.length / Math.floor(heightWorkspace / 120))
       );
     }
   },

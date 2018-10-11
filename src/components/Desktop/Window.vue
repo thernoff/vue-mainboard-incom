@@ -188,7 +188,6 @@ export default {
     var self = this;
     var countRows = self.$store.getters.getCountRows;
     var countColumns = self.$store.getters.getCountColumns;
-
     $(this.$refs.window)
       .draggable({
         handle: ".mainboard-window__title",
@@ -199,9 +198,13 @@ export default {
           $window.find(".mainboard-frame__cover").show();
           if (self.options.height == 100) {
             //$window.addClass("half-height");
-            $window.css("height", "90%");
+            //$window.css("height", "90%");
           }
-          console.log("drag", self.options.height);
+          //console.log("drag", self.options.height);
+
+          if ($window.hasClass("fullscreen")) {
+            return false;
+          }
         },
         stop: function(event, ui) {
           console.log("draggable ui", ui);
@@ -220,7 +223,7 @@ export default {
             diffLeft: ui.position.left - ui.originalPosition.left
           };
 
-          $window.removeClass("half-height");
+          //$window.removeClass("half-height");
 
           self.$store.dispatch("actionUpdateWindowCoords", options);
           //self.$store.dispatch("actionSaveSettingsDesktop");

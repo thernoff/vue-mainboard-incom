@@ -12,7 +12,7 @@
         >
           <v-icon>home</v-icon>
       </v-btn> -->
-      <mainboard-startmenu></mainboard-startmenu>
+      <mainboard-startmenu v-bind:heightWorkspace="heightWorkspace"></mainboard-startmenu>
       <v-btn
         v-for="(window, index) in windows"
         :key="index"
@@ -83,6 +83,10 @@ export default {
       return widthBtnMinimizeWindows > 120
         ? Math.floor((1000 * 120) / widthGrid) / 10
         : Math.floor((1000 * widthBtnMinimizeWindows) / widthGrid) / 10;
+    },
+
+    heightWorkspace() {
+      return this.$store.state.desktop.heightWorkspace;
     }
   },
 

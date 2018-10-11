@@ -4,7 +4,7 @@ import shared from '@/store/shared'
 import startmenu from '@/store/startmenu'
 import windows from '@/store/windows'
 import workspaces from '@/store/workspaces'
-import grid from '@/store/grid'
+import desktop from '@/store/desktop'
 import user from '@/store/user'
 import interfaces from './interfaces'
 
@@ -16,7 +16,7 @@ export default new Vuex.Store({
         startmenu,
         windows,
         workspaces,
-        grid,
+        desktop,
         user,
         interfaces
     }
