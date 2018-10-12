@@ -123,11 +123,8 @@ export default {
             state.activeWindow = null
             state.indexActiveWindow = null
             state.windows.splice(index, 1)
-            console.log('before', state.topPrevWindow, state.leftPrevWindow)
             state.topPrevWindow -= state.stepShift
             state.leftPrevWindow -= state.stepShift
-
-            console.log('after', state.topPrevWindow, state.leftPrevWindow)
         },
 
         minimizeWindow(state, index) {
