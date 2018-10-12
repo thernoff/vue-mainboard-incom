@@ -126,6 +126,7 @@ export default {
 
     toggleMinimizedWindow(index, minimize) {
       console.log("minimize", minimize, index);
+      this.arrIndexesWindowsRestore = [];
       this.$store.commit("toggleMinimizeWindow", index);
       if (minimize) {
         this.$store.commit("setActiveWindow", index);
