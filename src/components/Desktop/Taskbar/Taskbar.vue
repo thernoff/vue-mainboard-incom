@@ -169,6 +169,7 @@ export default {
     },
 
     closeWindow() {
+      this.arrIndexesWindowsRestore = [];
       this.$store.dispatch("actionCloseWindow", this.indexCloseWindow);
       this.$store.dispatch("actionSaveSettingsDesktop");
     }
