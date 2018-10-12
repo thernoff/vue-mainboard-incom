@@ -10,7 +10,6 @@
         height: options.height + '%',
         zIndex: options.zIndex,
     }"
-
     :class="[{'fullscreen': options.fullscreen}, options.classesCss.join(' ')]"
 >
   <v-card
@@ -18,36 +17,39 @@
     class="mainboard-window__card"
   >
     <v-card-title
-        class="mainboard-window__title"
+        class="mainboard-window__header"
         :class = "{'titleWindow': options.active, 'indigo lighten-4': !options.active}"
         v-on:mousedown="setActiveWindow"
         v-on:dblclick="toggleFullscreenWindow"
         primary-title
+        :title="options.title"
     >
-        <span >{{ options.title }}</span>
+        <div class="mainboard-window__title">{{ options.title }}</div>
         <v-spacer></v-spacer>
-        <v-btn icon small class="mainboard-window__btn" v-if="showBtnBack" v-on:click="back" title="Назад">
-            <v-icon color="white">fas fa-arrow-left</v-icon>
-        </v-btn>
-        <!-- <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
-            <v-icon color="white">fas fa-arrows-alt-v</v-icon>
-        </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullwidth')" title="Развернуть по ширине">
-            <v-icon color="white">fas fa-arrows-alt-h</v-icon>
-        </v-btn> -->
-        <v-btn icon small class="mainboard-window__btn" @click.stop="reloadWindow" title="Перезагрузить окно">
-            <v-icon color="white">refresh</v-icon>
-        </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click.stop="minimizeWindow" title="Свернуть">
-            <v-icon color="white">minimize</v-icon>
-        </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click.stop="toggleFullscreenWindow" title="Развернуть на весь экран">
-            <v-icon v-if="!options.fullscreen" color="white">fullscreen</v-icon>
-            <v-icon v-if="options.fullscreen" color="white">fullscreen_exit</v-icon>
-        </v-btn>
-        <v-btn icon small class="mainboard-window__btn" @click.stop="closeWindow" title="Закрыть окно">
-            <v-icon color="white">close</v-icon>
-        </v-btn>
+        <div class="mainboard-window__group-buttons">
+          <v-btn icon small class="mainboard-window__btn" v-if="showBtnBack" v-on:click="back" title="Назад">
+              <v-icon color="white">fas fa-arrow-left</v-icon>
+          </v-btn>
+          <!-- <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullheight')" title="Развернуть по высоте">
+              <v-icon color="white">fas fa-arrows-alt-v</v-icon>
+          </v-btn>
+          <v-btn icon small class="mainboard-window__btn" @click="toggleClassWindow('mainboard-window--fullwidth')" title="Развернуть по ширине">
+              <v-icon color="white">fas fa-arrows-alt-h</v-icon>
+          </v-btn> -->
+          <v-btn icon small class="mainboard-window__btn" @click.stop="reloadWindow" title="Перезагрузить окно">
+              <v-icon color="white">refresh</v-icon>
+          </v-btn>
+          <v-btn icon small class="mainboard-window__btn" @click.stop="minimizeWindow" title="Свернуть">
+              <v-icon color="white">minimize</v-icon>
+          </v-btn>
+          <v-btn icon small class="mainboard-window__btn" @click.stop="toggleFullscreenWindow" title="Развернуть на весь экран">
+              <v-icon v-if="!options.fullscreen" color="white">fullscreen</v-icon>
+              <v-icon v-if="options.fullscreen" color="white">fullscreen_exit</v-icon>
+          </v-btn>
+          <v-btn icon small class="mainboard-window__btn" @click.stop="closeWindow" title="Закрыть окно">
+              <v-icon color="white">close</v-icon>
+          </v-btn>
+        </div>
     </v-card-title>
 
     <v-card-text class="mainboard-window__body">
@@ -198,7 +200,7 @@ export default {
     var countColumns = self.$store.getters.getCountColumns;
     $(this.$refs.window)
       .draggable({
-        handle: ".mainboard-window__title",
+        handle: ".mainboard-window__header",
         containment: ".mainboard-workspace",
         snap: !self.isModeGrid ? false : ".mainboard-window",
         start: function(event, ui) {
@@ -329,7 +331,7 @@ export default {
   z-index: 10;
 }
 
-.mainboard-window__title {
+.mainboard-window__header {
   font-size: 16px;
   color: #fff;
   cursor: move;
@@ -337,6 +339,17 @@ export default {
   height: 30px;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
+}
+
+.mainboard-window__title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.mainboard-window__group-buttons {
+  /*   width: 40%;
+  float: right; */
 }
 
 .mainboard-window__btn {
@@ -368,6 +381,19 @@ export default {
 
 .half-width {
   width: 90% !important;
+}
+
+@media (max-width: 1200px) {
+  .mainboard-window__title {
+    width: 55%;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 800px) {
+  .mainboard-window__title {
+    display: none;
+  }
 }
 </style>
 

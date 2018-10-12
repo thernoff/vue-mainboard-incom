@@ -5,17 +5,18 @@
   ref="shortcutList"
 >
   <div class="mainboard-shortcut-list__container">
-    <li
-      v-for="(shortcut, index) in shortcuts"
-      :key="shortcut.id"
-      class="sortable-element"
-    >
-    <mainboard-shortcut
-      :index="index"
-      :shortcut="shortcut"
-    >
-    </mainboard-shortcut>
-    </li>
+      <div
+        v-for="(shortcut, index) in shortcuts"
+        :key="shortcut.id"
+        class="sortable-element"
+      >
+        <mainboard-shortcut
+          :index="index"
+          :shortcut="shortcut"
+        >
+        </mainboard-shortcut>
+      </div>
+
   </div>
 </div>
 </template>

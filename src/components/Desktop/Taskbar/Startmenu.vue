@@ -15,7 +15,7 @@
       light
       z-index=1000
     >
-      <v-list>
+      <v-list dense>
         <v-list-tile
           @click="''"
         >
@@ -35,7 +35,7 @@
       light
       z-index=1000
     >
-      <v-list>
+      <v-list dense>
         <v-list-tile
           @click="''"
         >
@@ -354,6 +354,10 @@ export default {
 .icon-folder {
   margin-right: 3px;
   color: #f58815;
+}
+
+.contextmenu-item {
+  height: 32px;
 }
 </style>
 

@@ -10,13 +10,14 @@
     :class = "{'mainboard-shortcut--active': shortcut.active, 'mainboard-shortcut--noimage': !shortcut.image}"
   >
     <v-menu
+      class="mainboard-shortcut__context-menu context-menu"
       v-model="contextMenu.visible"
       :position-x="contextMenu.x"
       :position-y="contextMenu.y"
       absolute
       offset-y
     >
-      <v-list>
+      <v-list dense>
         <v-list-tile
           @click="''"
         >
@@ -62,7 +63,7 @@
         class="mainboard-shortcut__input"
         ref="renameinput"
         v-show="rename"
-        v-bind:value="shortcut.label"
+        v-bind:value="shortLabel"
         v-on:blur="updateShortcut"
         v-on:keyup.enter="updateShortcut"
       />
@@ -96,6 +97,12 @@ export default {
   computed: {
     firstLetterLabel() {
       return this.shortcut.label[0].toUpperCase();
+    },
+
+    shortLabel() {
+      return this.shortcut.label.length > 33
+        ? this.shortcut.label.slice(0, 33) + "..."
+        : this.shortcut.label;
     }
   },
   methods: {
@@ -149,10 +156,9 @@ export default {
 
 <style scoped>
 .mainboard-shortcut {
-  display: inline-block;
   margin: 5px;
   width: 100px;
-  height: 100px;
+  height: 110px;
   /* background-color: #fff;
   border: 2px solid #b1a0a0; */
   border-radius: 5px;
@@ -179,7 +185,8 @@ export default {
 }
 
 .mainboard-shortcut__img {
-  padding: 5px;
+  /* padding: 5px; */
+  margin-top: 5px;
   text-align: center;
 }
 
@@ -210,7 +217,7 @@ export default {
   text-align: center;
 }
 
-.contextmenu__item-menu {
+.context-menu__tile {
   height: 32px;
 }
 </style>

@@ -183,7 +183,7 @@ export default {
         coefTop: newHeightWorkspace / oldHeightWorkspace
       };
 
-      self.$store.dispatch("actionRecalcWindowsCoords", options);
+      //self.$store.dispatch("actionRecalcWindowsCoords", options);
       //self.$store.commit("setWidthGrid", self.$refs.grid.$el.clientWidth);
       //self.$store.commit("setHeightGrid", self.$refs.grid.$el.clientHeight);
 
@@ -193,11 +193,32 @@ export default {
         self.$refs.workspace.clientHeight
       );
 
-      self.$store.dispatch("actionSaveSettingsDesktop");
+      //self.$store.dispatch("actionSaveSettingsDesktop");
     });
   },
 
   methods: {
+    /* toggleWorkspace(step, event) {
+      const touchElement = document.elementFromPoint(
+        event.touchstartX,
+        event.touchstartY
+      );
+      if (this.$refs.grid.$el.contains(touchElement)) {
+        const indexActiveWorkspace = this.$store.getters.indexActiveWorkspace;
+        const countWorkspaces = this.$store.getters.countWorkspaces;
+        if (
+          step + indexActiveWorkspace >= 0 &&
+          step + indexActiveWorkspace < countWorkspaces
+        ) {
+          this.$store.dispatch(
+            "actionSetActiveWorkspace",
+            step + indexActiveWorkspace
+          );
+          this.$store.dispatch("actionSaveSettingsDesktop");
+        }
+      }
+    }, */
+
     toggleVisibleStartMenu() {
       this.$store.dispatch("actionToggleVisibleStartMenu");
     },

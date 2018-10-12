@@ -269,7 +269,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .mainboard-panel {
   position: relative;
   padding-bottom: 10px;

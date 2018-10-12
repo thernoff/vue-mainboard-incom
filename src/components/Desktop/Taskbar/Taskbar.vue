@@ -6,6 +6,7 @@
       color="primary"
     >
     <v-menu
+      class="mainboard-taskbar__context-menu-minimize-button context-menu"
       v-model="contextMenuMinimizeButton.visible"
       :position-x="contextMenuMinimizeButton.x"
       :position-y="contextMenuMinimizeButton.y"
@@ -13,8 +14,9 @@
       offset-y
       light
     >
-      <v-list>
+      <v-list dense>
         <v-list-tile
+          class="context-menu__tile"
           v-on:click="closeWindow"
         >
           <v-list-tile-title

@@ -17,6 +17,7 @@ export default {
         maxZIndex: 0,
         topPrevWindow: 5,
         leftPrevWindow: 5,
+        stepShift: 10,
         indexActiveWindow: null,
         activeWindow: null,
         windows: [] // хранится ссылка на массив activeWorkspace.windows
@@ -34,6 +35,8 @@ export default {
             const itemId = element.id
             //const id = Math.random()
             const id = getRandomId()
+            const top = (state.topPrevWindow > 0) ? state.topPrevWindow : 5
+            const left = (state.leftPrevWindow > 0) ? state.leftPrevWindow : 5
             //console.log('id', id)
             const newWindow = {
                 id,
@@ -42,8 +45,8 @@ export default {
                 apiLink,
                 currentLink,
                 itemId,
-                top: 100 * state.topPrevWindow / heightWorkspace,
-                left: 100 * state.leftPrevWindow / widthWorkspace,
+                top: 100 * top / heightWorkspace,
+                left: 100 * left / widthWorkspace,
                 width: 40,
                 height: 45,
                 zIndex: state.windows.length + 2,
@@ -63,8 +66,8 @@ export default {
             state.activeWindow = state.windows[length - 1]
             state.indexActiveWindow = length - 1
 
-            state.topPrevWindow += 10
-            state.leftPrevWindow += 10
+            state.topPrevWindow += state.stepShift
+            state.leftPrevWindow += state.stepShift
         },
 
         updateWindow(state, options) {
@@ -80,6 +83,8 @@ export default {
             if (!window.fullscreen) {
                 window.top = +options.top / heightWorkspace * 100
                 window.left = +options.left / widthWorkspace * 100
+                //state.topPrevWindow -= state.stepShift
+                //state.leftPrevWindow -= state.stepShift
             }
         },
 
@@ -118,9 +123,11 @@ export default {
             state.activeWindow = null
             state.indexActiveWindow = null
             state.windows.splice(index, 1)
+            console.log('before', state.topPrevWindow, state.leftPrevWindow)
+            state.topPrevWindow -= state.stepShift
+            state.leftPrevWindow -= state.stepShift
 
-            state.topPrevWindow -= 10
-            state.leftPrevWindow -= 10
+            console.log('after', state.topPrevWindow, state.leftPrevWindow)
         },
 
         minimizeWindow(state, index) {
@@ -141,7 +148,7 @@ export default {
 
         setActiveWindow(state, index = undefined) {
             if (state.windows.length > 0) {
-                if (index === state.indexActiveWindow) {
+                if (index === state.indexActiveWindow && state.activeWindow.active) {
                     return
                 }
 
@@ -252,7 +259,6 @@ export default {
             console.log('actionUpdateWindowCoords.options', { options, widthWorkspace, heightWorkspace })
             commit('updateWindowCoords', { options, widthWorkspace, heightWorkspace })
             if (rootState.desktop.modeGrid) {
-                //console.log('old left', options.left, 'old top', options.top)
                 const countColumns = rootState.desktop.countColumns
                 const widthWorkspace = rootState.desktop.widthWorkspace
                 const widthOneColumn = widthWorkspace / countColumns
